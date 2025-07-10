@@ -1,10 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import ApperIcon from "@/components/ApperIcon";
+import ColorPicker from "@/components/atoms/ColorPicker";
 
 const TimelineBar = ({ deal, onUpdate }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [showColorPicker, setShowColorPicker] = useState(false);
   const [editName, setEditName] = useState(deal.name);
   const barRef = useRef(null);
 
@@ -21,18 +24,20 @@ const TimelineBar = ({ deal, onUpdate }) => {
     }).format(amount);
   };
 
-  const getBarColor = (value) => {
+const getBarColor = (value, customColor) => {
+    // Use custom color if set, otherwise fall back to value-based colors
+    if (customColor) return customColor;
     if (value >= 100000) return "from-green-500 to-green-600";
     if (value >= 50000) return "from-blue-500 to-blue-600";
     if (value >= 25000) return "from-yellow-500 to-yellow-600";
     return "from-gray-500 to-gray-600";
   };
 
-  const handleMouseDown = (e) => {
+const handleMouseDown = (e) => {
     if (e.target.classList.contains("resize-handle")) {
       setIsResizing(true);
       e.preventDefault();
-    } else if (!isEditing) {
+    } else if (!isEditing && !showColorPicker) {
       setIsDragging(true);
       e.preventDefault();
     }
@@ -92,9 +97,20 @@ const TimelineBar = ({ deal, onUpdate }) => {
       };
     }
   }, [isDragging, isResizing, handleMouseMove, handleMouseUp]);
-  const handleDoubleClick = (e) => {
+const handleDoubleClick = (e) => {
     e.stopPropagation();
-    setIsEditing(true);
+    if (!showColorPicker) {
+      setIsEditing(true);
+    }
+  };
+
+  const handleColorSelect = (color) => {
+    onUpdate({ color });
+  };
+
+  const handleColorPickerToggle = (e) => {
+    e.stopPropagation();
+    setShowColorPicker(!showColorPicker);
   };
 
   const handleNameSubmit = (e) => {
@@ -124,7 +140,7 @@ return (
       initial={{ opacity: 0, scaleX: 0 }}
       animate={{ opacity: 1, scaleX: 1 }}
       transition={{ duration: 0.3 }}
-      className={`absolute top-0 h-full rounded-lg bg-gradient-to-r ${getBarColor(deal.value)} 
+      className={`absolute top-0 h-full rounded-lg bg-gradient-to-r ${getBarColor(deal.value, deal.color)} 
         shadow-lg transition-all duration-200 group select-none
         ${isDragging ? "ring-2 ring-primary-400 ring-opacity-60 cursor-grabbing scale-105 z-10" : "hover:shadow-xl cursor-grab"}
         ${isResizing ? "ring-2 ring-blue-400 ring-opacity-60 cursor-ew-resize" : ""}
@@ -157,9 +173,31 @@ return (
               <div className="text-xs opacity-90">{formatCurrency(deal.value)}</div>
             </>
           )}
+</div>
+        
+        {/* Color picker button */}
+        <div className="flex items-center gap-1 relative">
+          <button
+            onClick={handleColorPickerToggle}
+            className="w-6 h-6 bg-white bg-opacity-30 rounded cursor-pointer opacity-0 group-hover:opacity-100 transition-all hover:bg-opacity-50 flex items-center justify-center"
+            title="Change color"
+          >
+            <ApperIcon name="Palette" size={12} className="text-white" />
+          </button>
+          
+          <AnimatePresence>
+            {showColorPicker && (
+              <ColorPicker
+                selectedColor={deal.color}
+                onColorSelect={handleColorSelect}
+                onClose={() => setShowColorPicker(false)}
+                position="top-right"
+              />
+            )}
+          </AnimatePresence>
         </div>
         
-{/* Resize handle */}
+        {/* Resize handle */}
         <div className="resize-handle w-3 h-full bg-white bg-opacity-30 rounded-r-lg cursor-ew-resize opacity-0 group-hover:opacity-100 transition-all hover:bg-opacity-50 flex items-center justify-center">
           <div className="w-0.5 h-4 bg-white opacity-60"></div>
         </div>
