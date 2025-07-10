@@ -4,7 +4,6 @@ import ApperIcon from "@/components/ApperIcon";
 import Card from "@/components/atoms/Card";
 import Error from "@/components/ui/Error";
 import Loading from "@/components/ui/Loading";
-import Pipeline from "@/components/pages/Pipeline";
 import MetricCard from "@/components/molecules/MetricCard";
 import { getDailyLeadsReport, getDashboardMetrics, getRecentActivity } from "@/services/api/dashboardService";
 
@@ -195,6 +194,8 @@ const Dashboard = () => {
           </div>
         </Card>
       </div>
-    </div>
+</div>
   );
 };
+
+export default Dashboard;
