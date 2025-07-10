@@ -95,6 +95,7 @@ const maxId = Math.max(...leads.map(l => l.Id), 0);
     linkedinUrl: leadData.linkedinUrl || "",
     status: leadData.status || "Keep an Eye",
     fundingType: leadData.fundingType || "Bootstrapped",
+    edition: leadData.edition || "Select Edition",
     followUpDate: leadData.followUpDate || null,
     addedBy: leadData.addedBy || 1, // Default to first sales rep for demo
     Id: maxId + 1,

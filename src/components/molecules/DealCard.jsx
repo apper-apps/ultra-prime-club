@@ -42,10 +42,17 @@ const DealCard = ({ deal, index, onEdit }) => {
           <Card className={`p-4 cursor-grab active:cursor-grabbing transition-all duration-200 ${
             snapshot.isDragging ? "shadow-2xl ring-2 ring-primary-500 bg-primary-50" : "hover:shadow-md"
           }`}>
-            <div className="flex items-start justify-between mb-3">
+<div className="flex items-start justify-between mb-3">
               <div className="flex-1">
                 <h4 className="font-semibold text-gray-900 mb-1">{deal.name}</h4>
                 <p className="text-sm text-gray-600">{deal.leadName}</p>
+                {deal.edition && deal.edition !== "Select Edition" && (
+                  <div className="mt-1">
+                    <Badge variant="primary" size="sm" className="text-xs">
+                      {deal.edition}
+                    </Badge>
+                  </div>
+                )}
               </div>
               <button
                 onClick={(e) => {

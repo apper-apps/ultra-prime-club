@@ -91,7 +91,7 @@ const handleStatusChange = async (leadId, newStatus) => {
           if (existingDeal) {
             // Update existing deal to the new stage
             await updateDeal(existingDeal.Id, { stage: targetStage });
-            toast.success(`Lead status updated and deal moved to ${targetStage} stage!`);
+toast.success(`Lead status updated and deal moved to ${targetStage} stage!`);
           } else {
             // Create new deal in the target stage
             const dealData = {
@@ -102,10 +102,10 @@ const handleStatusChange = async (leadId, newStatus) => {
               stage: targetStage,
               assignedRep: "Unassigned",
               startMonth: new Date().getMonth() + 1,
-              endMonth: new Date().getMonth() + 3
+              endMonth: new Date().getMonth() + 3,
+              edition: updatedLead.edition || "Select Edition"
             };
             await createDeal(dealData);
-            toast.success(`Lead status updated and new deal created in ${targetStage} stage!`);
           }
         } catch (dealError) {
           console.error("Failed to handle deal operation:", dealError);
@@ -591,8 +591,8 @@ const getStatusColor = (status) => {
                                                     </th>
                             <th
                                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[150px]">Status
-                                                    </th>
-<th
+</th>
+                            <th
                                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[140px]">Funding Type
                                                     </th>
                             <th
@@ -654,12 +654,12 @@ const getStatusColor = (status) => {
                                         }}
                                         placeholder="0.0"
                                         className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full placeholder-gray-400" />
+className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full placeholder-gray-400" />
                                 </td>
-<td
+                                <td
                                     className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[150px]">
-<SearchableSelect
+                                    <SearchableSelect
                                         value={emptyRow.category}
-                                        onChange={(value) => handleEmptyRowUpdate(emptyRow.Id, "category", value)}
                                         options={categoryOptions}
                                         placeholder="Select category..."
                                         className="text-gray-500"
@@ -708,8 +708,8 @@ const getStatusColor = (status) => {
                                             className="absolute inset-0 opacity-0 cursor-pointer w-full">
                                             {fundingTypeOptions.map(option => <option key={option} value={option}>{option}</option>)}
                                         </select>
-                                    </div>
-</td>
+</div>
+                                </td>
                                 <td className="px-6 py-4 whitespace-nowrap min-w-[130px]">
                                     <Input
                                         type="date"
@@ -795,11 +795,11 @@ const getStatusColor = (status) => {
                                         }
                                     }}
                                     className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full" />
+className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full" />
                             </td>
-<td
+                            <td
                                 className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[150px]">
-<SearchableSelect
-                                    value={lead.category}
+                                <SearchableSelect
                                     onChange={(value) => handleFieldUpdate(lead.Id, "category", value)}
                                     options={categoryOptions}
                                     placeholder="Select category..."
@@ -843,8 +843,8 @@ const getStatusColor = (status) => {
                                         className="absolute inset-0 opacity-0 cursor-pointer w-full">
                                         {fundingTypeOptions.map(option => <option key={option} value={option}>{option}</option>)}
                                     </select>
-                                </div>
-</td>
+</div>
+                            </td>
                             <td className="px-6 py-4 whitespace-nowrap min-w-[130px]">
                                 <Input
                                     type="date"
@@ -896,10 +896,10 @@ const getStatusColor = (status) => {
                     </tbody>
                 </table>
             </div>
-        </div>}
-</Card>
+</div>}
+    </Card>
     {/* Add Lead Modal */}
-    {showAddForm && <AddLeadModal 
+    {showAddForm && <AddLeadModal
       onClose={() => setShowAddForm(false)} 
       onSubmit={handleAddLead}
       categoryOptions={categoryOptions}
@@ -912,7 +912,7 @@ const getStatusColor = (status) => {
         onSubmit={handleUpdateLead}
         categoryOptions={categoryOptions}
         onCreateCategory={handleCreateCategory}
-    />}
+/>}
 </motion.div>
   );
 };
@@ -1039,7 +1039,8 @@ const AddLeadModal = ({ onClose, onSubmit, categoryOptions, onCreateCategory }) 
     category: "",
     linkedinUrl: "",
     status: "Keep an Eye",
-    fundingType: "Bootstrapped"
+    fundingType: "Bootstrapped",
+    edition: "Select Edition"
   });
 
   const handleSubmit = (e) => {
@@ -1064,8 +1065,8 @@ const AddLeadModal = ({ onClose, onSubmit, categoryOptions, onCreateCategory }) 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Website URL
-            </label>
-<Input
+</label>
+            <Input
               type="url"
               value={formData.websiteUrl}
               detectUrlPrefix={true}
@@ -1079,8 +1080,8 @@ const AddLeadModal = ({ onClose, onSubmit, categoryOptions, onCreateCategory }) 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Team Size
-            </label>
-<select
+</label>
+            <select
               value={formData.teamSize}
               onChange={(e) => setFormData({...formData, teamSize: e.target.value})}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
@@ -1107,13 +1108,12 @@ const AddLeadModal = ({ onClose, onSubmit, categoryOptions, onCreateCategory }) 
               required
             />
           </div>
-          
 <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Category
             </label>
             <div className="relative">
-<SearchableSelect
+              <SearchableSelect
                 value={formData.category}
                 onChange={(value) => setFormData({...formData, category: value})}
                 options={categoryOptions}
@@ -1145,8 +1145,8 @@ const AddLeadModal = ({ onClose, onSubmit, categoryOptions, onCreateCategory }) 
               value={formData.status}
               onChange={(e) => setFormData({...formData, status: e.target.value})}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-            >
-<option value="Launched on AppSumo">Launched on AppSumo</option>
+>
+              <option value="Launched on AppSumo">Launched on AppSumo</option>
               <option value="Launched on Prime Club">Launched on Prime Club</option>
               <option value="Keep an Eye">Keep an Eye</option>
               <option value="Rejected">Rejected</option>
@@ -1179,6 +1179,22 @@ const AddLeadModal = ({ onClose, onSubmit, categoryOptions, onCreateCategory }) 
               <option value="Series A">Series A</option>
               <option value="Series B">Series B</option>
               <option value="Series C">Series C</option>
+</select>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Edition
+            </label>
+            <select
+              value={formData.edition}
+              onChange={(e) => setFormData({...formData, edition: e.target.value})}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+            >
+              <option value="Select Edition">Select Edition</option>
+              <option value="Black Edition">Black Edition</option>
+              <option value="Collector's Edition">Collector's Edition</option>
+              <option value="Limited Edition">Limited Edition</option>
             </select>
           </div>
           
@@ -1204,7 +1220,8 @@ const EditLeadModal = ({ lead, onClose, onSubmit, categoryOptions, onCreateCateg
     category: lead.category,
     linkedinUrl: lead.linkedinUrl,
     status: lead.status,
-    fundingType: lead.fundingType
+    fundingType: lead.fundingType,
+    edition: lead.edition || "Select Edition"
   });
 
   const handleSubmit = (e) => {
@@ -1238,19 +1255,21 @@ const EditLeadModal = ({ lead, onClose, onSubmit, categoryOptions, onCreateCateg
                         ...formData,
                         websiteUrl: e.target.value
                     })}
-                    required />
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Team Size
-                                    </label>
-                    <select
+required />
+            </div>
+            
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Team Size
+                </label>
+                <select
                         value={formData.teamSize}
                         onChange={e => setFormData({
                             ...formData,
                             teamSize: e.target.value
-                        })}
-className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
-                        <option value="1-3">1-3</option>
-                        <option value="4-10">4-10</option>
+})}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    <option value="1-3">1-3</option>
+                    <option value="4-10">4-10</option>
                         <option value="11-50">11-50</option>
                         <option value="51-100">51-100</option>
                         <option value="101-500">101-500</option>
@@ -1269,15 +1288,17 @@ className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none
                             arr: e.target.value
                         })}
                         required />
-                </div>
-<div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Category
-                                    </label>
-                    <div className="relative">
-<SearchableSelect
-                            value={formData.category}
-                            onChange={(value) => setFormData({
-                                ...formData,
+</div>
+            
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Category
+                </label>
+                <div className="relative">
+<div className="relative">
+                    <SearchableSelect
+                        value={formData.category}
+                        onChange={(value) => setFormData({
+                            ...formData,
                                 category: value
                             })}
                             options={categoryOptions}
@@ -1285,10 +1306,11 @@ className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                             onCreateCategory={onCreateCategory}
                         />
-                    </div>
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">LinkedIn URL
+</div>
+            </div>
+            
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">LinkedIn URL
                                     </label>
                     <Input
                         type="url"
@@ -1297,10 +1319,11 @@ className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none
                             ...formData,
                             linkedinUrl: e.target.value
                         })}
-                        required />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Status
+required />
+            </div>
+            
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Status
                                     </label>
                     <select
                         value={formData.status}
@@ -1323,10 +1346,11 @@ className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none
                         <option value="Meeting Done">Meeting Done</option>
                         <option value="Negotiation">Negotiation</option>
                         <option value="Closed Lost">Closed Lost</option>
-                    </select>
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Funding Type
+</select>
+            </div>
+            
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Funding Type
                                     </label>
                     <select
                         value={formData.fundingType}
@@ -1341,16 +1365,36 @@ className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none
                         <option value="Angel">Angel</option>
                         <option value="Series A">Series A</option>
                         <option value="Series B">Series B</option>
-                        <option value="Series C">Series C</option>
+<option value="Series C">Series C</option>
                     </select>
-                </div>
-                <div className="flex justify-end gap-3 pt-4">
-                    <Button type="button" variant="outline" onClick={onClose}>Cancel
-                                    </Button>
-                    <Button type="submit">Update Lead
-                                    </Button>
-                </div>
-            </div></form>
+            </div>
+            
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Edition
+                                    </label>
+                    <select
+                        value={formData.edition}
+                        onChange={e => setFormData({
+                            ...formData,
+                            edition: e.target.value
+                        })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                        <option value="Select Edition">Select Edition</option>
+                        <option value="Black Edition">Black Edition</option>
+                        <option value="Collector's Edition">Collector's Edition</option>
+                        <option value="Limited Edition">Limited Edition</option>
+</select>
+            </div>
+            
+            <div className="flex justify-end gap-3 pt-4">
+                <Button type="button" variant="outline" onClick={onClose}>
+                    Cancel
+                </Button>
+                <Button type="submit">
+                    Update Lead
+                </Button>
+            </div>
+        </form>
     </div>
 </div>
   );
