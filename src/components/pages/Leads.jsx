@@ -197,10 +197,10 @@ const handleFieldUpdate = async (leadId, field, value) => {
   const addEmptyRow = () => {
     const newEmptyRow = {
       Id: nextTempId,
-      websiteUrl: "",
+websiteUrl: "",
       teamSize: "1-10",
       arr: 0,
-      category: "Productivity",
+      category: "Form Builder",
       linkedinUrl: "",
       status: "Keep an Eye",
       fundingType: "Bootstrapped",
@@ -259,8 +259,44 @@ const handleFieldUpdate = async (leadId, field, value) => {
     }
   };
 
-  const teamSizeOptions = ["1-10", "11-50", "51-100", "101-500", "501-1000", "1001+"];
-  const categoryOptions = ["Productivity", "Design", "Fintech", "E-commerce", "Communication", "Gaming", "Marketing", "CRM", "Analytics", "SaaS", "Other"];
+const teamSizeOptions = ["1-10", "11-50", "51-100", "101-500", "501-1000", "1001+"];
+  const categoryOptions = [
+    "Form Builder", 
+    "CRM", 
+    "Project Management", 
+    "Affiliate Management", 
+    "Help Desk", 
+    "Live Chat", 
+    "Graphic Design", 
+    "WordPress Plugin", 
+    "VPN", 
+    "Landing Page Builder", 
+    "Meeting Assistant", 
+    "Course Builder", 
+    "Sales Funnel Builder", 
+    "AI Writing Assistant", 
+    "Vibe Coding Software", 
+    "Transcription Software",
+    "Email Marketing",
+    "Social Media Management",
+    "E-commerce Platform",
+    "Payment Processing",
+    "Analytics & Tracking",
+    "Automation Tools",
+    "File Management",
+    "Team Communication",
+    "Video Conferencing",
+    "Document Management",
+    "HR & Recruitment",
+    "Accounting & Finance",
+    "SEO Tools",
+    "Content Management",
+    "Survey & Forms",
+    "Security & Privacy",
+    "Development Tools",
+    "Business Intelligence",
+    "Other"
+  ];
   const statusOptions = [
     "Launched on AppSumo", "Launched on Prime Club", "Keep an Eye", "Rejected", 
     "Unsubscribed", "Outdated", "Hotlist", "Out of League", "Connected", 
