@@ -67,31 +67,43 @@ const handleStatusChange = async (leadId, newStatus) => {
         )
       );
       
-      // If status is changed to "Locked", create or update deal in pipeline
-      if (newStatus === "Locked") {
+      // Define status-to-stage mapping for common statuses
+      const statusToStageMap = {
+        "Connected": "Connected",
+        "Locked": "Locked", 
+        "Meeting Booked": "Meeting Booked",
+        "Meeting Done": "Meeting Done",
+        "Negotiation": "Negotiation",
+        "Closed Lost": "Lost"
+      };
+      
+      // Check if status maps to a pipeline stage
+      const targetStage = statusToStageMap[newStatus];
+      
+      if (targetStage) {
         try {
           // Get current deals to check if one exists for this lead
           const currentDeals = await getDeals();
           const existingDeal = currentDeals.find(deal => deal.leadId === leadId.toString());
           
           if (existingDeal) {
-            // Update existing deal to "Locked" stage
-            await updateDeal(existingDeal.Id, { stage: "Locked" });
-            toast.success("Lead status updated and deal moved to Locked stage!");
+            // Update existing deal to the new stage
+            await updateDeal(existingDeal.Id, { stage: targetStage });
+            toast.success(`Lead status updated and deal moved to ${targetStage} stage!`);
           } else {
-            // Create new deal in "Locked" stage
+            // Create new deal in the target stage
             const dealData = {
               name: `${updatedLead.websiteUrl} Deal`,
               leadName: updatedLead.websiteUrl.replace(/^https?:\/\//, '').replace(/\/$/, ''),
               leadId: leadId.toString(),
               value: updatedLead.arr || 0,
-              stage: "Locked",
+              stage: targetStage,
               assignedRep: "Unassigned",
               startMonth: new Date().getMonth() + 1,
               endMonth: new Date().getMonth() + 3
             };
             await createDeal(dealData);
-            toast.success("Lead status updated and new deal created in Locked stage!");
+            toast.success(`Lead status updated and new deal created in ${targetStage} stage!`);
           }
         } catch (dealError) {
           console.error("Failed to handle deal operation:", dealError);
