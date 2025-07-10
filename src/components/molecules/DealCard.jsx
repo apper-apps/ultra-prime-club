@@ -65,13 +65,15 @@ const DealCard = ({ deal, index, onEdit }) => {
               </button>
             </div>
             
-            <div className="flex items-center justify-between mb-3">
+<div className="flex items-center justify-between mb-3">
               <span className="text-lg font-bold text-green-600">
                 {formatCurrency(deal.value)}
               </span>
-              <Badge variant={getStageColor(deal.stage)} size="sm">
-                {deal.stage}
-              </Badge>
+              {!["Connected", "Locked", "Meeting Done"].includes(deal.stage) && (
+                <Badge variant={getStageColor(deal.stage)} size="sm">
+                  {deal.stage}
+                </Badge>
+              )}
             </div>
             
             <div className="flex items-center justify-between">
