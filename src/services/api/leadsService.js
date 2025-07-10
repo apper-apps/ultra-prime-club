@@ -60,6 +60,11 @@ export const createLead = async (leadData) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 300));
   
+  // Validate required fields
+  if (!leadData.websiteUrl || !leadData.websiteUrl.trim()) {
+    throw new Error("Website URL is required");
+  }
+  
   // Check for duplicate website URL before creating
   const normalizedUrl = leadData.websiteUrl.toLowerCase().replace(/\/$/, '');
   const existingLead = leads.find(lead => 
@@ -70,9 +75,15 @@ export const createLead = async (leadData) => {
     throw new Error(`A lead with website URL "${leadData.websiteUrl}" already exists`);
   }
   
-  const maxId = Math.max(...leads.map(l => l.Id));
+  const maxId = Math.max(...leads.map(l => l.Id), 0);
   const newLead = {
-    ...leadData,
+    websiteUrl: leadData.websiteUrl,
+    teamSize: leadData.teamSize || "1-10",
+    arr: leadData.arr || 0,
+    category: leadData.category || "Other",
+    linkedinUrl: leadData.linkedinUrl || "",
+    status: leadData.status || "Keep an Eye",
+    fundingType: leadData.fundingType || "Bootstrapped",
     Id: maxId + 1,
     createdAt: new Date().toISOString()
   };

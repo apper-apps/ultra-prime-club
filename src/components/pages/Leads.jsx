@@ -24,6 +24,8 @@ const Leads = () => {
   const [sortOrder, setSortOrder] = useState("desc");
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingLead, setEditingLead] = useState(null);
+  const [emptyRows, setEmptyRows] = useState([]);
+  const [nextTempId, setNextTempId] = useState(-1);
 
   useEffect(() => {
     loadLeads();
@@ -173,6 +175,60 @@ const handleFieldUpdate = async (leadId, field, value) => {
     } catch (err) {
       toast.error("Failed to update lead");
     }
+};
+
+  // Add empty row for new data entry
+  const addEmptyRow = () => {
+    const newEmptyRow = {
+      Id: nextTempId,
+      websiteUrl: "",
+      teamSize: "1-10",
+      arr: 0,
+      category: "Productivity",
+      linkedinUrl: "",
+      status: "Keep an Eye",
+      fundingType: "Bootstrapped",
+      isEmptyRow: true
+    };
+    setEmptyRows(prev => [...prev, newEmptyRow]);
+    setNextTempId(prev => prev - 1);
+  };
+
+  // Handle updates to empty rows
+  const handleEmptyRowUpdate = async (tempId, field, value) => {
+    setEmptyRows(prev => 
+      prev.map(row => 
+        row.Id === tempId ? { ...row, [field]: field === 'arr' ? Number(value) * 1000000 : value } : row
+      )
+    );
+
+    // If websiteUrl is provided, create a real lead
+    if (field === 'websiteUrl' && value.trim()) {
+      const emptyRow = emptyRows.find(row => row.Id === tempId);
+      if (emptyRow) {
+        try {
+          const leadData = {
+            websiteUrl: value,
+            teamSize: emptyRow.teamSize,
+            arr: emptyRow.arr,
+            category: emptyRow.category,
+            linkedinUrl: emptyRow.linkedinUrl || `https://linkedin.com/company/${value.replace(/^https?:\/\//, '').replace(/\/$/, '')}`,
+            status: emptyRow.status,
+            fundingType: emptyRow.fundingType
+          };
+          
+          const newLead = await createLead(leadData);
+          setData(prevData => [newLead, ...prevData]);
+          
+          // Remove the empty row that was converted
+          setEmptyRows(prev => prev.filter(row => row.Id !== tempId));
+          
+          toast.success("Lead created successfully!");
+        } catch (err) {
+          toast.error("Failed to create lead: " + err.message);
+        }
+      }
+    }
   };
 
   const teamSizeOptions = ["1-10", "11-50", "51-100", "101-500", "501-1000", "1001+"];
@@ -244,7 +300,14 @@ const getStatusColor = (status) => {
       setSortBy(field);
       setSortOrder("asc");
     }
-  };
+};
+
+  // Initialize with one empty row if no data exists
+  useEffect(() => {
+    if (!loading && data.length === 0 && emptyRows.length === 0) {
+      addEmptyRow();
+    }
+  }, [loading, data.length, emptyRows.length]);
 
   if (loading) return <Loading />;
   if (error) return <Error message={error} onRetry={loadLeads} />;
@@ -262,10 +325,16 @@ const getStatusColor = (status) => {
           <h1 className="text-2xl font-bold text-gray-900">Leads</h1>
           <p className="text-gray-600">Manage your lead pipeline and track opportunities</p>
         </div>
-        <Button onClick={() => setShowAddForm(true)} className="shrink-0">
-          <ApperIcon name="Plus" size={16} className="mr-2" />
-          Add New Lead
-        </Button>
+<div className="flex gap-2">
+          <Button onClick={() => setShowAddForm(true)} variant="outline" className="shrink-0">
+            <ApperIcon name="Plus" size={16} className="mr-2" />
+            Add New Lead
+          </Button>
+          <Button onClick={addEmptyRow} className="shrink-0">
+            <ApperIcon name="FileSpreadsheet" size={16} className="mr-2" />
+            Add Empty Row
+          </Button>
+        </div>
       </div>
 
       {/* Search and Filters */}
@@ -483,6 +552,111 @@ const getStatusColor = (status) => {
                             className="text-red-600 hover:text-red-800 p-1 hover:bg-gray-100 rounded"
                           >
                             <ApperIcon name="Trash2" size={16} />
+                          </button>
+                        </div>
+</td>
+                    </tr>
+                  ))}
+                  {/* Empty rows for direct data entry */}
+                  {emptyRows.map((emptyRow) => (
+                    <tr key={`empty-${emptyRow.Id}`} className="hover:bg-gray-50 empty-row">
+                      <td className="px-6 py-4 whitespace-nowrap min-w-[200px]">
+                        <Input
+                          type="url"
+                          value={emptyRow.websiteUrl}
+                          onChange={(e) => handleEmptyRowUpdate(emptyRow.Id, 'websiteUrl', e.target.value)}
+                          placeholder="Enter website URL..."
+                          className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 text-primary-600 font-medium placeholder-gray-400"
+                        />
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[150px]">
+                        <select
+                          value={emptyRow.teamSize}
+                          onChange={(e) => handleEmptyRowUpdate(emptyRow.Id, 'teamSize', e.target.value)}
+                          className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full text-gray-500"
+                        >
+                          {teamSizeOptions.map(option => (
+                            <option key={option} value={option}>{option}</option>
+                          ))}
+                        </select>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[120px]">
+                        <Input
+                          type="number"
+                          step="0.1"
+                          min="0"
+                          value={(emptyRow.arr / 1000000).toFixed(1)}
+                          onChange={(e) => handleEmptyRowUpdate(emptyRow.Id, 'arr', e.target.value)}
+                          placeholder="0.0"
+                          className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full placeholder-gray-400"
+                        />
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[150px]">
+                        <select
+                          value={emptyRow.category}
+                          onChange={(e) => handleEmptyRowUpdate(emptyRow.Id, 'category', e.target.value)}
+                          className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full text-gray-500"
+                        >
+                          {categoryOptions.map(option => (
+                            <option key={option} value={option}>{option}</option>
+                          ))}
+                        </select>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap min-w-[100px]">
+                        <Input
+                          type="url"
+                          value={emptyRow.linkedinUrl}
+                          onChange={(e) => handleEmptyRowUpdate(emptyRow.Id, 'linkedinUrl', e.target.value)}
+                          placeholder="LinkedIn URL..."
+                          className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full placeholder-gray-400 text-sm"
+                        />
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap min-w-[150px]">
+                        <div className="relative">
+                          <Badge 
+                            variant={getStatusColor(emptyRow.status)}
+                            className="cursor-pointer hover:shadow-md transition-shadow opacity-60"
+                          >
+                            {emptyRow.status}
+                          </Badge>
+                          <select
+                            value={emptyRow.status}
+                            onChange={(e) => handleEmptyRowUpdate(emptyRow.Id, 'status', e.target.value)}
+                            className="absolute inset-0 opacity-0 cursor-pointer w-full"
+                          >
+                            {statusOptions.map(option => (
+                              <option key={option} value={option}>{option}</option>
+                            ))}
+                          </select>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap min-w-[140px]">
+                        <div className="relative">
+                          <Badge 
+                            variant={emptyRow.fundingType === "Series C" ? "primary" : "default"}
+                            className="cursor-pointer hover:shadow-md transition-shadow opacity-60"
+                          >
+                            {emptyRow.fundingType}
+                          </Badge>
+                          <select
+                            value={emptyRow.fundingType}
+                            onChange={(e) => handleEmptyRowUpdate(emptyRow.Id, 'fundingType', e.target.value)}
+                            className="absolute inset-0 opacity-0 cursor-pointer w-full"
+                          >
+                            {fundingTypeOptions.map(option => (
+                              <option key={option} value={option}>{option}</option>
+                            ))}
+                          </select>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium w-[120px] sticky right-0 bg-white border-l border-gray-200">
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => setEmptyRows(prev => prev.filter(row => row.Id !== emptyRow.Id))}
+                            className="text-gray-400 hover:text-red-600 p-1 hover:bg-gray-100 rounded"
+                            title="Remove empty row"
+                          >
+                            <ApperIcon name="X" size={16} />
                           </button>
                         </div>
                       </td>
