@@ -93,9 +93,14 @@ const handleUpdateLead = async (leadId, updates) => {
     }
   };
 
-  const handleFieldUpdate = async (leadId, field, value) => {
+const handleFieldUpdate = async (leadId, field, value) => {
     try {
-      const updates = { [field]: field === 'arr' ? Number(value) : value };
+      let processedValue = value;
+      if (field === 'arr') {
+        // Convert millions to actual value
+        processedValue = Number(value) * 1000000;
+      }
+      const updates = { [field]: processedValue };
       const updatedLead = await updateLead(leadId, updates);
       setData(prevData => 
         prevData.map(lead => 
@@ -108,12 +113,14 @@ const handleUpdateLead = async (leadId, updates) => {
     }
   };
 
-  const handleInlineEdit = (leadId, field, currentValue) => {
-    const newValue = prompt(`Edit ${field}:`, currentValue);
-    if (newValue !== null && newValue !== currentValue) {
-      handleFieldUpdate(leadId, field, newValue);
-    }
-  };
+  const teamSizeOptions = ["1-10", "11-50", "51-100", "101-500", "501-1000", "1001+"];
+  const categoryOptions = ["Productivity", "Design", "Fintech", "E-commerce", "Communication", "Gaming", "Marketing", "CRM", "Analytics", "SaaS", "Other"];
+  const statusOptions = [
+    "Launched on AppSumo", "Launched on Prime Club", "Keep an Eye", "Rejected", 
+    "Unsubscribed", "Outdated", "Hotlist", "Out of League", "Connected", 
+    "Locked", "Meeting Booked", "Meeting Done", "Negotiation", "Closed Lost"
+  ];
+  const fundingTypeOptions = ["Bootstrapped", "Pre-seed", "Y Combinator", "Angel", "Series A", "Series B", "Series C"];
 
 const getStatusColor = (status) => {
     const colors = {
@@ -248,7 +255,7 @@ const getStatusColor = (status) => {
         </div>
       </Card>
 
-      {/* Leads Table */}
+{/* Leads Table */}
       <Card className="overflow-hidden">
         {filteredAndSortedData.length === 0 ? (
           <Empty
@@ -259,165 +266,169 @@ const getStatusColor = (status) => {
             icon="Building2"
           />
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    <button
-                      onClick={() => handleSort("websiteUrl")}
-                      className="flex items-center gap-1 hover:text-gray-700"
-                    >
-                      Website URL
-                      <ApperIcon name="ArrowUpDown" size={12} />
-                    </button>
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    <button
-                      onClick={() => handleSort("teamSize")}
-                      className="flex items-center gap-1 hover:text-gray-700"
-                    >
-                      Team Size
-                      <ApperIcon name="ArrowUpDown" size={12} />
-                    </button>
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    <button
-                      onClick={() => handleSort("arr")}
-                      className="flex items-center gap-1 hover:text-gray-700"
-                    >
-                      ARR
-                      <ApperIcon name="ArrowUpDown" size={12} />
-                    </button>
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Category
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    LinkedIn
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Funding Type
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {filteredAndSortedData.map((lead) => (
-                  <tr key={lead.Id} className="hover:bg-gray-50">
-<td className="px-6 py-4 whitespace-nowrap">
-                      <div
-                        onClick={() => handleInlineEdit(lead.Id, 'websiteUrl', lead.websiteUrl)}
-                        className="cursor-pointer hover:bg-gray-50 p-1 rounded"
+          <div className="relative">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[1200px]">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[200px]">
+                      <button
+                        onClick={() => handleSort("websiteUrl")}
+                        className="flex items-center gap-1 hover:text-gray-700"
                       >
-                        <a
-                          href={lead.websiteUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-primary-600 hover:text-primary-800 font-medium"
-                          onClick={(e) => e.stopPropagation()}
+                        Website URL
+                        <ApperIcon name="ArrowUpDown" size={12} />
+                      </button>
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[150px]">
+                      <button
+                        onClick={() => handleSort("teamSize")}
+                        className="flex items-center gap-1 hover:text-gray-700"
+                      >
+                        Team Size
+                        <ApperIcon name="ArrowUpDown" size={12} />
+                      </button>
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">
+                      <button
+                        onClick={() => handleSort("arr")}
+                        className="flex items-center gap-1 hover:text-gray-700"
+                      >
+                        ARR (M)
+                        <ApperIcon name="ArrowUpDown" size={12} />
+                      </button>
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[150px]">
+                      Category
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[100px]">
+                      LinkedIn
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[150px]">
+                      Status
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[140px]">
+                      Funding Type
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[120px] sticky right-0 bg-gray-50 border-l border-gray-200">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {filteredAndSortedData.map((lead) => (
+                    <tr key={lead.Id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap min-w-[200px]">
+                        <Input
+                          type="url"
+                          value={lead.websiteUrl}
+                          onChange={(e) => handleFieldUpdate(lead.Id, 'websiteUrl', e.target.value)}
+                          onBlur={(e) => handleFieldUpdate(lead.Id, 'websiteUrl', e.target.value)}
+                          className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 text-primary-600 font-medium"
+                        />
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[150px]">
+                        <select
+                          value={lead.teamSize}
+                          onChange={(e) => handleFieldUpdate(lead.Id, 'teamSize', e.target.value)}
+                          className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full"
                         >
-                          {lead.websiteUrl.replace(/^https?:\/\//, '')}
-                        </a>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      <div
-                        onClick={() => handleInlineEdit(lead.Id, 'teamSize', lead.teamSize)}
-                        className="cursor-pointer hover:bg-gray-50 p-1 rounded"
-                      >
-                        {lead.teamSize}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      <div
-                        onClick={() => handleInlineEdit(lead.Id, 'arr', lead.arr.toString())}
-                        className="cursor-pointer hover:bg-gray-50 p-1 rounded"
-                      >
-                        ${lead.arr.toLocaleString()}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      <div
-                        onClick={() => handleInlineEdit(lead.Id, 'category', lead.category)}
-                        className="cursor-pointer hover:bg-gray-50 p-1 rounded"
-                      >
-                        {lead.category}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div
-                        onClick={() => handleInlineEdit(lead.Id, 'linkedinUrl', lead.linkedinUrl)}
-                        className="cursor-pointer hover:bg-gray-50 p-1 rounded inline-block"
-                      >
+                          {teamSizeOptions.map(option => (
+                            <option key={option} value={option}>{option}</option>
+                          ))}
+                        </select>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[120px]">
+                        <Input
+                          type="number"
+                          step="0.1"
+                          min="0"
+                          value={(lead.arr / 1000000).toFixed(1)}
+                          onChange={(e) => handleFieldUpdate(lead.Id, 'arr', e.target.value)}
+                          onBlur={(e) => handleFieldUpdate(lead.Id, 'arr', e.target.value)}
+                          className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full"
+                        />
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[150px]">
+                        <select
+                          value={lead.category}
+                          onChange={(e) => handleFieldUpdate(lead.Id, 'category', e.target.value)}
+                          className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full"
+                        >
+                          {categoryOptions.map(option => (
+                            <option key={option} value={option}>{option}</option>
+                          ))}
+                        </select>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap min-w-[100px]">
                         <a
                           href={lead.linkedinUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-primary-600 hover:text-primary-800"
-                          onClick={(e) => e.stopPropagation()}
+                          className="text-primary-600 hover:text-primary-800 inline-block p-1"
                         >
                           <ApperIcon name="Linkedin" size={16} />
                         </a>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <select
-                        value={lead.status}
-                        onChange={(e) => handleStatusChange(lead.Id, e.target.value)}
-                        className="text-sm border border-gray-300 rounded-lg px-2 py-1"
-                      >
-                        <option value="Launched on AppSumo">Launched on AppSumo</option>
-                        <option value="Launched on Prime Club">Launched on Prime Club</option>
-                        <option value="Keep an Eye">Keep an Eye</option>
-                        <option value="Rejected">Rejected</option>
-                        <option value="Unsubscribed">Unsubscribed</option>
-                        <option value="Outdated">Outdated</option>
-                        <option value="Hotlist">Hotlist</option>
-                        <option value="Out of League">Out of League</option>
-                        <option value="Connected">Connected</option>
-                        <option value="Locked">Locked</option>
-                        <option value="Meeting Booked">Meeting Booked</option>
-                        <option value="Meeting Done">Meeting Done</option>
-                        <option value="Negotiation">Negotiation</option>
-                        <option value="Closed Lost">Closed Lost</option>
-                      </select>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div
-                        onClick={() => handleInlineEdit(lead.Id, 'fundingType', lead.fundingType)}
-                        className="cursor-pointer hover:bg-gray-50 p-1 rounded inline-block"
-                      >
-                        <Badge variant={lead.fundingType === "Series C" ? "primary" : "default"}>
-                          {lead.fundingType}
-                        </Badge>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => setEditingLead(lead)}
-                          className="text-primary-600 hover:text-primary-800"
-                        >
-                          <ApperIcon name="Edit" size={16} />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(lead.Id)}
-                          className="text-red-600 hover:text-red-800"
-                        >
-                          <ApperIcon name="Trash2" size={16} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap min-w-[150px]">
+                        <div className="relative">
+                          <Badge 
+                            variant={getStatusColor(lead.status)}
+                            className="cursor-pointer hover:shadow-md transition-shadow"
+                          >
+                            {lead.status}
+                          </Badge>
+                          <select
+                            value={lead.status}
+                            onChange={(e) => handleStatusChange(lead.Id, e.target.value)}
+                            className="absolute inset-0 opacity-0 cursor-pointer w-full"
+                          >
+                            {statusOptions.map(option => (
+                              <option key={option} value={option}>{option}</option>
+                            ))}
+                          </select>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap min-w-[140px]">
+                        <div className="relative">
+                          <Badge 
+                            variant={lead.fundingType === "Series C" ? "primary" : "default"}
+                            className="cursor-pointer hover:shadow-md transition-shadow"
+                          >
+                            {lead.fundingType}
+                          </Badge>
+                          <select
+                            value={lead.fundingType}
+                            onChange={(e) => handleFieldUpdate(lead.Id, 'fundingType', e.target.value)}
+                            className="absolute inset-0 opacity-0 cursor-pointer w-full"
+                          >
+                            {fundingTypeOptions.map(option => (
+                              <option key={option} value={option}>{option}</option>
+                            ))}
+                          </select>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium w-[120px] sticky right-0 bg-white border-l border-gray-200">
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => setEditingLead(lead)}
+                            className="text-primary-600 hover:text-primary-800 p-1 hover:bg-gray-100 rounded"
+                          >
+                            <ApperIcon name="Edit" size={16} />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(lead.Id)}
+                            className="text-red-600 hover:text-red-800 p-1 hover:bg-gray-100 rounded"
+                          >
+                            <ApperIcon name="Trash2" size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </Card>
