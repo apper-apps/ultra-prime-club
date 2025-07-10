@@ -260,7 +260,7 @@ websiteUrl: "",
   };
 
 const teamSizeOptions = ["1-10", "11-50", "51-100", "101-500", "501-1000", "1001+"];
-  const categoryOptions = [
+  const [categoryOptions, setCategoryOptions] = useState([
     "3D Design Software",
     "Accounting Software", 
     "Affiliate Management",
@@ -385,7 +385,7 @@ const teamSizeOptions = ["1-10", "11-50", "51-100", "101-500", "501-1000", "1001
     "WordPress Plugin",
     "Workflow Automation",
     "Other"
-  ];
+  ]);
   const statusOptions = [
     "Launched on AppSumo", "Launched on Prime Club", "Keep an Eye", "Rejected", 
     "Unsubscribed", "Outdated", "Hotlist", "Out of League", "Connected", 
@@ -393,6 +393,14 @@ const teamSizeOptions = ["1-10", "11-50", "51-100", "101-500", "501-1000", "1001
   ];
   const fundingTypeOptions = ["Bootstrapped", "Pre-seed", "Y Combinator", "Angel", "Series A", "Series B", "Series C"];
 
+  const handleCreateCategory = (newCategory) => {
+    if (newCategory.trim() && !categoryOptions.includes(newCategory.trim())) {
+      setCategoryOptions(prev => [...prev, newCategory.trim()]);
+      toast.success(`Category "${newCategory.trim()}" created successfully!`);
+      return newCategory.trim();
+    }
+    return null;
+  };
 const getStatusColor = (status) => {
     const colors = {
       "Launched on AppSumo": "success",
@@ -645,12 +653,13 @@ const getStatusColor = (status) => {
                                 </td>
 <td
                                     className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[150px]">
-                                    <SearchableSelect
+<SearchableSelect
                                         value={emptyRow.category}
                                         onChange={(value) => handleEmptyRowUpdate(emptyRow.Id, "category", value)}
                                         options={categoryOptions}
                                         placeholder="Select category..."
                                         className="text-gray-500"
+                                        onCreateCategory={handleCreateCategory}
                                     />
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap min-w-[100px]">
@@ -772,11 +781,12 @@ const getStatusColor = (status) => {
                             </td>
 <td
                                 className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[150px]">
-                                <SearchableSelect
+<SearchableSelect
                                     value={lead.category}
                                     onChange={(value) => handleFieldUpdate(lead.Id, "category", value)}
                                     options={categoryOptions}
                                     placeholder="Select category..."
+                                    onCreateCategory={handleCreateCategory}
                                 />
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap min-w-[100px]">
@@ -858,7 +868,7 @@ const getStatusColor = (status) => {
 };
 
 // Searchable Select Component for Categories
-const SearchableSelect = ({ value, onChange, options, placeholder = "Select...", className = "" }) => {
+const SearchableSelect = ({ value, onChange, options, placeholder = "Select...", className = "", onCreateCategory }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredOptions, setFilteredOptions] = useState(options);
@@ -876,9 +886,24 @@ const SearchableSelect = ({ value, onChange, options, placeholder = "Select...",
     setSearchTerm("");
   };
 
+  const handleCreateCategory = () => {
+    if (onCreateCategory && searchTerm.trim()) {
+      const newCategory = onCreateCategory(searchTerm.trim());
+      if (newCategory) {
+        onChange(newCategory);
+        setIsOpen(false);
+        setSearchTerm("");
+      }
+    }
+  };
+
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && filteredOptions.length > 0) {
-      handleSelect(filteredOptions[0]);
+    if (e.key === 'Enter') {
+      if (filteredOptions.length > 0) {
+        handleSelect(filteredOptions[0]);
+      } else if (onCreateCategory && searchTerm.trim()) {
+        handleCreateCategory();
+      }
     } else if (e.key === 'Escape') {
       setIsOpen(false);
       setSearchTerm("");
@@ -927,9 +952,20 @@ const SearchableSelect = ({ value, onChange, options, placeholder = "Select...",
                 </div>
               ))
             ) : (
-              <div className="px-3 py-2 text-sm text-gray-500 italic">
-                No categories found
-              </div>
+              <>
+                {onCreateCategory && searchTerm.trim() ? (
+                  <div
+                    className="px-3 py-2 cursor-pointer hover:bg-primary-50 text-sm text-primary-600 flex items-center gap-2 border-b border-gray-100"
+                    onClick={handleCreateCategory}
+                  >
+                    <ApperIcon name="Plus" size={14} />
+                    <span>Create new category: "{searchTerm.trim()}"</span>
+                  </div>
+                ) : null}
+                <div className="px-3 py-2 text-sm text-gray-500 italic">
+                  {searchTerm.trim() ? "No matching categories found" : "No categories found"}
+                </div>
+              </>
             )}
           </div>
         </div>
@@ -1026,12 +1062,13 @@ const AddLeadModal = ({ onClose, onSubmit }) => {
               Category
             </label>
             <div className="relative">
-              <SearchableSelect
+<SearchableSelect
                 value={formData.category}
                 onChange={(value) => setFormData({...formData, category: value})}
                 options={categoryOptions}
                 placeholder="Select category..."
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                onCreateCategory={handleCreateCategory}
               />
             </div>
           </div>
@@ -1185,7 +1222,7 @@ const EditLeadModal = ({ lead, onClose, onSubmit }) => {
                     <label className="block text-sm font-medium text-gray-700 mb-1">Category
                                     </label>
                     <div className="relative">
-                        <SearchableSelect
+<SearchableSelect
                             value={formData.category}
                             onChange={(value) => setFormData({
                                 ...formData,
@@ -1194,6 +1231,7 @@ const EditLeadModal = ({ lead, onClose, onSubmit }) => {
                             options={categoryOptions}
                             placeholder="Select category..."
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                            onCreateCategory={handleCreateCategory}
                         />
                     </div>
                 </div>
