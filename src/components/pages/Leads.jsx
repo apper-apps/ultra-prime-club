@@ -194,19 +194,20 @@ const handleFieldUpdate = async (leadId, field, value) => {
   };
 
 // Add empty row for new data entry
-const addEmptyRow = () => {
-    const newEmptyRow = {
-      Id: nextTempId,
-websiteUrl: "",
-      teamSize: "1-3", 
-      arr: 0,
-      category: "Accounting Software",
-      linkedinUrl: "",
-      status: "Keep an Eye",
-      fundingType: "Bootstrapped",
-      followUpDate: "",
-      isEmptyRow: true
-    };
+  const addEmptyRow = () => {
+      const newEmptyRow = {
+        Id: nextTempId,
+        websiteUrl: "",
+        teamSize: "1-3", 
+        arr: 0,
+        category: "Accounting Software",
+        linkedinUrl: "",
+        status: "Keep an Eye",
+        fundingType: "Bootstrapped",
+        edition: "Select Edition",
+        followUpDate: "",
+        isEmptyRow: true
+      };
     setEmptyRows(prev => [...prev, newEmptyRow]);
     setNextTempId(prev => prev - 1);
   };
@@ -223,16 +224,17 @@ websiteUrl: "",
     if (field === 'websiteUrl' && value.trim()) {
       const emptyRow = emptyRows.find(row => row.Id === tempId);
       if (emptyRow) {
-        try {
-          const leadData = {
-            websiteUrl: value,
-            teamSize: emptyRow.teamSize,
-            arr: emptyRow.arr,
-            category: emptyRow.category,
-            linkedinUrl: emptyRow.linkedinUrl || `https://linkedin.com/company/${value.replace(/^https?:\/\//, '').replace(/\/$/, '')}`,
-            status: emptyRow.status,
-            fundingType: emptyRow.fundingType
-          };
+try {
+            const leadData = {
+              websiteUrl: value,
+              teamSize: emptyRow.teamSize,
+              arr: emptyRow.arr,
+              category: emptyRow.category,
+              linkedinUrl: emptyRow.linkedinUrl || `https://linkedin.com/company/${value.replace(/^https?:\/\//, '').replace(/\/$/, '')}`,
+              status: emptyRow.status,
+              fundingType: emptyRow.fundingType,
+              edition: emptyRow.edition
+            };
           
           const newLead = await createLead(leadData);
           setData(prevData => [newLead, ...prevData]);
@@ -593,18 +595,21 @@ const getStatusColor = (status) => {
                                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[150px]">Status
                                                     </th>
 <th
-                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[140px]">Funding Type
-                                                    </th>
-                            <th
-                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[130px]">Follow-up Date
-                                                    </th>
-                            <th
-                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">Added By
-                                                    </th>
-                            <th
-                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[120px] sticky right-0 bg-gray-50 border-l border-gray-200">Actions
-                                                    </th>
-                        </tr>
+                              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[140px]">Funding Type
+                                                  </th>
+                          <th
+                              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">Edition
+                                                  </th>
+                          <th
+                              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[130px]">Follow-up Date
+                                                  </th>
+                          <th
+                              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">Added By
+                                                  </th>
+                          <th
+                              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[120px] sticky right-0 bg-gray-50 border-l border-gray-200">Actions
+                                                  </th>
+                      </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                         {/* Empty rows for direct data entry - positioned at top */}
@@ -710,19 +715,32 @@ const getStatusColor = (status) => {
                                         </select>
                                     </div>
 </td>
-                                <td className="px-6 py-4 whitespace-nowrap min-w-[130px]">
-                                    <Input
-                                        type="date"
-                                        value={emptyRow.followUpDate ? emptyRow.followUpDate.split('T')[0] : ''}
-                                        onChange={e => handleEmptyRowUpdateDebounced(emptyRow.Id, "followUpDate", e.target.value ? new Date(e.target.value).toISOString() : '')}
-                                        onBlur={e => handleEmptyRowUpdate(emptyRow.Id, "followUpDate", e.target.value ? new Date(e.target.value).toISOString() : '')}
-                                        onKeyDown={e => {
-                                            if (e.key === "Enter") {
-                                                handleEmptyRowUpdate(emptyRow.Id, "followUpDate", e.target.value ? new Date(e.target.value).toISOString() : '');
-                                            }
-                                        }}
-                                        className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full placeholder-gray-400 text-sm" />
-                                </td>
+                              <td className="px-6 py-4 whitespace-nowrap min-w-[120px]">
+                                  <div className="relative">
+                                      <select
+                                          value={emptyRow.edition}
+                                          onChange={e => handleEmptyRowUpdate(emptyRow.Id, "edition", e.target.value)}
+                                          className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full text-gray-500">
+                                          <option value="Select Edition">Select Edition</option>
+                                          <option value="Black Edition">Black Edition</option>
+                                          <option value="Collector's Edition">Collector's Edition</option>
+                                          <option value="Limited Edition">Limited Edition</option>
+                                      </select>
+                                  </div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap min-w-[130px]">
+                                  <Input
+                                      type="date"
+                                      value={emptyRow.followUpDate ? emptyRow.followUpDate.split('T')[0] : ''}
+                                      onChange={e => handleEmptyRowUpdateDebounced(emptyRow.Id, "followUpDate", e.target.value ? new Date(e.target.value).toISOString() : '')}
+                                      onBlur={e => handleEmptyRowUpdate(emptyRow.Id, "followUpDate", e.target.value ? new Date(e.target.value).toISOString() : '')}
+                                      onKeyDown={e => {
+                                          if (e.key === "Enter") {
+                                              handleEmptyRowUpdate(emptyRow.Id, "followUpDate", e.target.value ? new Date(e.target.value).toISOString() : '');
+                                          }
+                                      }}
+                                      className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full placeholder-gray-400 text-sm" />
+                              </td>
                                 <td
                                     className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 min-w-[120px]">
                                     <span className="italic">Current User</span>
@@ -845,31 +863,44 @@ const getStatusColor = (status) => {
                                     </select>
                                 </div>
 </td>
-                            <td className="px-6 py-4 whitespace-nowrap min-w-[130px]">
-                                <Input
-                                    type="date"
-                                    value={lead.followUpDate ? lead.followUpDate.split('T')[0] : ''}
-                                    onChange={e => {
-                                        const newDate = e.target.value ? new Date(e.target.value).toISOString() : '';
-                                        setData(prevData => prevData.map(l => l.Id === lead.Id ? {
-                                            ...l,
-                                            followUpDate: newDate
-                                        } : l));
+                          <td className="px-6 py-4 whitespace-nowrap min-w-[120px]">
+                              <div className="relative">
+                                  <select
+                                      value={lead.edition}
+                                      onChange={e => handleFieldUpdate(lead.Id, "edition", e.target.value)}
+                                      className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full">
+                                      <option value="Select Edition">Select Edition</option>
+                                      <option value="Black Edition">Black Edition</option>
+                                      <option value="Collector's Edition">Collector's Edition</option>
+                                      <option value="Limited Edition">Limited Edition</option>
+                                  </select>
+                              </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap min-w-[130px]">
+                              <Input
+                                  type="date"
+                                  value={lead.followUpDate ? lead.followUpDate.split('T')[0] : ''}
+                                  onChange={e => {
+                                      const newDate = e.target.value ? new Date(e.target.value).toISOString() : '';
+                                      setData(prevData => prevData.map(l => l.Id === lead.Id ? {
+                                          ...l,
+                                          followUpDate: newDate
+                                      } : l));
 
-                                        handleFieldUpdateDebounced(lead.Id, "followUpDate", newDate);
-                                    }}
-                                    onBlur={e => {
-                                        const newDate = e.target.value ? new Date(e.target.value).toISOString() : '';
-                                        handleFieldUpdate(lead.Id, "followUpDate", newDate);
-                                    }}
-                                    onKeyDown={e => {
-                                        if (e.key === "Enter") {
-                                            const newDate = e.target.value ? new Date(e.target.value).toISOString() : '';
-                                            handleFieldUpdate(lead.Id, "followUpDate", newDate);
-                                        }
-                                    }}
-                                    className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full text-sm" />
-                            </td>
+                                      handleFieldUpdateDebounced(lead.Id, "followUpDate", newDate);
+                                  }}
+                                  onBlur={e => {
+                                      const newDate = e.target.value ? new Date(e.target.value).toISOString() : '';
+                                      handleFieldUpdate(lead.Id, "followUpDate", newDate);
+                                  }}
+                                  onKeyDown={e => {
+                                      if (e.key === "Enter") {
+                                          const newDate = e.target.value ? new Date(e.target.value).toISOString() : '';
+                                          handleFieldUpdate(lead.Id, "followUpDate", newDate);
+                                      }
+                                  }}
+                                  className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full text-sm" />
+                          </td>
                             <td
                                 className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[120px]">
                                 <div className="flex items-center">
@@ -1031,9 +1062,9 @@ const AddLeadModal = ({ onClose, onSubmit }) => {
     category: "",
     linkedinUrl: "",
     status: "Keep an Eye",
-    fundingType: "Bootstrapped"
+    fundingType: "Bootstrapped",
+    edition: "Select Edition"
   });
-
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit({
@@ -1078,6 +1109,7 @@ const AddLeadModal = ({ onClose, onSubmit }) => {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
 >
               <option value="1-3">1-3</option>
+              <option value="4-10">4-10</option>
               <option value="11-50">11-50</option>
               <option value="51-100">51-100</option>
               <option value="101-500">101-500</option>
@@ -1170,6 +1202,22 @@ const AddLeadModal = ({ onClose, onSubmit }) => {
               <option value="Series A">Series A</option>
               <option value="Series B">Series B</option>
               <option value="Series C">Series C</option>
+</select>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Edition
+            </label>
+            <select
+              value={formData.edition}
+              onChange={(e) => setFormData({...formData, edition: e.target.value})}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+            >
+              <option value="Select Edition">Select Edition</option>
+              <option value="Black Edition">Black Edition</option>
+              <option value="Collector's Edition">Collector's Edition</option>
+              <option value="Limited Edition">Limited Edition</option>
             </select>
           </div>
           
@@ -1180,7 +1228,7 @@ const AddLeadModal = ({ onClose, onSubmit }) => {
             <Button type="submit">
               Add Lead
             </Button>
-          </div>
+</div>
         </form>
       </div>
     </div>
@@ -1195,9 +1243,9 @@ const EditLeadModal = ({ lead, onClose, onSubmit }) => {
     category: lead.category,
     linkedinUrl: lead.linkedinUrl,
     status: lead.status,
-    fundingType: lead.fundingType
+    fundingType: lead.fundingType,
+    edition: lead.edition || "Select Edition"
   });
-
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(lead.Id, {
@@ -1229,10 +1277,12 @@ const EditLeadModal = ({ lead, onClose, onSubmit }) => {
                         ...formData,
                         websiteUrl: e.target.value
                     })}
-                    required />
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Team Size
-                                    </label>
+required />
+            </div>
+            
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Team Size
+                </label>
                     <select
                         value={formData.teamSize}
                         onChange={e => setFormData({
@@ -1241,6 +1291,7 @@ const EditLeadModal = ({ lead, onClose, onSubmit }) => {
                         })}
 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
                         <option value="1-3">1-3</option>
+                        <option value="4-10">4-10</option>
                         <option value="11-50">11-50</option>
                         <option value="51-100">51-100</option>
                         <option value="101-500">101-500</option>
@@ -1332,17 +1383,35 @@ className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none
                         <option value="Series A">Series A</option>
                         <option value="Series B">Series B</option>
                         <option value="Series C">Series C</option>
+</select>
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Edition
+                                    </label>
+                    <select
+                        value={formData.edition}
+                        onChange={e => setFormData({
+                            ...formData,
+                            edition: e.target.value
+                        })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                        <option value="Select Edition">Select Edition</option>
+                        <option value="Black Edition">Black Edition</option>
+                        <option value="Collector's Edition">Collector's Edition</option>
+                        <option value="Limited Edition">Limited Edition</option>
                     </select>
                 </div>
-                <div className="flex justify-end gap-3 pt-4">
-                    <Button type="button" variant="outline" onClick={onClose}>Cancel
-                                    </Button>
-                    <Button type="submit">Update Lead
-                                    </Button>
+<div className="flex justify-end gap-3 pt-4">
+                    <Button type="button" variant="outline" onClick={onClose}>
+                        Cancel
+                    </Button>
+                    <Button type="submit">
+                        Update Lead
+                    </Button>
                 </div>
-            </div></form>
+            </form>
+        </div>
     </div>
-</div>
   );
 };
 
