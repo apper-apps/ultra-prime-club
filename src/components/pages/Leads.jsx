@@ -11,6 +11,7 @@ import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
 import ApperIcon from "@/components/ApperIcon";
 import { getLeads, updateLead, deleteLead, createLead } from "@/services/api/leadsService";
+import { getDeals, createDeal, updateDeal } from "@/services/api/dealsService";
 
 const Leads = () => {
   const [data, setData] = useState([]);
@@ -57,7 +58,7 @@ const loadLeads = async () => {
     }
   };
 
-  const handleStatusChange = async (leadId, newStatus) => {
+const handleStatusChange = async (leadId, newStatus) => {
     try {
       const updatedLead = await updateLead(leadId, { status: newStatus });
       setData(prevData => 
@@ -65,7 +66,40 @@ const loadLeads = async () => {
           lead.Id === leadId ? updatedLead : lead
         )
       );
-      toast.success("Lead status updated successfully!");
+      
+      // If status is changed to "Locked", create or update deal in pipeline
+      if (newStatus === "Locked") {
+        try {
+          // Get current deals to check if one exists for this lead
+          const currentDeals = await getDeals();
+          const existingDeal = currentDeals.find(deal => deal.leadId === leadId.toString());
+          
+          if (existingDeal) {
+            // Update existing deal to "Locked" stage
+            await updateDeal(existingDeal.Id, { stage: "Locked" });
+            toast.success("Lead status updated and deal moved to Locked stage!");
+          } else {
+            // Create new deal in "Locked" stage
+            const dealData = {
+              name: `${updatedLead.websiteUrl} Deal`,
+              leadName: updatedLead.websiteUrl.replace(/^https?:\/\//, '').replace(/\/$/, ''),
+              leadId: leadId.toString(),
+              value: updatedLead.arr || 0,
+              stage: "Locked",
+              assignedRep: "Unassigned",
+              startMonth: new Date().getMonth() + 1,
+              endMonth: new Date().getMonth() + 3
+            };
+            await createDeal(dealData);
+            toast.success("Lead status updated and new deal created in Locked stage!");
+          }
+        } catch (dealError) {
+          console.error("Failed to handle deal operation:", dealError);
+          toast.warning("Lead status updated, but failed to sync with deal pipeline");
+        }
+      } else {
+        toast.success("Lead status updated successfully!");
+      }
     } catch (err) {
       toast.error("Failed to update lead status");
     }
