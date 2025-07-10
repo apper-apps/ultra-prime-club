@@ -17,12 +17,6 @@ import {
   exportWebsiteUrlData 
 } from "@/services/api/reportService";
 
-// Utility function to clean website URLs
-const cleanWebsiteUrl = (url) => {
-  if (!url) return url;
-  return url.endsWith('/') ? url.slice(0, -1) : url;
-};
-
 const WebsiteUrlReport = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -477,14 +471,14 @@ const WebsiteUrlReport = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {sortedData.map((lead) => (
                   <tr key={lead.Id} className="hover:bg-gray-50">
-<td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap">
                       <a
                         href={lead.websiteUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-primary-600 hover:text-primary-800 font-medium"
                       >
-                        {cleanWebsiteUrl(lead.websiteUrl)}
+                        {lead.websiteUrl}
                       </a>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">

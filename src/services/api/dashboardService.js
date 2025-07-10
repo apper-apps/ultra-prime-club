@@ -17,14 +17,7 @@ export const getRecentActivity = async () => {
 
 export const getDailyLeadsReport = async () => {
   // Simulate API delay
-await new Promise(resolve => setTimeout(resolve, 300));
-  
-  return await getLeadsReport();
-};
-
-export const getTodaysMeetings = async () => {
-  // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 300));
   
-  return [...dashboardData.todaysMeetings];
+  return await getLeadsReport();
 };

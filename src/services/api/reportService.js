@@ -1,16 +1,11 @@
 import leadsData from "@/services/mockData/leads.json";
 import salesRepsData from "@/services/mockData/salesReps.json";
 
-// Utility function to clean website URLs by removing trailing slash
-const cleanWebsiteUrl = (url) => {
-  if (!url) return url;
-  return url.endsWith('/') ? url.slice(0, -1) : url;
-};
-
 // Get website URL activity with filtering options
 export const getWebsiteUrlActivity = async (filters = {}) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 300));
+  
   let filteredData = [...leadsData];
   
   // Filter by date range
@@ -51,16 +46,10 @@ export const getWebsiteUrlActivity = async (filters = {}) => {
       lead.category.toLowerCase().includes(term) ||
       lead.addedByName.toLowerCase().includes(term)
     );
-}
-  
-  // Clean website URLs in the filtered data
-  const cleanedData = filteredData.map(lead => ({
-    ...lead,
-    websiteUrl: cleanWebsiteUrl(lead.websiteUrl)
-  }));
+  }
   
   return {
-    data: cleanedData,
+    data: filteredData,
     summary: {
       totalUrls: filteredData.length,
       totalArr: filteredData.reduce((sum, lead) => sum + lead.arr, 0),
@@ -137,8 +126,8 @@ const getCategorySummary = (data) => {
 export const exportWebsiteUrlData = async (filters = {}) => {
   const result = await getWebsiteUrlActivity(filters);
   
-return result.data.map(lead => ({
-    'Website URL': cleanWebsiteUrl(lead.websiteUrl),
+  return result.data.map(lead => ({
+    'Website URL': lead.websiteUrl,
     'Category': lead.category,
     'Team Size': lead.teamSize,
     'ARR': `$${(lead.arr / 1000000).toFixed(1)}M`,
