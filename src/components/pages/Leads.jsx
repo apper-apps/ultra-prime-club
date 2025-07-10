@@ -1024,53 +1024,10 @@ const SearchableSelect = ({ value, onChange, options, placeholder = "Select...",
 };
 
 const AddLeadModal = ({ onClose, onSubmit }) => {
-  // Define option arrays for form dropdowns
-  const teamSizeOptions = ['1-3', '4-10', '11-50', '51-200', '201-500', '500+'];
-  const statusOptions = [
-    'Launched on AppSumo',
-    'Launched on Prime Club',
-    'Keep an Eye',
-    'Rejected',
-    'Unsubscribed',
-    'Outdated',
-    'Hotlist',
-    'Out of League',
-    'Connected',
-    'Locked',
-    'Meeting Booked',
-    'Meeting Done',
-    'Negotiation',
-    'Closed Lost'
-  ];
-  const fundingTypeOptions = ['Bootstrapped', 'Pre-seed', 'Y Combinator', 'Seed', 'Series A', 'Series B+', 'Unknown'];
-  const categoryOptions = [
-    'Accounting Software',
-    'AI/ML Platform',
-    'Analytics Tool',
-    'Automation Tool',
-    'Communication Tool',
-    'CRM Software',
-    'Design Tool',
-    'Developer Tool',
-    'E-commerce Platform',
-    'Education Platform',
-    'Email Marketing',
-    'Finance Tool',
-    'Health & Fitness',
-    'HR Software',
-    'Marketing Tool',
-    'Project Management',
-    'Productivity Tool',
-    'Sales Tool',
-    'Security Tool',
-    'Social Media Tool',
-    'Other'
-  ];
-
   const [formData, setFormData] = useState({
-    websiteUrl: '',
-    teamSize: '1-3',
-    arr: 0,
+    websiteUrl: "",
+    teamSize: "1-3",
+    arr: "",
     category: "",
     linkedinUrl: "",
     status: "Keep an Eye",
@@ -1231,53 +1188,10 @@ const AddLeadModal = ({ onClose, onSubmit }) => {
 };
 
 const EditLeadModal = ({ lead, onClose, onSubmit }) => {
-  // Define option arrays for form dropdowns
-  const teamSizeOptions = ['1-3', '4-10', '11-50', '51-200', '201-500', '500+'];
-  const statusOptions = [
-    'Launched on AppSumo',
-    'Launched on Prime Club',
-    'Keep an Eye',
-    'Rejected',
-    'Unsubscribed',
-    'Outdated',
-    'Hotlist',
-    'Out of League',
-    'Connected',
-    'Locked',
-    'Meeting Booked',
-    'Meeting Done',
-    'Negotiation',
-    'Closed Lost'
-  ];
-  const fundingTypeOptions = ['Bootstrapped', 'Pre-seed', 'Y Combinator', 'Seed', 'Series A', 'Series B+', 'Unknown'];
-  const categoryOptions = [
-    'Accounting Software',
-    'AI/ML Platform',
-    'Analytics Tool',
-    'Automation Tool',
-    'Communication Tool',
-    'CRM Software',
-    'Design Tool',
-    'Developer Tool',
-    'E-commerce Platform',
-    'Education Platform',
-    'Email Marketing',
-    'Finance Tool',
-    'Health & Fitness',
-    'HR Software',
-    'Marketing Tool',
-    'Project Management',
-    'Productivity Tool',
-    'Sales Tool',
-    'Security Tool',
-    'Social Media Tool',
-    'Other'
-  ];
-
   const [formData, setFormData] = useState({
-    websiteUrl: lead.websiteUrl || '',
-    teamSize: lead.teamSize || '1-3',
-    arr: lead.arr || 0,
+    websiteUrl: lead.websiteUrl,
+    teamSize: lead.teamSize,
+    arr: lead.arr.toString(),
     category: lead.category,
     linkedinUrl: lead.linkedinUrl,
     status: lead.status,
