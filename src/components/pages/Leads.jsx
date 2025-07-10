@@ -328,12 +328,12 @@ const getStatusColor = (status) => {
             icon="Building2"
           />
         ) : (
-          <div className="relative">
+<div className="relative">
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[1200px]">
-                <thead className="bg-gray-50">
+              <table className="w-full min-w-[1200px] border-collapse">
+                <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[200px]">
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[200px] border-r border-gray-200">
                       <button
                         onClick={() => handleSort("websiteUrl")}
                         className="flex items-center gap-1 hover:text-gray-700"
@@ -342,7 +342,7 @@ const getStatusColor = (status) => {
                         <ApperIcon name="ArrowUpDown" size={12} />
                       </button>
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[150px]">
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[150px] border-r border-gray-200">
                       <button
                         onClick={() => handleSort("teamSize")}
                         className="flex items-center gap-1 hover:text-gray-700"
@@ -351,7 +351,7 @@ const getStatusColor = (status) => {
                         <ApperIcon name="ArrowUpDown" size={12} />
                       </button>
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px] border-r border-gray-200">
                       <button
                         onClick={() => handleSort("arr")}
                         className="flex items-center gap-1 hover:text-gray-700"
@@ -360,47 +360,57 @@ const getStatusColor = (status) => {
                         <ApperIcon name="ArrowUpDown" size={12} />
                       </button>
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[150px]">
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[150px] border-r border-gray-200">
                       Category
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[100px]">
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[100px] border-r border-gray-200">
                       LinkedIn
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[150px]">
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[150px] border-r border-gray-200">
                       Status
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[140px]">
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[140px] border-r border-gray-200">
                       Funding Type
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[120px] sticky right-0 bg-gray-50 border-l border-gray-200">
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[120px] sticky right-0 bg-gray-50 border-l border-gray-300">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredAndSortedData.map((lead) => (
-                    <tr key={lead.Id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap min-w-[200px]">
+                <tbody className="bg-white">
+                  {filteredAndSortedData.map((lead, index) => (
+                    <tr key={lead.Id} className="hover:bg-gray-50 border-b border-gray-100">
+                      <td className="px-2 py-2 whitespace-nowrap min-w-[200px] border-r border-gray-100">
                         <Input
                           type="url"
                           value={lead.websiteUrl}
                           onChange={(e) => handleFieldUpdate(lead.Id, 'websiteUrl', e.target.value)}
                           onBlur={(e) => handleFieldUpdate(lead.Id, 'websiteUrl', e.target.value)}
-                          className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 text-primary-600 font-medium"
+                          onFocus={(e) => e.target.select()}
+                          onPaste={(e) => {
+                            setTimeout(() => {
+                              const pastedValue = e.target.value;
+                              if (pastedValue && pastedValue !== lead.websiteUrl) {
+                                handleFieldUpdate(lead.Id, 'websiteUrl', pastedValue);
+                              }
+                            }, 0);
+                          }}
+                          placeholder="https://example.com"
+                          className="w-full border-0 bg-transparent px-2 py-1 text-sm text-primary-600 font-medium hover:bg-gray-50 focus:bg-white focus:border focus:border-primary-300 focus:ring-1 focus:ring-primary-200 rounded transition-all duration-150"
                         />
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[150px]">
+                      <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-900 min-w-[150px] border-r border-gray-100">
                         <select
                           value={lead.teamSize}
                           onChange={(e) => handleFieldUpdate(lead.Id, 'teamSize', e.target.value)}
-                          className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full"
+                          className="w-full border-0 bg-transparent px-2 py-1 text-sm hover:bg-gray-50 focus:bg-white focus:border focus:border-primary-300 focus:ring-1 focus:ring-primary-200 rounded transition-all duration-150"
                         >
                           {teamSizeOptions.map(option => (
                             <option key={option} value={option}>{option}</option>
                           ))}
                         </select>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[120px]">
+                      <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-900 min-w-[120px] border-r border-gray-100">
                         <Input
                           type="number"
                           step="0.1"
@@ -408,35 +418,38 @@ const getStatusColor = (status) => {
                           value={(lead.arr / 1000000).toFixed(1)}
                           onChange={(e) => handleFieldUpdate(lead.Id, 'arr', e.target.value)}
                           onBlur={(e) => handleFieldUpdate(lead.Id, 'arr', e.target.value)}
-                          className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full"
+                          onFocus={(e) => e.target.select()}
+                          className="w-full border-0 bg-transparent px-2 py-1 text-sm hover:bg-gray-50 focus:bg-white focus:border focus:border-primary-300 focus:ring-1 focus:ring-primary-200 rounded transition-all duration-150"
                         />
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[150px]">
+                      <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-900 min-w-[150px] border-r border-gray-100">
                         <select
                           value={lead.category}
                           onChange={(e) => handleFieldUpdate(lead.Id, 'category', e.target.value)}
-                          className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full"
+                          className="w-full border-0 bg-transparent px-2 py-1 text-sm hover:bg-gray-50 focus:bg-white focus:border focus:border-primary-300 focus:ring-1 focus:ring-primary-200 rounded transition-all duration-150"
                         >
                           {categoryOptions.map(option => (
                             <option key={option} value={option}>{option}</option>
                           ))}
                         </select>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap min-w-[100px]">
-                        <a
-                          href={lead.linkedinUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-primary-600 hover:text-primary-800 inline-block p-1"
-                        >
-                          <ApperIcon name="Linkedin" size={16} />
-                        </a>
+                      <td className="px-2 py-2 whitespace-nowrap min-w-[100px] border-r border-gray-100">
+                        <div className="flex justify-center">
+                          <a
+                            href={lead.linkedinUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary-600 hover:text-primary-800 p-1 hover:bg-gray-100 rounded transition-colors"
+                          >
+                            <ApperIcon name="Linkedin" size={16} />
+                          </a>
+                        </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap min-w-[150px]">
+                      <td className="px-2 py-2 whitespace-nowrap min-w-[150px] border-r border-gray-100">
                         <div className="relative">
                           <Badge 
                             variant={getStatusColor(lead.status)}
-                            className="cursor-pointer hover:shadow-md transition-shadow"
+                            className="cursor-pointer hover:shadow-md transition-shadow w-full justify-center"
                           >
                             {lead.status}
                           </Badge>
@@ -451,11 +464,11 @@ const getStatusColor = (status) => {
                           </select>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap min-w-[140px]">
+                      <td className="px-2 py-2 whitespace-nowrap min-w-[140px] border-r border-gray-100">
                         <div className="relative">
                           <Badge 
                             variant={lead.fundingType === "Series C" ? "primary" : "default"}
-                            className="cursor-pointer hover:shadow-md transition-shadow"
+                            className="cursor-pointer hover:shadow-md transition-shadow w-full justify-center"
                           >
                             {lead.fundingType}
                           </Badge>
@@ -470,17 +483,19 @@ const getStatusColor = (status) => {
                           </select>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium w-[120px] sticky right-0 bg-white border-l border-gray-200">
-                        <div className="flex items-center gap-2">
+                      <td className="px-2 py-2 whitespace-nowrap text-sm font-medium w-[120px] sticky right-0 bg-white border-l border-gray-200">
+                        <div className="flex items-center justify-center gap-1">
                           <button
                             onClick={() => setEditingLead(lead)}
-                            className="text-primary-600 hover:text-primary-800 p-1 hover:bg-gray-100 rounded"
+                            className="text-primary-600 hover:text-primary-800 p-1 hover:bg-gray-100 rounded transition-colors"
+                            title="Edit Lead"
                           >
                             <ApperIcon name="Edit" size={16} />
                           </button>
                           <button
                             onClick={() => handleDelete(lead.Id)}
-                            className="text-red-600 hover:text-red-800 p-1 hover:bg-gray-100 rounded"
+                            className="text-red-600 hover:text-red-800 p-1 hover:bg-gray-100 rounded transition-colors"
+                            title="Delete Lead"
                           >
                             <ApperIcon name="Trash2" size={16} />
                           </button>
