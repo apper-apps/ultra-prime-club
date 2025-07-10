@@ -102,7 +102,7 @@ const Contacts = () => {
         <Empty
           title="No contacts found"
           description="Start building your contact list by adding your first lead"
-          actionText="Add Contact"
+actionText="Add Contact"
           icon="Users"
         />
       ) : (

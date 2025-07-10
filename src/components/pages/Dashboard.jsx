@@ -7,7 +7,8 @@ import Loading from "@/components/ui/Loading";
 import Pipeline from "@/components/pages/Pipeline";
 import Leads from "@/components/pages/Leads";
 import MetricCard from "@/components/molecules/MetricCard";
-import { getDashboardMetrics, getPendingFollowUps, getRecentActivity, getTodaysMeetings } from "@/services/api/dashboardService";
+import { getPendingFollowUps } from "@/services/api/leadsService";
+import { getDashboardMetrics, getRecentActivity, getTodaysMeetings } from "@/services/api/dashboardService";
 
 const Dashboard = () => {
 const [metrics, setMetrics] = useState([]);
@@ -102,8 +103,7 @@ const [metricsData, activityData, meetingsData, followUpsData] = await Promise.a
                         scale: 1.02
                     }}
                     whileTap={{
-                        scale: 0.98
-                    }}
+}}
                     className="w-full text-left p-3 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all">
                     <div className="font-medium text-gray-900">Add New Lead</div>
                     <div className="text-sm text-gray-500">Create a new lead contact</div>
@@ -114,7 +114,7 @@ const [metricsData, activityData, meetingsData, followUpsData] = await Promise.a
                     }}
                     whileTap={{
                         scale: 0.98
-                    }}
+}}
                     className="w-full text-left p-3 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all">
                     <div className="font-medium text-gray-900">Schedule Meeting</div>
                     <div className="text-sm text-gray-500">Book a meeting with a lead</div>
@@ -125,7 +125,7 @@ const [metricsData, activityData, meetingsData, followUpsData] = await Promise.a
                     }}
                     whileTap={{
                         scale: 0.98
-                    }}
+}}
                     className="w-full text-left p-3 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all">
                     <div className="font-medium text-gray-900">Update Pipeline</div>
                     <div className="text-sm text-gray-500">Move deals through stages</div>
@@ -135,6 +135,7 @@ const [metricsData, activityData, meetingsData, followUpsData] = await Promise.a
         <Card className="p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Pending Follow-ups</h3>
             <div className="space-y-3">
+                {pendingFollowUps.length > 0 ? pendingFollowUps.map((followUp, index) => <motion.div
                 {pendingFollowUps.length > 0 ? pendingFollowUps.map((followUp, index) => <motion.div
                     key={followUp.Id}
                     initial={{
@@ -146,7 +147,7 @@ const [metricsData, activityData, meetingsData, followUpsData] = await Promise.a
                         y: 0
                     }}
                     transition={{
-                        delay: index * 0.1
+delay: index * 0.1
                     }}
                     className="p-3 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all">
                     <div className="flex items-center justify-between">

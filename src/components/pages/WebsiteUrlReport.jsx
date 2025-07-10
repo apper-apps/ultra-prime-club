@@ -266,7 +266,7 @@ const WebsiteUrlReport = () => {
           <Card className="p-4">
             <div className="flex items-center">
               <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
-                <ApperIcon name="Globe" size={20} className="text-primary-600" />
+                <ApperIcon name="Globe" size={20} className="text-primary-300" />
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Total URLs</p>
@@ -274,10 +274,10 @@ const WebsiteUrlReport = () => {
               </div>
             </div>
           </Card>
-          <Card className="p-4">
+<Card className="p-4">
             <div className="flex items-center">
               <div className="w-10 h-10 bg-success-100 rounded-lg flex items-center justify-center">
-                <ApperIcon name="DollarSign" size={20} className="text-success-600" />
+                <ApperIcon name="DollarSign" size={20} className="text-success-300" />
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Total ARR</p>
@@ -287,10 +287,10 @@ const WebsiteUrlReport = () => {
               </div>
             </div>
           </Card>
-          <Card className="p-4">
+<Card className="p-4">
             <div className="flex items-center">
               <div className="w-10 h-10 bg-info-100 rounded-lg flex items-center justify-center">
-                <ApperIcon name="TrendingUp" size={20} className="text-info-600" />
+                <ApperIcon name="TrendingUp" size={20} className="text-info-300" />
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Avg ARR</p>
@@ -300,10 +300,10 @@ const WebsiteUrlReport = () => {
               </div>
             </div>
           </Card>
-          <Card className="p-4">
+<Card className="p-4">
             <div className="flex items-center">
               <div className="w-10 h-10 bg-accent-100 rounded-lg flex items-center justify-center">
-                <ApperIcon name="Target" size={20} className="text-accent-600" />
+                <ApperIcon name="Target" size={20} className="text-accent-300" />
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Top Status</p>

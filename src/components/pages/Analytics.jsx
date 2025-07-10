@@ -87,7 +87,7 @@ const Analytics = () => {
         enabled: false
 }
     },
-    colors: ['#D8AEFF'],
+    colors: ['#EAC2FF'],
     dataLabels: {
       enabled: false
     },
@@ -290,7 +290,7 @@ const Analytics = () => {
             {userPerformance.slice(0, 6).map((rep, index) => (
               <div key={rep.Id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-700 rounded-full flex items-center justify-center">
+                  <div className="w-8 h-8 bg-gradient-to-br from-primary-300 to-primary-500 rounded-full flex items-center justify-center">
                     <span className="text-white text-sm font-semibold">
                       {rep.name.charAt(0)}
                     </span>

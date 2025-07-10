@@ -1,12 +1,13 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import Card from "@/components/atoms/Card";
+import ApperIcon from "@/components/ApperIcon";
 import Badge from "@/components/atoms/Badge";
 import Avatar from "@/components/atoms/Avatar";
-import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
+import Card from "@/components/atoms/Card";
 import Empty from "@/components/ui/Empty";
-import ApperIcon from "@/components/ApperIcon";
+import Error from "@/components/ui/Error";
+import Loading from "@/components/ui/Loading";
+import Leads from "@/components/pages/Leads";
 import { getSalesReps } from "@/services/api/salesRepService";
 
 const Leaderboard = () => {
@@ -48,10 +49,10 @@ const Leaderboard = () => {
 
   const getPerformanceTier = (rank) => {
     switch (rank) {
-      case 1:
+case 1:
         return {
           tier: "Gold",
-          color: "from-accent-400 to-accent-600",
+          color: "from-accent-300 to-accent-400",
           textColor: "text-accent-700",
           bgColor: "bg-gradient-to-r from-accent-50 to-accent-100",
           icon: "Crown"
@@ -64,10 +65,10 @@ const Leaderboard = () => {
           bgColor: "bg-gradient-to-r from-gray-50 to-gray-100",
           icon: "Medal"
         };
-      case 3:
+case 3:
         return {
           tier: "Bronze",
-          color: "from-primary-400 to-primary-600",
+          color: "from-primary-300 to-primary-400",
           textColor: "text-primary-700",
           bgColor: "bg-gradient-to-r from-primary-50 to-primary-100",
           icon: "Award"
@@ -122,12 +123,11 @@ const Leaderboard = () => {
         <div className="space-y-8">
           {/* Champion Spotlight */}
           {salesReps.length > 0 && (
-            <motion.div
+<motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
             >
-              <Card className="relative overflow-hidden bg-gradient-to-br from-accent-400 via-accent-500 to-accent-600 text-white">
+              <Card className="relative overflow-hidden bg-gradient-to-br from-accent-300 via-accent-400 to-accent-500 text-white">
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-y-3"></div>
                 <div className="relative p-8">
                   <div className="flex flex-col lg:flex-row items-center justify-between space-y-6 lg:space-y-0">
@@ -136,7 +136,7 @@ const Leaderboard = () => {
                         <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
                           <Avatar name={salesReps[0].name} size="xl" />
                         </div>
-                        <div className="absolute -top-2 -right-2 w-10 h-10 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center shadow-lg">
+<div className="absolute -top-2 -right-2 w-10 h-10 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center shadow-lg">
                           <ApperIcon name="Crown" size={20} className="text-white" />
                         </div>
                       </div>
@@ -215,9 +215,9 @@ const Leaderboard = () => {
                             <span className="text-sm font-medium text-gray-700">Leads Contacted</span>
                             <span className="text-sm font-bold text-primary-600">{rep.leadsContacted}</span>
                           </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
+<div className="w-full bg-gray-200 rounded-full h-2">
                             <div
-                              className="bg-gradient-to-r from-primary-400 to-primary-600 h-2 rounded-full transition-all duration-500"
+                              className="bg-gradient-to-r from-primary-300 to-primary-500 h-2 rounded-full transition-all duration-500"
                               style={{ width: `${calculateProgress(rep.leadsContacted, maxValues.leads)}%` }}
                             ></div>
                           </div>
@@ -229,9 +229,9 @@ const Leaderboard = () => {
                             <span className="text-sm font-medium text-gray-700">Meetings Booked</span>
                             <span className="text-sm font-bold text-info-600">{rep.meetingsBooked}</span>
                           </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
+<div className="w-full bg-gray-200 rounded-full h-2">
                             <div
-                              className="bg-gradient-to-r from-info-400 to-info-600 h-2 rounded-full transition-all duration-500"
+                              className="bg-gradient-to-r from-info-300 to-info-400 h-2 rounded-full transition-all duration-500"
                               style={{ width: `${calculateProgress(rep.meetingsBooked, maxValues.meetings)}%` }}
                             ></div>
                           </div>
@@ -243,9 +243,9 @@ const Leaderboard = () => {
                             <span className="text-sm font-medium text-gray-700">Deals Closed</span>
                             <span className="text-sm font-bold text-success-600">{rep.dealsClosed}</span>
                           </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
+<div className="w-full bg-gray-200 rounded-full h-2">
                             <div
-                              className="bg-gradient-to-r from-success-400 to-success-600 h-2 rounded-full transition-all duration-500"
+                              className="bg-gradient-to-r from-success-300 to-success-400 h-2 rounded-full transition-all duration-500"
                               style={{ width: `${calculateProgress(rep.dealsClosed, maxValues.deals)}%` }}
                             ></div>
                           </div>
@@ -257,33 +257,31 @@ const Leaderboard = () => {
                             <span className="text-sm font-medium text-gray-700">Revenue</span>
                             <span className="text-sm font-bold text-accent-600">{formatCurrency(rep.totalRevenue)}</span>
                           </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
+<div className="w-full bg-gray-200 rounded-full h-2">
                             <div
-                              className="bg-gradient-to-r from-accent-400 to-accent-600 h-2 rounded-full transition-all duration-500"
+                              className="bg-gradient-to-r from-accent-300 to-accent-400 h-2 rounded-full transition-all duration-500"
                               style={{ width: `${calculateProgress(rep.totalRevenue, maxValues.revenue)}%` }}
                             ></div>
                           </div>
                         </div>
-                      </div>
 
-                      {/* Performance Score */}
-                      <div className="mt-6 pt-4 border-t border-gray-200">
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm font-medium text-gray-700">Performance Score</span>
-                          <span className="text-2xl font-bold text-primary-600">{score}</span>
+{/* Performance Score */}
+                        <div className="mt-6 pt-4 border-t border-gray-200">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm font-medium text-gray-700">Performance Score</span>
+                            <span className="text-2xl font-bold text-primary-600">{score}</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
                   </Card>
                 </motion.div>
               );
             })}
           </div>
 
-          {/* Statistics Dashboard */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card className="p-6 text-center bg-gradient-to-br from-primary-50 to-primary-100 border-primary-200">
-              <div className="w-16 h-16 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+              <div className="w-16 h-16 bg-gradient-to-r from-primary-300 to-primary-400 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                 <ApperIcon name="Users" size={28} className="text-white" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Total Leads</h3>
@@ -292,9 +290,8 @@ const Leaderboard = () => {
               </p>
               <p className="text-sm text-gray-600">Across all reps</p>
             </Card>
-
-            <Card className="p-6 text-center bg-gradient-to-br from-info-50 to-info-100 border-info-200">
-              <div className="w-16 h-16 bg-gradient-to-r from-info-500 to-info-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+<Card className="p-6 text-center bg-gradient-to-br from-info-50 to-info-100 border-info-200">
+              <div className="w-16 h-16 bg-gradient-to-r from-info-300 to-info-400 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                 <ApperIcon name="Calendar" size={28} className="text-white" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Total Meetings</h3>
@@ -303,9 +300,8 @@ const Leaderboard = () => {
               </p>
               <p className="text-sm text-gray-600">Scheduled & completed</p>
             </Card>
-
-            <Card className="p-6 text-center bg-gradient-to-br from-success-50 to-success-100 border-success-200">
-              <div className="w-16 h-16 bg-gradient-to-r from-success-500 to-success-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+<Card className="p-6 text-center bg-gradient-to-br from-success-50 to-success-100 border-success-200">
+              <div className="w-16 h-16 bg-gradient-to-r from-success-300 to-success-400 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                 <ApperIcon name="CheckCircle" size={28} className="text-white" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Total Deals</h3>
@@ -314,9 +310,8 @@ const Leaderboard = () => {
               </p>
               <p className="text-sm text-gray-600">Successfully closed</p>
             </Card>
-
-            <Card className="p-6 text-center bg-gradient-to-br from-accent-50 to-accent-100 border-accent-200">
-              <div className="w-16 h-16 bg-gradient-to-r from-accent-500 to-accent-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+<Card className="p-6 text-center bg-gradient-to-br from-accent-50 to-accent-100 border-accent-200">
+              <div className="w-16 h-16 bg-gradient-to-r from-accent-300 to-accent-400 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                 <ApperIcon name="DollarSign" size={28} className="text-white" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Total Revenue</h3>
@@ -326,6 +321,7 @@ const Leaderboard = () => {
               <p className="text-sm text-gray-600">Team performance</p>
             </Card>
           </div>
+        </div>
         </div>
       )}
     </div>

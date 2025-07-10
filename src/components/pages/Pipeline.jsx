@@ -162,7 +162,7 @@ const Pipeline = () => {
                     {(provided, snapshot) => (
                       <div
                         ref={provided.innerRef}
-                        {...provided.droppableProps}
+{...provided.droppableProps}
                         className={`p-4 min-h-[400px] transition-colors ${
                           snapshot.isDraggingOver ? "bg-primary-50" : ""
                         }`}

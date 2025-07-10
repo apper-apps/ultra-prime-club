@@ -131,7 +131,7 @@ transition={{ delay: index * 0.05 }}
                 <h4 className="font-semibold text-gray-900 mb-3">Legend</h4>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4">
                   <div className="flex items-center">
-                    <div 
+<div 
                       className="w-3 h-3 sm:w-4 sm:h-4 rounded mr-1 sm:mr-2 flex-shrink-0" 
                       style={{ background: 'linear-gradient(135deg, #EAC2FF 0%, #D8A3FF 100%)' }}
                     />

@@ -4,7 +4,6 @@ const Layout = ({ children }) => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Sidebar />
-      
       {/* Main Content */}
       <div className="lg:ml-64">
         <main className="p-6 lg:p-8">

@@ -22,17 +22,17 @@ const Avatar = forwardRef(({
   };
 
   return (
-    <div
+<div
       ref={ref}
       className={cn(
-        "inline-flex items-center justify-center rounded-full bg-gradient-to-br from-primary-400 to-primary-600 text-white font-semibold shrink-0",
+        "inline-flex items-center justify-center rounded-full bg-gradient-to-br from-primary-300 to-primary-500 text-white font-semibold shrink-0",
         sizes[size],
         className
       )}
       {...props}
     >
       {src ? (
-        <img 
+        <img
           src={src} 
           alt={alt || name} 
           className="w-full h-full rounded-full object-cover"
