@@ -23,12 +23,12 @@ const TimelineBar = ({ deal, onUpdate }) => {
 
 const getBarColor = (edition) => {
     const colors = {
-      'select': 'linear-gradient(135deg, #EAC2FF 0%, #D8A3FF 100%)',
-      'black': 'linear-gradient(135deg, #FEE8D0 0%, #FDDBB8 100%)',
-      'collector': 'linear-gradient(135deg, #9FEBE1 0%, #7DD3C7 100%)',
-      'limited': 'linear-gradient(135deg, #FFAEB5 0%, #FF8A94 100%)'
+      'select': 'linear-gradient(135deg, #C084FC 0%, #A855F7 100%)', // Lilac
+      'black': 'linear-gradient(135deg, #FDE047 0%, #FACC15 100%)', // Yellow
+      'collector': 'linear-gradient(135deg, #34D399 0%, #10B981 100%)', // Green
+      'limited': 'linear-gradient(135deg, #F87171 0%, #EF4444 100%)' // Red
     };
-    return colors[edition?.toLowerCase()] || colors.select;
+    return colors[edition?.toLowerCase().replace(/\s+edition$/, '')] || colors.select;
   };
 
   const handleMouseDown = (e) => {
