@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 import Card from "@/components/atoms/Card";
 import Button from "@/components/atoms/Button";
 import TimelineBar from "@/components/molecules/TimelineBar";
-import DealBar from "@/components/molecules/DealBar";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
@@ -15,7 +14,6 @@ const Calendar = () => {
   const [deals, setDeals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [viewMode, setViewMode] = useState("timeline");
 
   const months = [
     "January", "February", "March", "April", "May", "June",
@@ -53,10 +51,6 @@ const Calendar = () => {
       const end = deal.endMonth || 3;
       return monthIndex >= start && monthIndex <= end;
     });
-};
-
-  const getMaxDealValue = () => {
-    return Math.max(...deals.map(deal => deal.value));
   };
 
   if (loading) return <Loading />;
@@ -66,39 +60,13 @@ const Calendar = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Calendar {viewMode === "timeline" ? "Timeline" : "Bars"}</h1>
-          <p className="text-gray-600 mt-1">Visual {viewMode === "timeline" ? "timeline" : "bar chart"} of your deals across the year</p>
+          <h1 className="text-3xl font-bold text-gray-900">Calendar Timeline</h1>
+          <p className="text-gray-600 mt-1">Visual timeline of your deals across the year</p>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="flex bg-gray-100 rounded-lg p-1">
-            <button
-              onClick={() => setViewMode("timeline")}
-              className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
-                viewMode === "timeline" 
-                  ? "bg-white text-gray-900 shadow-sm" 
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
-            >
-              <ApperIcon name="BarChart3" size={16} className="mr-1" />
-              Timeline
-            </button>
-            <button
-              onClick={() => setViewMode("bars")}
-              className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
-                viewMode === "bars" 
-                  ? "bg-white text-gray-900 shadow-sm" 
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
-            >
-              <ApperIcon name="BarChart2" size={16} className="mr-1" />
-              Bars
-            </button>
-          </div>
-          <Button>
-            <ApperIcon name="Plus" size={16} className="mr-2" />
-            Add Deal
-          </Button>
-        </div>
+        <Button>
+          <ApperIcon name="Plus" size={16} className="mr-2" />
+          Add Deal
+        </Button>
       </div>
 
       {deals.length === 0 ? (
@@ -108,100 +76,52 @@ const Calendar = () => {
           actionText="Add Deal"
           icon="Calendar"
         />
-) : (
+      ) : (
         <Card className="p-6">
           <div className="overflow-x-auto">
             <div className="min-w-[1200px]">
-              {viewMode === "timeline" ? (
-                <>
-                  {/* Month Headers */}
-                  <div className="grid grid-cols-12 gap-4 mb-6">
-                    {months.map((month, index) => (
-                      <motion.div
-                        key={month}
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                        className="text-center"
-                      >
-                        <div className="bg-gray-100 rounded-lg p-3 mb-2">
-                          <h3 className="font-semibold text-gray-900">{month}</h3>
-                          <p className="text-sm text-gray-500">
-                            {getDealsForMonth(index + 1).length} deals
-                          </p>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
+              {/* Month Headers */}
+              <div className="grid grid-cols-12 gap-4 mb-6">
+                {months.map((month, index) => (
+                  <motion.div
+                    key={month}
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    className="text-center"
+                  >
+                    <div className="bg-gray-100 rounded-lg p-3 mb-2">
+                      <h3 className="font-semibold text-gray-900">{month}</h3>
+                      <p className="text-sm text-gray-500">
+                        {getDealsForMonth(index + 1).length} deals
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
 
-                  {/* Timeline */}
-                  <div className="space-y-4">
-                    {deals.map((deal, index) => (
-                      <motion.div
-                        key={deal.Id}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                        className="relative"
-                      >
-                        <div className="grid grid-cols-12 gap-4 h-16 items-center">
-                          <div className="col-span-12 relative">
-                            <div className="absolute inset-0 bg-gray-100 rounded-lg" />
-                            <TimelineBar
-                              deal={deal}
-                              onUpdate={(updates) => handleDealUpdate(deal.Id, updates)}
-                            />
-                          </div>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <>
-                  {/* Month Headers for Bars */}
-                  <div className="grid grid-cols-12 gap-4 mb-6">
-                    {months.map((month, index) => (
-                      <motion.div
-                        key={month}
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                        className="text-center"
-                      >
-                        <div className="bg-gray-100 rounded-lg p-3 mb-2">
-                          <h3 className="font-semibold text-gray-900">{month.slice(0, 3)}</h3>
-                          <p className="text-sm text-gray-500">
-                            {getDealsForMonth(index + 1).length} deals
-                          </p>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-
-                  {/* Deal Bars */}
-                  <div className="grid grid-cols-12 gap-4 h-80 items-end">
-                    {months.map((month, monthIndex) => {
-                      const monthDeals = getDealsForMonth(monthIndex + 1);
-                      const maxValue = getMaxDealValue();
-                      
-                      return (
-                        <div key={month} className="space-y-1 h-full flex flex-col justify-end">
-                          {monthDeals.map((deal) => (
-                            <div key={deal.Id} className="flex-1 min-h-0">
-                              <DealBar
-                                deal={deal}
-                                maxValue={maxValue}
-                                monthIndex={monthIndex}
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </>
-              )}
+              {/* Timeline */}
+              <div className="space-y-4">
+                {deals.map((deal, index) => (
+                  <motion.div
+                    key={deal.Id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="relative"
+                  >
+                    <div className="grid grid-cols-12 gap-4 h-16 items-center">
+                      <div className="col-span-12 relative">
+                        <div className="absolute inset-0 bg-gray-100 rounded-lg" />
+                        <TimelineBar
+                          deal={deal}
+                          onUpdate={(updates) => handleDealUpdate(deal.Id, updates)}
+                        />
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
 
               {/* Legend */}
               <div className="mt-8 p-4 bg-gray-50 rounded-lg">
