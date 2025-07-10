@@ -193,12 +193,12 @@ const handleFieldUpdate = async (leadId, field, value) => {
     }, 1000);
   };
 
-  // Add empty row for new data entry
+// Add empty row for new data entry
   const addEmptyRow = () => {
     const newEmptyRow = {
       Id: nextTempId,
 websiteUrl: "",
-      teamSize: "1-10", 
+      teamSize: "1-3", 
       arr: 0,
       category: "Accounting Software",
       linkedinUrl: "",
@@ -259,7 +259,7 @@ websiteUrl: "",
     }
   };
 
-const teamSizeOptions = ["1-10", "11-50", "51-100", "101-500", "501-1000", "1001+"];
+const teamSizeOptions = ["1-3", "11-50", "51-100", "101-500", "501-1000", "1001+"];
   const [categoryOptions, setCategoryOptions] = useState([
     "3D Design Software",
     "Accounting Software", 
@@ -984,7 +984,7 @@ const SearchableSelect = ({ value, onChange, options, placeholder = "Select...",
 const AddLeadModal = ({ onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
     websiteUrl: "",
-    teamSize: "1-10",
+    teamSize: "1-3",
     arr: "",
     category: "",
     linkedinUrl: "",
@@ -1034,8 +1034,8 @@ const AddLeadModal = ({ onClose, onSubmit }) => {
               value={formData.teamSize}
               onChange={(e) => setFormData({...formData, teamSize: e.target.value})}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-            >
-              <option value="1-10">1-10</option>
+>
+              <option value="1-3">1-3</option>
               <option value="11-50">11-50</option>
               <option value="51-100">51-100</option>
               <option value="101-500">101-500</option>
@@ -1197,8 +1197,8 @@ const EditLeadModal = ({ lead, onClose, onSubmit }) => {
                             ...formData,
                             teamSize: e.target.value
                         })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
-                        <option value="1-10">1-10</option>
+className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                        <option value="1-3">1-3</option>
                         <option value="11-50">11-50</option>
                         <option value="51-100">51-100</option>
                         <option value="101-500">101-500</option>
