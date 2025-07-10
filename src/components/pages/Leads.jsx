@@ -459,8 +459,11 @@ const getStatusColor = (status) => {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[150px]">
                       Status
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[140px]">
+<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[140px]">
                       Funding Type
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">
+                      Added By
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[120px] sticky right-0 bg-gray-50 border-l border-gray-200">
                       Actions
@@ -580,7 +583,10 @@ const getStatusColor = (status) => {
                               <option key={option} value={option}>{option}</option>
                             ))}
                           </select>
-                        </div>
+</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 min-w-[120px]">
+                        <span className="italic">Current User</span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium w-[120px] sticky right-0 bg-white border-l border-gray-200">
                         <div className="flex items-center gap-2">
@@ -714,6 +720,12 @@ const getStatusColor = (status) => {
                               <option key={option} value={option}>{option}</option>
                             ))}
                           </select>
+</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[120px]">
+                        <div className="flex items-center">
+                          <ApperIcon name="User" size={14} className="mr-2 text-gray-400" />
+                          <span>{lead.addedByName || 'Unknown'}</span>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium w-[120px] sticky right-0 bg-white border-l border-gray-200">

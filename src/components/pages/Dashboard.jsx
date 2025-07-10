@@ -1,10 +1,83 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import MetricCard from "@/components/molecules/MetricCard";
+import ApperIcon from "@/components/ApperIcon";
 import Card from "@/components/atoms/Card";
-import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
-import { getDashboardMetrics, getRecentActivity } from "@/services/api/dashboardService";
+import Loading from "@/components/ui/Loading";
+import Pipeline from "@/components/pages/Pipeline";
+import MetricCard from "@/components/molecules/MetricCard";
+import { getDailyLeadsReport, getDashboardMetrics, getRecentActivity } from "@/services/api/dashboardService";
+
+const DailyLeadsReport = () => {
+  const [leadsData, setLeadsData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const loadLeadsData = async () => {
+      try {
+        setLoading(true);
+        setError("");
+        const data = await getDailyLeadsReport();
+        setLeadsData(data || []);
+      } catch (err) {
+        setError("Failed to load leads report");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadLeadsData();
+  }, []);
+
+  if (loading) return (
+    <Card className="p-6">
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">Daily Leads Report</h3>
+      <div className="animate-pulse space-y-3">
+        <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+        <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+        <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+      </div>
+    </Card>
+  );
+
+  if (error) return (
+    <Card className="p-6">
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">Daily Leads Report</h3>
+      <p className="text-red-600 text-sm">{error}</p>
+    </Card>
+  );
+
+  return (
+    <Card className="p-6">
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">Daily Leads Report</h3>
+      <div className="space-y-4">
+        {leadsData.length > 0 ? (
+          leadsData.map((lead, index) => (
+            <motion.div
+              key={lead.id || index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+            >
+              <div>
+                <p className="font-medium text-gray-900">{lead.name || 'Unknown Lead'}</p>
+                <p className="text-sm text-gray-500">{lead.source || 'Unknown Source'}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-sm font-medium text-gray-900">{lead.value || '$0'}</p>
+                <p className="text-xs text-gray-500">{lead.time || 'Today'}</p>
+              </div>
+            </motion.div>
+          ))
+        ) : (
+          <p className="text-gray-500 text-center py-4">No leads data available</p>
+        )}
+      </div>
+    </Card>
+  );
+};
 
 const Dashboard = () => {
   const [metrics, setMetrics] = useState([]);
@@ -63,8 +136,8 @@ const Dashboard = () => {
         ))}
       </div>
 
-      {/* Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+{/* Reports and Activity */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
           <div className="space-y-4">
@@ -89,6 +162,8 @@ const Dashboard = () => {
             ))}
           </div>
         </Card>
+
+        <DailyLeadsReport />
 
         <Card className="p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
@@ -123,5 +198,3 @@ const Dashboard = () => {
     </div>
   );
 };
-
-export default Dashboard;

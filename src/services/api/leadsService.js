@@ -1,6 +1,8 @@
 import leadsData from "@/services/mockData/leads.json";
+import salesRepData from "@/services/mockData/salesReps.json";
 
 let leads = [...leadsData];
+let salesReps = [...salesRepData];
 
 // Utility function to remove duplicate website URLs, keeping the most recent entry
 const deduplicateLeads = (leadsArray) => {
@@ -38,8 +40,17 @@ export const getLeads = async () => {
     leads = deduplicationResult.uniqueLeads;
   }
   
+  // Enhance leads with sales rep names
+  const leadsWithRepNames = leads.map(lead => {
+    const salesRep = salesReps.find(rep => rep.Id === lead.addedBy);
+    return {
+      ...lead,
+      addedByName: salesRep ? salesRep.name : 'Unknown'
+    };
+  });
+  
   return {
-    leads: [...leads],
+    leads: leadsWithRepNames,
     deduplicationResult: deduplicationResult.duplicateCount > 0 ? deduplicationResult : null
   };
 };
@@ -75,7 +86,7 @@ export const createLead = async (leadData) => {
     throw new Error(`A lead with website URL "${leadData.websiteUrl}" already exists`);
   }
   
-  const maxId = Math.max(...leads.map(l => l.Id), 0);
+const maxId = Math.max(...leads.map(l => l.Id), 0);
   const newLead = {
     websiteUrl: leadData.websiteUrl,
     teamSize: leadData.teamSize || "1-10",
@@ -84,12 +95,19 @@ export const createLead = async (leadData) => {
     linkedinUrl: leadData.linkedinUrl || "",
     status: leadData.status || "Keep an Eye",
     fundingType: leadData.fundingType || "Bootstrapped",
+    addedBy: leadData.addedBy || 1, // Default to first sales rep for demo
     Id: maxId + 1,
     createdAt: new Date().toISOString()
   };
   
   leads.push(newLead);
-  return { ...newLead };
+  
+  // Return lead with sales rep name
+  const salesRep = salesReps.find(rep => rep.Id === newLead.addedBy);
+  return { 
+    ...newLead,
+    addedByName: salesRep ? salesRep.name : 'Unknown'
+  };
 };
 
 export const updateLead = async (id, updates) => {
@@ -116,4 +134,38 @@ export const deleteLead = async (id) => {
   
   leads.splice(index, 1);
   return { success: true };
+};
+
+export const getDailyLeadsReport = async () => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 300));
+  
+  // Get today's date in YYYY-MM-DD format
+  const today = new Date().toISOString().split('T')[0];
+  
+  // Filter leads created today
+  const todaysLeads = leads.filter(lead => {
+    const leadDate = lead.createdAt.split('T')[0];
+    return leadDate === today;
+  });
+  
+  // Group by sales rep
+  const reportData = {};
+  
+  todaysLeads.forEach(lead => {
+    const salesRep = salesReps.find(rep => rep.Id === lead.addedBy);
+    const repName = salesRep ? salesRep.name : 'Unknown';
+    
+    if (!reportData[repName]) {
+      reportData[repName] = {
+        salesRep: repName,
+        leads: []
+      };
+    }
+    
+    reportData[repName].leads.push(lead);
+  });
+  
+  // Convert to array and sort by lead count (descending)
+  return Object.values(reportData).sort((a, b) => b.leads.length - a.leads.length);
 };
