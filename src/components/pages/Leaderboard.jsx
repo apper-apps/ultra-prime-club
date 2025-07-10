@@ -46,14 +46,14 @@ const Leaderboard = () => {
     }).format(amount);
   };
 
-  const getRankIcon = (rank) => {
+const getRankIcon = (rank) => {
     switch (rank) {
       case 1:
-        return <ApperIcon name="Crown" size={20} className="text-yellow-500" />;
+        return <ApperIcon name="Crown" size={20} className="text-accent-500" />;
       case 2:
-        return <ApperIcon name="Medal" size={20} className="text-gray-400" />;
+        return <ApperIcon name="Medal" size={20} className="text-primary-400" />;
       case 3:
-        return <ApperIcon name="Award" size={20} className="text-amber-600" />;
+        return <ApperIcon name="Award" size={20} className="text-primary-300" />;
       default:
         return <span className="text-gray-500 font-bold">#{rank}</span>;
     }
@@ -62,13 +62,13 @@ const Leaderboard = () => {
   const getRankColor = (rank) => {
     switch (rank) {
       case 1:
-        return "from-yellow-400 to-yellow-600";
+        return "from-accent-100 to-accent-200";
       case 2:
-        return "from-gray-300 to-gray-500";
+        return "from-primary-100 to-primary-200";
       case 3:
-        return "from-amber-400 to-amber-600";
+        return "from-primary-50 to-primary-100";
       default:
-        return "from-gray-200 to-gray-300";
+        return "from-gray-50 to-gray-100";
     }
   };
 
@@ -95,12 +95,12 @@ const Leaderboard = () => {
         <div className="space-y-6">
           {/* Hunter of the Month */}
           {salesReps.length > 0 && (
-            <Card className="p-6 bg-gradient-to-r from-primary-50 to-primary-100 border-primary-200">
+<Card className="p-6 bg-gradient-to-r from-primary-100 to-primary-200 border-primary-300">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
                   <div className="relative">
                     <Avatar name={salesReps[0].name} size="xl" />
-                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center">
+                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-accent-400 to-accent-600 rounded-full flex items-center justify-center">
                       <ApperIcon name="Crown" size={16} className="text-white" />
                     </div>
                   </div>
@@ -166,9 +166,9 @@ const Leaderboard = () => {
                           <div className="flex items-center">
                             <Avatar name={rep.name} size="sm" />
                             <div className="ml-3">
-                              <div className="font-medium text-gray-900">{rep.name}</div>
+<div className="font-medium text-gray-900">{rep.name}</div>
                               {rank === 1 && (
-                                <Badge variant="warning" size="sm">
+                                <Badge variant="primary" size="sm">
                                   <ApperIcon name="Crown" size={12} className="mr-1" />
                                   Hunter of the Month
                                 </Badge>
@@ -182,14 +182,14 @@ const Leaderboard = () => {
                         <td className="py-4 px-6">
                           <div className="font-medium text-gray-900">{rep.meetingsBooked}</div>
                         </td>
-                        <td className="py-4 px-6">
-                          <div className="font-medium text-green-600">{rep.dealsClosed}</div>
+<td className="py-4 px-6">
+                          <div className="font-medium text-primary-600">{rep.dealsClosed}</div>
                         </td>
                         <td className="py-4 px-6">
                           <div className="font-medium text-gray-900">{formatCurrency(rep.totalRevenue)}</div>
                         </td>
-                        <td className="py-4 px-6">
-                          <div className="font-bold text-primary-600">{score}</div>
+<td className="py-4 px-6">
+                          <div className="font-bold text-accent-600">{score}</div>
                         </td>
                       </motion.tr>
                     );
@@ -201,32 +201,32 @@ const Leaderboard = () => {
 
           {/* Performance Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="p-6 text-center">
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <ApperIcon name="Users" size={24} className="text-blue-600" />
+<Card className="p-6 text-center">
+              <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <ApperIcon name="Users" size={24} className="text-primary-600" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Total Leads</h3>
-              <p className="text-3xl font-bold text-blue-600">
+              <p className="text-3xl font-bold text-primary-600">
                 {salesReps.reduce((sum, rep) => sum + rep.leadsContacted, 0)}
               </p>
             </Card>
 
             <Card className="p-6 text-center">
-              <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <ApperIcon name="Calendar" size={24} className="text-yellow-600" />
+              <div className="w-12 h-12 bg-primary-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                <ApperIcon name="Calendar" size={24} className="text-primary-700" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Total Meetings</h3>
-              <p className="text-3xl font-bold text-yellow-600">
+              <p className="text-3xl font-bold text-primary-700">
                 {salesReps.reduce((sum, rep) => sum + rep.meetingsBooked, 0)}
               </p>
             </Card>
 
             <Card className="p-6 text-center">
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <ApperIcon name="DollarSign" size={24} className="text-green-600" />
+              <div className="w-12 h-12 bg-accent-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <ApperIcon name="DollarSign" size={24} className="text-accent-600" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Total Revenue</h3>
-              <p className="text-3xl font-bold text-green-600">
+              <p className="text-3xl font-bold text-accent-600">
                 {formatCurrency(salesReps.reduce((sum, rep) => sum + rep.totalRevenue, 0))}
               </p>
             </Card>
