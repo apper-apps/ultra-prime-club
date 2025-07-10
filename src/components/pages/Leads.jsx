@@ -23,17 +23,15 @@ const Leads = () => {
   const [sortBy, setSortBy] = useState("createdAt");
   const [sortOrder, setSortOrder] = useState("desc");
   const [showAddForm, setShowAddForm] = useState(false);
-  const [editingLead, setEditingLead] = useState(null);
+const [editingLead, setEditingLead] = useState(null);
   const [emptyRows, setEmptyRows] = useState([]);
   const [nextTempId, setNextTempId] = useState(-1);
+  const [debounceTimeouts, setDebounceTimeouts] = useState({});
 
-  useEffect(() => {
-    loadLeads();
-  }, []);
-
-const loadLeads = async () => {
+  // Load leads data
+  const loadLeads = async () => {
     try {
-      setLoading(true);
+setLoading(true);
       setError(null);
       const response = await getLeads();
       
@@ -57,6 +55,19 @@ const loadLeads = async () => {
       setError(err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadLeads();
+  }, []);
+
+  const handleSort = (field) => {
+    if (sortBy === field) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(field);
+      setSortOrder('desc');
     }
   };
 
@@ -455,17 +466,38 @@ const getStatusColor = (status) => {
       } else {
         return aValue < bValue ? 1 : -1;
       }
-    });
+});
 
-  const handleSort = (field) => {
-    if (sortBy === field) {
-      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-    } else {
-      setSortBy(field);
-      setSortOrder("asc");
+  // Handle creating new category
+  const handleCreateCategory = (newCategory) => {
+    if (newCategory && newCategory.trim() && !categoryOptions.includes(newCategory.trim())) {
+      setCategoryOptions(prev => [...prev, newCategory.trim()]);
+      toast.success(`Category "${newCategory}" has been added`);
+      return newCategory.trim();
     }
-};
+    return null;
+  };
 
+  // Helper function to get status color
+  const getStatusColor = (status) => {
+    const colors = {
+      "Launched on AppSumo": "success",
+      "Launched on Prime Club": "primary",
+      "Keep an Eye": "info",
+      "Rejected": "error",
+      "Unsubscribed": "warning",
+      "Outdated": "default",
+      "Hotlist": "primary",
+      "Out of League": "error",
+      "Connected": "info",
+      "Locked": "warning",
+      "Meeting Booked": "primary",
+      "Meeting Done": "success",
+      "Negotiation": "warning",
+      "Closed Lost": "error"
+    };
+    return colors[status] || "default";
+  };
 // Always maintain one empty row at the top
   useEffect(() => {
     if (!loading && emptyRows.length === 0) {
