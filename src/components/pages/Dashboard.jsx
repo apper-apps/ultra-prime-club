@@ -47,26 +47,70 @@ const DailyLeadsReport = () => {
     </Card>
   );
 
-  return (
+return (
     <Card className="p-6">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">Daily Leads Report</h3>
       <div className="space-y-4">
+        {/* Performance Alert */}
+        {leadsData.some(rep => rep.lowPerformance) && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="p-4 bg-red-50 border border-red-200 rounded-lg"
+          >
+            <div className="flex items-center space-x-2 mb-2">
+              <ApperIcon name="AlertTriangle" size={16} className="text-red-600" />
+              <h4 className="font-medium text-red-800">Performance Alert</h4>
+            </div>
+            <p className="text-sm text-red-700 mb-3">
+              The following sales reps have added fewer than 5 leads today:
+            </p>
+            <div className="space-y-2">
+              {leadsData
+                .filter(rep => rep.lowPerformance)
+                .map((rep, index) => (
+                  <motion.div
+                    key={rep.salesRepId}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="flex items-center justify-between text-sm"
+                  >
+                    <span className="font-medium text-red-800">{rep.salesRep}</span>
+                    <span className="text-red-600">{rep.leadCount} leads</span>
+                  </motion.div>
+                ))}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Sales Rep Performance Summary */}
         {leadsData.length > 0 ? (
-          leadsData.map((lead, index) => (
+          leadsData.map((rep, index) => (
             <motion.div
-              key={lead.id || index}
+              key={rep.salesRepId}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+              className={`flex items-center justify-between p-3 rounded-lg ${
+                rep.lowPerformance ? 'bg-red-50 border border-red-200' : 'bg-gray-50'
+              }`}
             >
               <div>
-                <p className="font-medium text-gray-900">{lead.name || 'Unknown Lead'}</p>
-                <p className="text-sm text-gray-500">{lead.source || 'Unknown Source'}</p>
+                <p className={`font-medium ${rep.lowPerformance ? 'text-red-900' : 'text-gray-900'}`}>
+                  {rep.salesRep}
+                </p>
+                <p className={`text-sm ${rep.lowPerformance ? 'text-red-600' : 'text-gray-500'}`}>
+                  Sales Representative
+                </p>
               </div>
               <div className="text-right">
-                <p className="text-sm font-medium text-gray-900">{lead.value || '$0'}</p>
-                <p className="text-xs text-gray-500">{lead.time || 'Today'}</p>
+                <p className={`text-sm font-medium ${rep.lowPerformance ? 'text-red-900' : 'text-gray-900'}`}>
+                  {rep.leadCount} leads today
+                </p>
+                <p className={`text-xs ${rep.lowPerformance ? 'text-red-500' : 'text-gray-500'}`}>
+                  {rep.lowPerformance ? 'Below target' : 'Performance'}
+                </p>
               </div>
             </motion.div>
           ))

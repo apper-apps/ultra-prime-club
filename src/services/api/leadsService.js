@@ -152,18 +152,31 @@ export const getDailyLeadsReport = async () => {
   // Group by sales rep
   const reportData = {};
   
+  // Initialize all sales reps with empty data
+  salesReps.forEach(rep => {
+    reportData[rep.name] = {
+      salesRep: rep.name,
+      salesRepId: rep.Id,
+      leads: [],
+      leadCount: 0,
+      lowPerformance: false
+    };
+  });
+  
+  // Add today's leads to the respective sales reps
   todaysLeads.forEach(lead => {
     const salesRep = salesReps.find(rep => rep.Id === lead.addedBy);
     const repName = salesRep ? salesRep.name : 'Unknown';
     
-    if (!reportData[repName]) {
-      reportData[repName] = {
-        salesRep: repName,
-        leads: []
-      };
+    if (reportData[repName]) {
+      reportData[repName].leads.push(lead);
     }
-    
-    reportData[repName].leads.push(lead);
+  });
+  
+  // Calculate lead counts and identify low performers
+  Object.values(reportData).forEach(repData => {
+    repData.leadCount = repData.leads.length;
+    repData.lowPerformance = repData.leadCount < 5;
   });
   
   // Convert to array and sort by lead count (descending)
