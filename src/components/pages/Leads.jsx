@@ -78,7 +78,7 @@ const Leads = () => {
     }
   };
 
-  const handleUpdateLead = async (leadId, updates) => {
+const handleUpdateLead = async (leadId, updates) => {
     try {
       const updatedLead = await updateLead(leadId, updates);
       setData(prevData => 
@@ -93,7 +93,29 @@ const Leads = () => {
     }
   };
 
-  const getStatusColor = (status) => {
+  const handleFieldUpdate = async (leadId, field, value) => {
+    try {
+      const updates = { [field]: field === 'arr' ? Number(value) : value };
+      const updatedLead = await updateLead(leadId, updates);
+      setData(prevData => 
+        prevData.map(lead => 
+          lead.Id === leadId ? updatedLead : lead
+        )
+      );
+      toast.success("Lead updated successfully!");
+    } catch (err) {
+      toast.error("Failed to update lead");
+    }
+  };
+
+  const handleInlineEdit = (leadId, field, currentValue) => {
+    const newValue = prompt(`Edit ${field}:`, currentValue);
+    if (newValue !== null && newValue !== currentValue) {
+      handleFieldUpdate(leadId, field, newValue);
+    }
+  };
+
+const getStatusColor = (status) => {
     const colors = {
       "Launched on AppSumo": "success",
       "Launched on Prime Club": "primary",
@@ -102,7 +124,13 @@ const Leads = () => {
       "Unsubscribed": "warning",
       "Outdated": "default",
       "Hotlist": "primary",
-      "Out of League": "error"
+      "Out of League": "error",
+      "Connected": "info",
+      "Locked": "warning",
+      "Meeting Booked": "primary",
+      "Meeting Done": "success",
+      "Negotiation": "warning",
+      "Closed Lost": "error"
     };
     return colors[status] || "default";
   };
@@ -181,7 +209,7 @@ const Leads = () => {
             />
           </div>
           <div className="flex flex-col sm:flex-row gap-2">
-            <select
+<select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
               className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
@@ -195,6 +223,12 @@ const Leads = () => {
               <option value="Outdated">Outdated</option>
               <option value="Hotlist">Hotlist</option>
               <option value="Out of League">Out of League</option>
+              <option value="Connected">Connected</option>
+              <option value="Locked">Locked</option>
+              <option value="Meeting Booked">Meeting Booked</option>
+              <option value="Meeting Done">Meeting Done</option>
+              <option value="Negotiation">Negotiation</option>
+              <option value="Closed Lost">Closed Lost</option>
             </select>
             <select
               value={fundingFilter}
@@ -276,40 +310,67 @@ const Leads = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredAndSortedData.map((lead) => (
                   <tr key={lead.Id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <a
-                        href={lead.websiteUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary-600 hover:text-primary-800 font-medium"
+<td className="px-6 py-4 whitespace-nowrap">
+                      <div
+                        onClick={() => handleInlineEdit(lead.Id, 'websiteUrl', lead.websiteUrl)}
+                        className="cursor-pointer hover:bg-gray-50 p-1 rounded"
                       >
-                        {lead.websiteUrl.replace(/^https?:\/\//, '')}
-                      </a>
+                        <a
+                          href={lead.websiteUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary-600 hover:text-primary-800 font-medium"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {lead.websiteUrl.replace(/^https?:\/\//, '')}
+                        </a>
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {lead.teamSize}
+                      <div
+                        onClick={() => handleInlineEdit(lead.Id, 'teamSize', lead.teamSize)}
+                        className="cursor-pointer hover:bg-gray-50 p-1 rounded"
+                      >
+                        {lead.teamSize}
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      ${lead.arr.toLocaleString()}
+                      <div
+                        onClick={() => handleInlineEdit(lead.Id, 'arr', lead.arr.toString())}
+                        className="cursor-pointer hover:bg-gray-50 p-1 rounded"
+                      >
+                        ${lead.arr.toLocaleString()}
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {lead.category}
+                      <div
+                        onClick={() => handleInlineEdit(lead.Id, 'category', lead.category)}
+                        className="cursor-pointer hover:bg-gray-50 p-1 rounded"
+                      >
+                        {lead.category}
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <a
-                        href={lead.linkedinUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary-600 hover:text-primary-800"
+                      <div
+                        onClick={() => handleInlineEdit(lead.Id, 'linkedinUrl', lead.linkedinUrl)}
+                        className="cursor-pointer hover:bg-gray-50 p-1 rounded inline-block"
                       >
-                        <ApperIcon name="Linkedin" size={16} />
-                      </a>
+                        <a
+                          href={lead.linkedinUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary-600 hover:text-primary-800"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <ApperIcon name="Linkedin" size={16} />
+                        </a>
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <select
                         value={lead.status}
                         onChange={(e) => handleStatusChange(lead.Id, e.target.value)}
-                        className="text-sm border-0 bg-transparent focus:outline-none focus:ring-0"
+                        className="text-sm border border-gray-300 rounded-lg px-2 py-1"
                       >
                         <option value="Launched on AppSumo">Launched on AppSumo</option>
                         <option value="Launched on Prime Club">Launched on Prime Club</option>
@@ -319,12 +380,23 @@ const Leads = () => {
                         <option value="Outdated">Outdated</option>
                         <option value="Hotlist">Hotlist</option>
                         <option value="Out of League">Out of League</option>
+                        <option value="Connected">Connected</option>
+                        <option value="Locked">Locked</option>
+                        <option value="Meeting Booked">Meeting Booked</option>
+                        <option value="Meeting Done">Meeting Done</option>
+                        <option value="Negotiation">Negotiation</option>
+                        <option value="Closed Lost">Closed Lost</option>
                       </select>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <Badge variant={lead.fundingType === "Series C" ? "primary" : "default"}>
-                        {lead.fundingType}
-                      </Badge>
+                      <div
+                        onClick={() => handleInlineEdit(lead.Id, 'fundingType', lead.fundingType)}
+                        className="cursor-pointer hover:bg-gray-50 p-1 rounded inline-block"
+                      >
+                        <Badge variant={lead.fundingType === "Series C" ? "primary" : "default"}>
+                          {lead.fundingType}
+                        </Badge>
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex items-center gap-2">
@@ -479,7 +551,7 @@ const AddLeadModal = ({ onClose, onSubmit }) => {
               onChange={(e) => setFormData({...formData, status: e.target.value})}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
-              <option value="Launched on AppSumo">Launched on AppSumo</option>
+<option value="Launched on AppSumo">Launched on AppSumo</option>
               <option value="Launched on Prime Club">Launched on Prime Club</option>
               <option value="Keep an Eye">Keep an Eye</option>
               <option value="Rejected">Rejected</option>
@@ -487,6 +559,12 @@ const AddLeadModal = ({ onClose, onSubmit }) => {
               <option value="Outdated">Outdated</option>
               <option value="Hotlist">Hotlist</option>
               <option value="Out of League">Out of League</option>
+              <option value="Connected">Connected</option>
+              <option value="Locked">Locked</option>
+              <option value="Meeting Booked">Meeting Booked</option>
+              <option value="Meeting Done">Meeting Done</option>
+              <option value="Negotiation">Negotiation</option>
+              <option value="Closed Lost">Closed Lost</option>
             </select>
           </div>
           
@@ -628,7 +706,7 @@ const EditLeadModal = ({ lead, onClose, onSubmit }) => {
               onChange={(e) => setFormData({...formData, status: e.target.value})}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
-              <option value="Launched on AppSumo">Launched on AppSumo</option>
+<option value="Launched on AppSumo">Launched on AppSumo</option>
               <option value="Launched on Prime Club">Launched on Prime Club</option>
               <option value="Keep an Eye">Keep an Eye</option>
               <option value="Rejected">Rejected</option>
@@ -636,6 +714,12 @@ const EditLeadModal = ({ lead, onClose, onSubmit }) => {
               <option value="Outdated">Outdated</option>
               <option value="Hotlist">Hotlist</option>
               <option value="Out of League">Out of League</option>
+              <option value="Connected">Connected</option>
+              <option value="Locked">Locked</option>
+              <option value="Meeting Booked">Meeting Booked</option>
+              <option value="Meeting Done">Meeting Done</option>
+              <option value="Negotiation">Negotiation</option>
+              <option value="Closed Lost">Closed Lost</option>
             </select>
           </div>
           
