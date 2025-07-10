@@ -897,14 +897,22 @@ const getStatusColor = (status) => {
                 </table>
             </div>
         </div>}
-    </Card>
+</Card>
     {/* Add Lead Modal */}
-    {showAddForm && <AddLeadModal onClose={() => setShowAddForm(false)} onSubmit={handleAddLead} />}
+    {showAddForm && <AddLeadModal 
+      onClose={() => setShowAddForm(false)} 
+      onSubmit={handleAddLead}
+      categoryOptions={categoryOptions}
+      onCreateCategory={handleCreateCategory}
+    />}
     {/* Edit Lead Modal */}
     {editingLead && <EditLeadModal
         lead={editingLead}
         onClose={() => setEditingLead(null)}
-        onSubmit={handleUpdateLead} />}
+        onSubmit={handleUpdateLead}
+        categoryOptions={categoryOptions}
+        onCreateCategory={handleCreateCategory}
+    />}
 </motion.div>
   );
 };
@@ -1023,7 +1031,7 @@ const SearchableSelect = ({ value, onChange, options, placeholder = "Select...",
   );
 };
 
-const AddLeadModal = ({ onClose, onSubmit }) => {
+const AddLeadModal = ({ onClose, onSubmit, categoryOptions, onCreateCategory }) => {
   const [formData, setFormData] = useState({
     websiteUrl: "",
     teamSize: "1-3",
@@ -1072,12 +1080,13 @@ const AddLeadModal = ({ onClose, onSubmit }) => {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Team Size
             </label>
-            <select
+<select
               value={formData.teamSize}
               onChange={(e) => setFormData({...formData, teamSize: e.target.value})}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
->
+            >
               <option value="1-3">1-3</option>
+              <option value="4-10">4-10</option>
               <option value="11-50">11-50</option>
               <option value="51-100">51-100</option>
               <option value="101-500">101-500</option>
@@ -1110,7 +1119,7 @@ const AddLeadModal = ({ onClose, onSubmit }) => {
                 options={categoryOptions}
                 placeholder="Select category..."
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                onCreateCategory={handleCreateCategory}
+                onCreateCategory={onCreateCategory}
               />
             </div>
           </div>
@@ -1187,7 +1196,7 @@ const AddLeadModal = ({ onClose, onSubmit }) => {
   );
 };
 
-const EditLeadModal = ({ lead, onClose, onSubmit }) => {
+const EditLeadModal = ({ lead, onClose, onSubmit, categoryOptions, onCreateCategory }) => {
   const [formData, setFormData] = useState({
     websiteUrl: lead.websiteUrl,
     teamSize: lead.teamSize,
@@ -1241,6 +1250,7 @@ const EditLeadModal = ({ lead, onClose, onSubmit }) => {
                         })}
 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
                         <option value="1-3">1-3</option>
+                        <option value="4-10">4-10</option>
                         <option value="11-50">11-50</option>
                         <option value="51-100">51-100</option>
                         <option value="101-500">101-500</option>
@@ -1273,7 +1283,7 @@ className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none
                             options={categoryOptions}
                             placeholder="Select category..."
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                            onCreateCategory={handleCreateCategory}
+                            onCreateCategory={onCreateCategory}
                         />
                     </div>
                 </div>
