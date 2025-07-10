@@ -1,0 +1,98 @@
+[
+  {
+    "Id": 1,
+    "name": "Notion Enterprise Package",
+    "leadName": "John Smith",
+    "leadId": "1",
+    "value": 125000,
+    "stage": "Negotiation",
+    "assignedRep": "Sarah Johnson",
+    "startMonth": 1,
+    "endMonth": 3,
+    "createdAt": "2024-01-15T10:30:00Z"
+  },
+  {
+    "Id": 2,
+    "name": "Canva Pro Subscription",
+    "leadName": "Emma Wilson",
+    "leadId": "2",
+    "value": 85000,
+    "stage": "Closed",
+    "assignedRep": "Mike Davis",
+    "startMonth": 5,
+    "endMonth": 6,
+    "createdAt": "2024-01-10T14:20:00Z"
+  },
+  {
+    "Id": 3,
+    "name": "Figma Team Plan",
+    "leadName": "David Brown",
+    "leadId": "3",
+    "value": 45000,
+    "stage": "Connected",
+    "assignedRep": "Sarah Johnson",
+    "startMonth": 2,
+    "endMonth": 4,
+    "createdAt": "2024-01-18T09:15:00Z"
+  },
+  {
+    "Id": 4,
+    "name": "Stripe Integration",
+    "leadName": "Lisa Garcia",
+    "leadId": "4",
+    "value": 200000,
+    "stage": "Meeting Booked",
+    "assignedRep": "Tom Wilson",
+    "startMonth": 3,
+    "endMonth": 8,
+    "createdAt": "2024-01-20T11:45:00Z"
+  },
+  {
+    "Id": 5,
+    "name": "Shopify Plus",
+    "leadName": "James Miller",
+    "leadId": "5",
+    "value": 150000,
+    "stage": "Meeting Done",
+    "assignedRep": "Mike Davis",
+    "startMonth": 4,
+    "endMonth": 7,
+    "createdAt": "2024-01-12T16:30:00Z"
+  },
+  {
+    "Id": 6,
+    "name": "Slack Premium",
+    "leadName": "Anna Taylor",
+    "leadId": "6",
+    "value": 75000,
+    "stage": "Locked",
+    "assignedRep": "Sarah Johnson",
+    "startMonth": 6,
+    "endMonth": 9,
+    "createdAt": "2024-01-14T13:20:00Z"
+  },
+  {
+    "Id": 7,
+    "name": "Discord Nitro",
+    "leadName": "Rachel Green",
+    "leadId": "8",
+    "value": 35000,
+    "stage": "Connected",
+    "assignedRep": "Mike Davis",
+    "startMonth": 7,
+    "endMonth": 10,
+    "createdAt": "2024-01-22T15:10:00Z"
+  },
+  {
+    "Id": 8,
+    "name": "Zoom Enterprise",
+    "leadName": "Chris Anderson",
+    "leadId": "7",
+    "value": 25000,
+    "stage": "Lost",
+    "assignedRep": "Tom Wilson",
+    "startMonth": 1,
+    "endMonth": 2,
+    "createdAt": "2024-01-08T10:00:00Z"
+  }
+]

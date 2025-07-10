@@ -1,0 +1,72 @@
+{
+  "metrics": [
+    {
+      "id": 1,
+      "title": "Total Leads Contacted",
+      "value": "2,847",
+      "icon": "Users",
+      "trend": "up",
+      "trendValue": "12%",
+      "color": "primary"
+    },
+    {
+      "id": 2,
+      "title": "Meetings Booked",
+      "value": "387",
+      "icon": "Calendar",
+      "trend": "up",
+      "trendValue": "8%",
+      "color": "success"
+    },
+    {
+      "id": 3,
+      "title": "Deals Closed",
+      "value": "156",
+      "icon": "TrendingUp",
+      "trend": "up",
+      "trendValue": "15%",
+      "color": "warning"
+    },
+    {
+      "id": 4,
+      "title": "Conversion Rate",
+      "value": "5.5%",
+      "icon": "Target",
+      "trend": "up",
+      "trendValue": "2%",
+      "color": "info"
+    }
+  ],
+  "recentActivity": [
+    {
+      "id": 1,
+      "title": "Meeting scheduled with Notion LTD",
+      "type": "meeting",
+      "time": "2 hours ago"
+    },
+    {
+      "id": 2,
+      "title": "Deal closed: Canva LTD - $85,000",
+      "type": "deal",
+      "time": "4 hours ago"
+    },
+    {
+      "id": 3,
+      "title": "New lead: Figma Inc contacted",
+      "type": "contact",
+      "time": "6 hours ago"
+    },
+    {
+      "id": 4,
+      "title": "Meeting completed with Stripe",
+      "type": "meeting",
+      "time": "1 day ago"
+    },
+    {
+      "id": 5,
+      "title": "Deal moved to negotiation: Shopify",
+      "type": "deal",
+      "time": "1 day ago"
+    }
+  ]
+}

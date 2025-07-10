@@ -1,0 +1,81 @@
+import { useState, useRef } from "react";
+import { motion } from "framer-motion";
+
+const TimelineBar = ({ deal, onUpdate }) => {
+  const [isDragging, setIsDragging] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+  const barRef = useRef(null);
+
+  const months = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  ];
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 0
+    }).format(amount);
+  };
+
+  const getBarColor = (value) => {
+    if (value >= 100000) return "from-green-500 to-green-600";
+    if (value >= 50000) return "from-blue-500 to-blue-600";
+    if (value >= 25000) return "from-yellow-500 to-yellow-600";
+    return "from-gray-500 to-gray-600";
+  };
+
+  const handleMouseDown = (e) => {
+    if (e.target.classList.contains("resize-handle")) {
+      setIsResizing(true);
+    } else {
+      setIsDragging(true);
+    }
+  };
+
+  const startMonth = deal.startMonth || 1;
+  const endMonth = deal.endMonth || 3;
+  const duration = endMonth - startMonth + 1;
+  const leftPosition = ((startMonth - 1) / 12) * 100;
+  const width = (duration / 12) * 100;
+
+  return (
+    <motion.div
+      ref={barRef}
+      initial={{ opacity: 0, scaleX: 0 }}
+      animate={{ opacity: 1, scaleX: 1 }}
+      transition={{ duration: 0.3 }}
+      className={`absolute top-0 h-full rounded-lg bg-gradient-to-r ${getBarColor(deal.value)} 
+        shadow-lg cursor-grab active:cursor-grabbing transition-all duration-200 group
+        ${isDragging ? "ring-2 ring-primary-400 ring-opacity-60" : "hover:shadow-xl"}
+        ${isResizing ? "ring-2 ring-blue-400 ring-opacity-60" : ""}
+      `}
+      style={{
+        left: `${leftPosition}%`,
+        width: `${width}%`,
+        minWidth: "60px"
+      }}
+      onMouseDown={handleMouseDown}
+    >
+      <div className="h-full flex items-center justify-between px-3 text-white text-sm font-medium">
+        <div className="flex-1 min-w-0">
+          <div className="truncate font-semibold">{deal.name}</div>
+          <div className="text-xs opacity-90">{formatCurrency(deal.value)}</div>
+        </div>
+        
+        {/* Resize handle */}
+        <div className="resize-handle w-2 h-full bg-white bg-opacity-30 rounded-r-lg cursor-ew-resize opacity-0 group-hover:opacity-100 transition-opacity" />
+      </div>
+      
+      {/* Tooltip */}
+      <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-3 py-1 rounded-lg text-xs opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+        <div className="font-semibold">{deal.name}</div>
+        <div>{months[startMonth - 1]} - {months[endMonth - 1]}</div>
+        <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+      </div>
+    </motion.div>
+  );
+};
+
+export default TimelineBar;
