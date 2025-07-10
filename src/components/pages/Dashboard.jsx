@@ -64,23 +64,9 @@ return (
               <ApperIcon name="AlertTriangle" size={16} className="text-red-600" />
               <h4 className="font-medium text-red-800">Performance Alert</h4>
             </div>
-            <p className="text-sm text-red-700 mb-3">
-              The following sales reps have added fewer than 10 leads today:
+<p className="text-sm text-red-700">
+              {leadsData.filter(rep => rep.lowPerformance).length} sales rep{leadsData.filter(rep => rep.lowPerformance).length !== 1 ? 's' : ''} have added fewer than 10 leads today.
             </p>
-            {leadsData
-              .filter(rep => rep.lowPerformance)
-              .map((rep, index) => (
-                <motion.div
-                  key={rep.salesRepId}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="flex items-center justify-between text-sm"
-                >
-                  <span className="font-medium text-red-800">{rep.salesRep}</span>
-                  <span className="text-red-600">{rep.leadCount} leads</span>
-                </motion.div>
-              ))}
           </motion.div>
         )}
 
