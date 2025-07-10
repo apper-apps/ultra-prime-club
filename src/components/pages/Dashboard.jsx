@@ -7,25 +7,28 @@ import Loading from "@/components/ui/Loading";
 import Pipeline from "@/components/pages/Pipeline";
 import Leads from "@/components/pages/Leads";
 import MetricCard from "@/components/molecules/MetricCard";
-import { getDashboardMetrics, getRecentActivity } from "@/services/api/dashboardService";
+import { getDashboardMetrics, getRecentActivity, getTodaysMeetings } from "@/services/api/dashboardService";
 
 const Dashboard = () => {
   const [metrics, setMetrics] = useState([]);
   const [activity, setActivity] = useState([]);
+  const [meetings, setMeetings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const loadDashboardData = async () => {
+const loadDashboardData = async () => {
     try {
       setLoading(true);
       setError("");
       
-const [metricsData, activityData] = await Promise.all([
+      const [metricsData, activityData, meetingsData] = await Promise.all([
         getDashboardMetrics(),
-        getRecentActivity()
+        getRecentActivity(),
+        getTodaysMeetings()
       ]);
       
       setMetrics(metricsData);
       setActivity(activityData);
+      setMeetings(meetingsData);
     } catch (err) {
       setError("Failed to load dashboard data");
     } finally {
@@ -64,8 +67,8 @@ color={metric.color}
 />
         ))}
       </div>
-      {/* Reports and Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+{/* Reports and Activity */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <Card className="p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
           <div className="space-y-4">
@@ -120,6 +123,38 @@ color={metric.color}
             </motion.button>
           </div>
 </Card>
+
+        <Card className="p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Meetings Today</h3>
+          <div className="space-y-3">
+            {meetings.length > 0 ? (
+              meetings.map((meeting, index) => (
+                <motion.div
+                  key={meeting.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="p-3 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="font-medium text-gray-900">{meeting.title}</div>
+                      <div className="text-sm text-gray-500">{meeting.client}</div>
+                    </div>
+                    <div className="text-sm font-medium text-primary-600">
+                      {meeting.time}
+                    </div>
+                  </div>
+                </motion.div>
+              ))
+            ) : (
+              <div className="text-center text-gray-500 py-8">
+                <ApperIcon name="Calendar" size={48} className="mx-auto mb-3 text-gray-300" />
+                <p>No meetings scheduled for today</p>
+              </div>
+            )}
+          </div>
+        </Card>
       </div>
     </div>
   );
