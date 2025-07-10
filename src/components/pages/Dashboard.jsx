@@ -7,11 +7,12 @@ import Loading from "@/components/ui/Loading";
 import Pipeline from "@/components/pages/Pipeline";
 import Leads from "@/components/pages/Leads";
 import MetricCard from "@/components/molecules/MetricCard";
-import { getDashboardMetrics, getRecentActivity } from "@/services/api/dashboardService";
+import { getDashboardMetrics, getRecentActivity, getTodaysMeetings } from "@/services/api/dashboardService";
 
 const Dashboard = () => {
   const [metrics, setMetrics] = useState([]);
   const [activity, setActivity] = useState([]);
+  const [meetings, setMeetings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const loadDashboardData = async () => {
@@ -19,13 +20,15 @@ const Dashboard = () => {
       setLoading(true);
       setError("");
       
-      const [metricsData, activityData] = await Promise.all([
+const [metricsData, activityData, meetingsData] = await Promise.all([
         getDashboardMetrics(),
-        getRecentActivity()
+        getRecentActivity(),
+        getTodaysMeetings()
       ]);
       
       setMetrics(metricsData);
       setActivity(activityData);
+      setMeetings(meetingsData);
     } catch (err) {
       setError("Failed to load dashboard data");
     } finally {
@@ -61,10 +64,18 @@ const Dashboard = () => {
             trendValue={metric.trendValue}
             color={metric.color}
             delay={index * 0.1}
-          />
+/>
         ))}
-</div>
-
+        <MetricCard
+          title="Meetings Today"
+          value={meetings.length.toString()}
+          icon="Clock"
+          trend="up"
+          trendValue={`${meetings.length} scheduled`}
+          color="info"
+          delay={metrics.length * 0.1}
+        />
+      </div>
       {/* Reports and Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="p-6">
