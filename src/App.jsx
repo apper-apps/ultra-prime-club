@@ -4,12 +4,10 @@ import { Component } from "react";
 import Layout from "@/components/organisms/Layout";
 import Dashboard from "@/components/pages/Dashboard";
 import Leads from "@/components/pages/Leads";
-import Contacts from "@/components/pages/Contacts";
 import Pipeline from "@/components/pages/Pipeline";
 import Calendar from "@/components/pages/Calendar";
 import Analytics from "@/components/pages/Analytics";
 import Leaderboard from "@/components/pages/Leaderboard";
-import WebsiteUrlReport from "@/components/pages/WebsiteUrlReport";
 
 // Error boundary to handle external script errors (like canvas viewport capture)
 class ErrorBoundary extends Component {
@@ -77,15 +75,6 @@ function App() {
               <Leads />
             </motion.div>
           } />
-          <Route path="/contacts" element={
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Contacts />
-            </motion.div>
-          } />
           <Route path="/pipeline" element={
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -111,15 +100,6 @@ function App() {
               transition={{ duration: 0.3 }}
             >
               <Analytics />
-            </motion.div>
-          } />
-          <Route path="/reports/website-urls" element={
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <WebsiteUrlReport />
             </motion.div>
           } />
           <Route path="/leaderboard" element={
