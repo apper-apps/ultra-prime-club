@@ -175,7 +175,23 @@ const handleFieldUpdate = async (leadId, field, value) => {
     } catch (err) {
       toast.error("Failed to update lead");
     }
-};
+  };
+
+  // Debounced version for real-time updates
+  const handleFieldUpdateDebounced = (leadId, field, value) => {
+    // Clear any existing timeout
+    const timeoutKey = `${leadId}-${field}`;
+    if (window.fieldUpdateTimeouts) {
+      clearTimeout(window.fieldUpdateTimeouts[timeoutKey]);
+    } else {
+      window.fieldUpdateTimeouts = {};
+    }
+    
+    // Set new timeout
+    window.fieldUpdateTimeouts[timeoutKey] = setTimeout(() => {
+      handleFieldUpdate(leadId, field, value);
+    }, 1000);
+  };
 
   // Add empty row for new data entry
   const addEmptyRow = () => {
@@ -194,7 +210,7 @@ const handleFieldUpdate = async (leadId, field, value) => {
     setNextTempId(prev => prev - 1);
   };
 
-  // Handle updates to empty rows
+// Handle updates to empty rows
   const handleEmptyRowUpdate = async (tempId, field, value) => {
     setEmptyRows(prev => 
       prev.map(row => 
@@ -228,6 +244,18 @@ const handleFieldUpdate = async (leadId, field, value) => {
           toast.error("Failed to create lead: " + err.message);
         }
       }
+    }
+  };
+
+  // Debounced version for non-submission updates
+  const handleEmptyRowUpdateDebounced = (tempId, field, value) => {
+    // Update UI immediately for non-websiteUrl fields
+    if (field !== 'websiteUrl') {
+      setEmptyRows(prev => 
+        prev.map(row => 
+          row.Id === tempId ? { ...row, [field]: field === 'arr' ? Number(value) * 1000000 : value } : row
+        )
+      );
     }
   };
 
@@ -444,10 +472,20 @@ const getStatusColor = (status) => {
                   {emptyRows.map((emptyRow) => (
                     <tr key={`empty-${emptyRow.Id}`} className="hover:bg-gray-50 empty-row">
                       <td className="px-6 py-4 whitespace-nowrap min-w-[200px]">
-                        <Input
+<Input
                           type="url"
                           value={emptyRow.websiteUrl}
-                          onChange={(e) => handleEmptyRowUpdate(emptyRow.Id, 'websiteUrl', e.target.value)}
+                          onChange={(e) => setEmptyRows(prev => 
+                            prev.map(row => 
+                              row.Id === emptyRow.Id ? { ...row, websiteUrl: e.target.value } : row
+                            )
+                          )}
+                          onBlur={(e) => handleEmptyRowUpdate(emptyRow.Id, 'websiteUrl', e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              handleEmptyRowUpdate(emptyRow.Id, 'websiteUrl', e.target.value);
+                            }
+                          }}
                           placeholder="Enter website URL..."
                           className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 text-primary-600 font-medium placeholder-gray-400"
                         />
@@ -464,12 +502,18 @@ const getStatusColor = (status) => {
                         </select>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[120px]">
-                        <Input
+<Input
                           type="number"
                           step="0.1"
                           min="0"
                           value={(emptyRow.arr / 1000000).toFixed(1)}
-                          onChange={(e) => handleEmptyRowUpdate(emptyRow.Id, 'arr', e.target.value)}
+                          onChange={(e) => handleEmptyRowUpdateDebounced(emptyRow.Id, 'arr', e.target.value)}
+                          onBlur={(e) => handleEmptyRowUpdate(emptyRow.Id, 'arr', e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              handleEmptyRowUpdate(emptyRow.Id, 'arr', e.target.value);
+                            }
+                          }}
                           placeholder="0.0"
                           className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full placeholder-gray-400"
                         />
@@ -486,10 +530,16 @@ const getStatusColor = (status) => {
                         </select>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap min-w-[100px]">
-                        <Input
+<Input
                           type="url"
                           value={emptyRow.linkedinUrl}
-                          onChange={(e) => handleEmptyRowUpdate(emptyRow.Id, 'linkedinUrl', e.target.value)}
+                          onChange={(e) => handleEmptyRowUpdateDebounced(emptyRow.Id, 'linkedinUrl', e.target.value)}
+                          onBlur={(e) => handleEmptyRowUpdate(emptyRow.Id, 'linkedinUrl', e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              handleEmptyRowUpdate(emptyRow.Id, 'linkedinUrl', e.target.value);
+                            }
+                          }}
                           placeholder="LinkedIn URL..."
                           className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full placeholder-gray-400 text-sm"
                         />
@@ -549,11 +599,25 @@ const getStatusColor = (status) => {
                   {filteredAndSortedData.map((lead) => (
                     <tr key={lead.Id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap min-w-[200px]">
-                        <Input
+<Input
                           type="url"
                           value={lead.websiteUrl}
-                          onChange={(e) => handleFieldUpdate(lead.Id, 'websiteUrl', e.target.value)}
+                          onChange={(e) => {
+                            // Update UI immediately for smooth typing
+                            setData(prevData => 
+                              prevData.map(l => 
+                                l.Id === lead.Id ? { ...l, websiteUrl: e.target.value } : l
+                              )
+                            );
+                            // Debounce the API call
+                            handleFieldUpdateDebounced(lead.Id, 'websiteUrl', e.target.value);
+                          }}
                           onBlur={(e) => handleFieldUpdate(lead.Id, 'websiteUrl', e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              handleFieldUpdate(lead.Id, 'websiteUrl', e.target.value);
+                            }
+                          }}
                           className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 text-primary-600 font-medium"
                         />
                       </td>
@@ -569,13 +633,27 @@ const getStatusColor = (status) => {
                         </select>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[120px]">
-                        <Input
+<Input
                           type="number"
                           step="0.1"
                           min="0"
                           value={(lead.arr / 1000000).toFixed(1)}
-                          onChange={(e) => handleFieldUpdate(lead.Id, 'arr', e.target.value)}
+                          onChange={(e) => {
+                            // Update UI immediately for smooth typing
+                            setData(prevData => 
+                              prevData.map(l => 
+                                l.Id === lead.Id ? { ...l, arr: Number(e.target.value) * 1000000 } : l
+                              )
+                            );
+                            // Debounce the API call
+                            handleFieldUpdateDebounced(lead.Id, 'arr', e.target.value);
+                          }}
                           onBlur={(e) => handleFieldUpdate(lead.Id, 'arr', e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              handleFieldUpdate(lead.Id, 'arr', e.target.value);
+                            }
+                          }}
                           className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full"
                         />
                       </td>
