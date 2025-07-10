@@ -467,37 +467,6 @@ const getStatusColor = (status) => {
         return aValue < bValue ? 1 : -1;
       }
 });
-
-  // Handle creating new category
-  const handleCreateCategory = (newCategory) => {
-    if (newCategory && newCategory.trim() && !categoryOptions.includes(newCategory.trim())) {
-      setCategoryOptions(prev => [...prev, newCategory.trim()]);
-      toast.success(`Category "${newCategory}" has been added`);
-      return newCategory.trim();
-    }
-    return null;
-  };
-
-  // Helper function to get status color
-  const getStatusColor = (status) => {
-    const colors = {
-      "Launched on AppSumo": "success",
-      "Launched on Prime Club": "primary",
-      "Keep an Eye": "info",
-      "Rejected": "error",
-      "Unsubscribed": "warning",
-      "Outdated": "default",
-      "Hotlist": "primary",
-      "Out of League": "error",
-      "Connected": "info",
-      "Locked": "warning",
-      "Meeting Booked": "primary",
-      "Meeting Done": "success",
-      "Negotiation": "warning",
-      "Closed Lost": "error"
-    };
-    return colors[status] || "default";
-  };
 // Always maintain one empty row at the top
   useEffect(() => {
     if (!loading && emptyRows.length === 0) {
