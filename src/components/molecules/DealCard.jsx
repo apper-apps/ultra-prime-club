@@ -46,23 +46,23 @@ const DealCard = ({ deal, index, onEdit }) => {
               <div className="flex-1">
                 <h4 className="font-semibold text-gray-900 mb-1">{deal.name}</h4>
                 <p className="text-sm text-gray-600">{deal.leadName}</p>
-                {deal.edition && deal.edition !== "Select Edition" && (
-                  <div className="mt-1">
-                    <Badge variant="primary" size="sm" className="text-xs">
-                      {deal.edition}
-                    </Badge>
-                  </div>
-                )}
               </div>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onEdit?.(deal);
-                }}
-                className="p-1 hover:bg-gray-100 rounded-full transition-colors"
-              >
-                <ApperIcon name="MoreHorizontal" size={16} className="text-gray-400" />
-              </button>
+              <div className="flex flex-col items-end gap-2">
+                {deal.edition && deal.edition !== "Select Edition" && (
+                  <Badge variant="primary" size="sm" className="text-xs">
+                    {deal.edition}
+                  </Badge>
+                )}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onEdit?.(deal);
+                  }}
+                  className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                >
+                  <ApperIcon name="MoreHorizontal" size={16} className="text-gray-400" />
+                </button>
+              </div>
             </div>
             
 <div className="flex items-center justify-between mb-3">
