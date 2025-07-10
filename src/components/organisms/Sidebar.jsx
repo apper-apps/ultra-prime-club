@@ -6,8 +6,9 @@ import NavItem from "@/components/molecules/NavItem";
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  const navigation = [
+const navigation = [
     { to: "/", icon: "BarChart3", label: "Dashboard" },
+    { to: "/leads", icon: "Building2", label: "Leads" },
     { to: "/contacts", icon: "Users", label: "Contacts" },
     { to: "/pipeline", icon: "Kanban", label: "Deal Pipeline" },
     { to: "/calendar", icon: "Calendar", label: "Calendar" },
