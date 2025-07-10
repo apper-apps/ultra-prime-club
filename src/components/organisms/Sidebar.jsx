@@ -63,18 +63,8 @@ const navigation = [
             ))}
           </nav>
 
-          <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
-            <div className="flex items-center">
-              <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
-                <span className="text-white text-sm font-semibold">U</span>
-              </div>
-              {!isCollapsed && (
-                <div className="ml-3">
-                  <p className="text-sm font-medium text-gray-900">User</p>
-                  <p className="text-xs text-gray-500">Sales Manager</p>
-                </div>
-              )}
-            </div>
+<div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
+            <UserSettings isCollapsed={isCollapsed} />
           </div>
         </motion.div>
       </div>
@@ -152,6 +142,71 @@ const MobileSidebar = ({ navigation }) => {
         </div>
       )}
     </>
+  );
+};
+
+const UserSettings = ({ isCollapsed }) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const settingsItems = [
+    { icon: "User", label: "Profile", action: () => console.log("Profile") },
+    { icon: "Settings", label: "Account Settings", action: () => console.log("Account Settings") },
+    { icon: "Palette", label: "Preferences", action: () => console.log("Preferences") },
+    { icon: "LogOut", label: "Logout", action: () => console.log("Logout") }
+  ];
+
+  return (
+    <div className="relative">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
+            <span className="text-white text-sm font-semibold">U</span>
+          </div>
+          {!isCollapsed && (
+            <div className="ml-3">
+              <p className="text-sm font-medium text-gray-900">User</p>
+              <p className="text-xs text-gray-500">Sales Manager</p>
+            </div>
+          )}
+        </div>
+        <button
+          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
+        >
+          <ApperIcon 
+            name="Settings" 
+            size={16} 
+            className="text-gray-500 hover:text-gray-700" 
+          />
+        </button>
+      </div>
+
+      {isDropdownOpen && (
+        <>
+          <div 
+            className="fixed inset-0 z-40"
+            onClick={() => setIsDropdownOpen(false)}
+          />
+          <div className={`absolute ${isCollapsed ? 'left-0' : 'right-0'} bottom-full mb-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50`}>
+            <div className="py-2">
+              {settingsItems.map((item, index) => (
+                <button
+                  key={index}
+                  onClick={() => {
+                    item.action();
+                    setIsDropdownOpen(false);
+                  }}
+                  className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center transition-colors"
+                >
+                  <ApperIcon name={item.icon} size={16} className="mr-3 text-gray-500" />
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+    </div>
   );
 };
 
