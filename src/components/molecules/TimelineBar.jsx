@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
 const TimelineBar = ({ deal, onUpdate }) => {
@@ -28,7 +28,7 @@ const TimelineBar = ({ deal, onUpdate }) => {
     return "from-gray-500 to-gray-600";
   };
 
-const handleMouseDown = (e) => {
+  const handleMouseDown = (e) => {
     if (e.target.classList.contains("resize-handle")) {
       setIsResizing(true);
       e.preventDefault();
@@ -50,7 +50,9 @@ const handleMouseDown = (e) => {
     const monthPosition = Math.max(0, Math.min(11, Math.floor(relativeX / monthWidth)));
 
     if (isDragging) {
-      // Calculate new start position while maintaining duration
+// Calculate new start position while maintaining duration
+      const startMonth = deal.startMonth || 1;
+      const endMonth = deal.endMonth || 3;
       const duration = endMonth - startMonth + 1;
       const newStartMonth = Math.max(1, Math.min(12 - duration + 1, monthPosition + 1));
       const newEndMonth = newStartMonth + duration - 1;
@@ -63,6 +65,8 @@ const handleMouseDown = (e) => {
       }
     } else if (isResizing) {
       // Calculate new width from current start position
+      const startMonth = deal.startMonth || 1;
+      const endMonth = deal.endMonth || 3;
       const newEndMonth = Math.max(startMonth, Math.min(12, monthPosition + 1));
       
       if (newEndMonth !== endMonth) {
@@ -72,14 +76,13 @@ const handleMouseDown = (e) => {
       }
     }
   };
-
   const handleMouseUp = () => {
     setIsDragging(false);
     setIsResizing(false);
   };
 
-  // Add global mouse event listeners when dragging
-  useState(() => {
+// Add global mouse event listeners when dragging
+  useEffect(() => {
     if (isDragging || isResizing) {
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
@@ -88,8 +91,7 @@ const handleMouseDown = (e) => {
         document.removeEventListener('mouseup', handleMouseUp);
       };
     }
-  }, [isDragging, isResizing]);
-
+  }, [isDragging, isResizing, handleMouseMove, handleMouseUp]);
   const handleDoubleClick = (e) => {
     e.stopPropagation();
     setIsEditing(true);
