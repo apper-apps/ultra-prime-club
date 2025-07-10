@@ -13,9 +13,9 @@ const Error = ({ message = "Something went wrong", onRetry }) => {
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl w-full">
         {/* Main Error Information Tile */}
-        <Card className="p-6 text-center">
-          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <ApperIcon name="HelpCircle" size={32} className="text-blue-600" />
+<Card className="p-6 text-center">
+          <div className="w-16 h-16 bg-info-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <ApperIcon name="HelpCircle" size={32} className="text-info-600" />
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">We're here to help!</h3>
           <p className="text-gray-600 text-sm leading-relaxed">

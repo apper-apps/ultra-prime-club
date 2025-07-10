@@ -82,7 +82,7 @@ const MobileSidebar = ({ navigation }) => {
   return (
     <>
       {/* Mobile Header */}
-      <div className="lg:hidden bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+<div className="lg:hidden bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center">
           <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center">
             <ApperIcon name="Zap" size={18} className="text-white" />
@@ -107,8 +107,8 @@ const MobileSidebar = ({ navigation }) => {
             exit={{ x: -320 }}
             transition={{ duration: 0.3 }}
             className="fixed left-0 top-0 h-full w-80 bg-white shadow-xl"
-          >
-<div className="flex items-center justify-between p-6 border-b border-gray-200">
+>
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <div className="flex items-center">
                 <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center">
                   <ApperIcon name="Zap" size={18} className="text-white" />
@@ -155,9 +155,9 @@ const UserSettings = ({ isCollapsed }) => {
 
   return (
     <div className="relative">
-      <div className="flex items-center justify-between">
+<div className="flex items-center justify-between">
         <div className="flex items-center">
-          <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
+          <div className="w-8 h-8 bg-gradient-to-br from-success-400 to-success-600 rounded-full flex items-center justify-center">
             <span className="text-white text-sm font-semibold">U</span>
           </div>
           {!isCollapsed && (

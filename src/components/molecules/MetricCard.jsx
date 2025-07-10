@@ -11,11 +11,11 @@ const MetricCard = ({
   color = "primary",
   delay = 0 
 }) => {
-  const colorStyles = {
+const colorStyles = {
     primary: "from-primary-500 to-primary-600",
-    success: "from-green-500 to-green-600",
-    warning: "from-yellow-500 to-yellow-600",
-    info: "from-blue-500 to-blue-600"
+    success: "from-success-500 to-success-600",
+    warning: "from-accent-500 to-accent-600",
+    info: "from-info-500 to-info-600"
   };
 
   return (
@@ -30,9 +30,9 @@ const MetricCard = ({
             <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
             <div className="flex items-baseline">
               <h3 className="text-3xl font-bold text-gray-900">{value}</h3>
-              {trend && (
+{trend && (
                 <div className={`ml-2 flex items-center text-sm ${
-                  trend === "up" ? "text-green-600" : "text-red-600"
+                  trend === "up" ? "text-success-600" : "text-error-600"
                 }`}>
                   <ApperIcon 
                     name={trend === "up" ? "TrendingUp" : "TrendingDown"} 

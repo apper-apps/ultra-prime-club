@@ -138,9 +138,9 @@ transition={{ delay: index * 0.05 }}
                     <span className="text-xs sm:text-sm text-gray-600 truncate">Select Edition</span>
                   </div>
                   <div className="flex items-center">
-<div 
+                    <div 
                       className="w-3 h-3 sm:w-4 sm:h-4 rounded mr-1 sm:mr-2 flex-shrink-0" 
-                      style={{ background: 'linear-gradient(135deg, #FEE8D0 0%, #FDDBB8 100%)' }}
+                      style={{ background: 'linear-gradient(135deg, #FFE9CF 0%, #FDDBB8 100%)' }}
                     />
                     <span className="text-xs sm:text-sm text-gray-600 truncate">Black Edition</span>
                   </div>
@@ -149,15 +149,15 @@ transition={{ delay: index * 0.05 }}
                       className="w-3 h-3 sm:w-4 sm:h-4 rounded mr-1 sm:mr-2 flex-shrink-0" 
                       style={{ background: 'linear-gradient(135deg, #9FEBE1 0%, #7DD3C7 100%)' }}
                     />
-<span className="text-xs sm:text-sm text-gray-600 truncate">Collector's Edition</span>
+                    <span className="text-xs sm:text-sm text-gray-600 truncate">Collector's Edition</span>
                   </div>
                   <div className="flex items-center">
                     <div 
                       className="w-3 h-3 sm:w-4 sm:h-4 rounded mr-1 sm:mr-2 flex-shrink-0" 
-                      style={{ background: 'linear-gradient(135deg, #FFAEB5 0%, #FF8A94 100%)' }}
+                      style={{ background: 'linear-gradient(135deg, #FFAEB4 0%, #FF8A94 100%)' }}
                     />
                     <span className="text-xs sm:text-sm text-gray-600 truncate">Limited Edition</span>
-</div>
+                  </div>
                 </div>
               </div>
             </div>

@@ -94,8 +94,8 @@ const getRankIcon = (rank) => {
       ) : (
         <div className="space-y-6">
           {/* Hunter of the Month */}
-          {salesReps.length > 0 && (
-<Card className="p-6 bg-gradient-to-r from-primary-100 to-primary-200 border-primary-300">
+{salesReps.length > 0 && (
+            <Card className="p-6 bg-gradient-to-r from-primary-100 to-primary-200 border-primary-300">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
                   <div className="relative">
@@ -200,8 +200,8 @@ const getRankIcon = (rank) => {
           </Card>
 
           {/* Performance Metrics */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-<Card className="p-6 text-center">
+<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="p-6 text-center">
               <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <ApperIcon name="Users" size={24} className="text-primary-600" />
               </div>

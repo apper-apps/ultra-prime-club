@@ -85,9 +85,9 @@ const Analytics = () => {
       },
       zoom: {
         enabled: false
-      }
+}
     },
-    colors: ['#8B5CF6'],
+    colors: ['#D8AEFF'],
     dataLabels: {
       enabled: false
     },
@@ -286,7 +286,7 @@ const Analytics = () => {
             </p>
           </div>
           
-          <div className="space-y-4">
+<div className="space-y-4">
             {userPerformance.slice(0, 6).map((rep, index) => (
               <div key={rep.Id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                 <div className="flex items-center gap-3">
@@ -340,11 +340,11 @@ const Analytics = () => {
                     </span>
                   </div>
                 </div>
-                <div className="ml-4">
+<div className="ml-4">
                   <span className={`px-2 py-1 text-xs rounded-full ${
-                    lead.status === 'Hotlist' ? 'bg-red-100 text-red-800' :
-                    lead.status === 'Connected' ? 'bg-green-100 text-green-800' :
-                    lead.status === 'Meeting Booked' ? 'bg-blue-100 text-blue-800' :
+                    lead.status === 'Hotlist' ? 'bg-error-100 text-error-800' :
+                    lead.status === 'Connected' ? 'bg-success-100 text-success-800' :
+                    lead.status === 'Meeting Booked' ? 'bg-info-100 text-info-800' :
                     'bg-gray-100 text-gray-800'
                   }`}>
                     {lead.status}
@@ -376,7 +376,7 @@ const Analytics = () => {
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {Object.entries(metrics.categoryDistribution)
+{Object.entries(metrics.categoryDistribution)
               .sort(([,a], [,b]) => b - a)
               .map(([category, count]) => (
               <div key={category} className="text-center p-4 bg-gray-50 rounded-lg">
