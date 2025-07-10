@@ -7,113 +7,13 @@ import Loading from "@/components/ui/Loading";
 import Pipeline from "@/components/pages/Pipeline";
 import Leads from "@/components/pages/Leads";
 import MetricCard from "@/components/molecules/MetricCard";
-import { getDailyLeadsReport, getDashboardMetrics, getRecentActivity } from "@/services/api/dashboardService";
-
-const DailyLeadsReport = () => {
-  const [leadsData, setLeadsData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    const loadLeadsData = async () => {
-      try {
-        setLoading(true);
-        setError("");
-        const data = await getDailyLeadsReport();
-        setLeadsData(data || []);
-      } catch (err) {
-        setError("Failed to load leads report");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadLeadsData();
-  }, []);
-
-  if (loading) return (
-    <Card className="p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Daily Leads Report</h3>
-      <div className="animate-pulse space-y-3">
-        <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-        <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-        <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-      </div>
-    </Card>
-  );
-
-  if (error) return (
-    <Card className="p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Daily Leads Report</h3>
-      <p className="text-red-600 text-sm">{error}</p>
-    </Card>
-  );
-
-return (
-    <Card className="p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Daily Leads Report</h3>
-      <div className="space-y-4">
-        {/* Performance Alert */}
-        {leadsData.some(rep => rep.lowPerformance) && (
-<motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="p-4 bg-red-50 border border-red-200 rounded-lg"
-          >
-            <div className="flex items-center space-x-2 mb-2">
-              <ApperIcon name="AlertTriangle" size={16} className="text-red-600" />
-              <h4 className="font-medium text-red-800">Performance Alert</h4>
-            </div>
-<p className="text-sm text-red-700">
-              {leadsData.filter(rep => rep.lowPerformance).length} sales rep{leadsData.filter(rep => rep.lowPerformance).length !== 1 ? 's' : ''} have added fewer than 10 leads today.
-            </p>
-          </motion.div>
-        )}
-
-        {/* Sales Rep Performance Summary */}
-        {leadsData.length > 0 ? (
-          leadsData.map((rep, index) => (
-            <motion.div
-              key={rep.salesRepId}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className={`flex items-center justify-between p-3 rounded-lg ${
-                rep.lowPerformance ? 'bg-red-50 border border-red-200' : 'bg-gray-50'
-              }`}
-            >
-              <div>
-                <p className={`font-medium ${rep.lowPerformance ? 'text-red-900' : 'text-gray-900'}`}>
-                  {rep.salesRep}
-                </p>
-                <p className={`text-sm ${rep.lowPerformance ? 'text-red-600' : 'text-gray-500'}`}>
-                  Sales Representative
-                </p>
-              </div>
-              <div className="text-right">
-                <p className={`text-sm font-medium ${rep.lowPerformance ? 'text-red-900' : 'text-gray-900'}`}>
-                  {rep.leadCount} leads today
-                </p>
-                <p className={`text-xs ${rep.lowPerformance ? 'text-red-500' : 'text-gray-500'}`}>
-                  {rep.lowPerformance ? 'Below target' : 'Performance'}
-                </p>
-              </div>
-            </motion.div>
-          ))
-        ) : (
-          <p className="text-gray-500 text-center py-4">No leads data available</p>
-        )}
-      </div>
-    </Card>
-  );
-};
+import { getDashboardMetrics, getRecentActivity } from "@/services/api/dashboardService";
 
 const Dashboard = () => {
   const [metrics, setMetrics] = useState([]);
   const [activity, setActivity] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
   const loadDashboardData = async () => {
     try {
       setLoading(true);
@@ -189,10 +89,8 @@ const Dashboard = () => {
                 </div>
               </motion.div>
             ))}
-          </div>
+</div>
         </Card>
-
-        <DailyLeadsReport />
 
         <Card className="p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
