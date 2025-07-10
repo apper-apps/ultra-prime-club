@@ -14,18 +14,23 @@ const Calendar = () => {
   const [deals, setDeals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
 const months = [
     "Jan", "Feb", "March", "April", "May", "June",
     "July", "Aug", "Sep", "Oct", "Nov", "Dec"
   ];
 
-  const loadDeals = async () => {
+  // Generate year options (current year ± 5 years)
+  const currentYear = new Date().getFullYear();
+  const yearOptions = Array.from({ length: 11 }, (_, i) => currentYear - 5 + i);
+
+const loadDeals = async () => {
     try {
       setLoading(true);
       setError("");
       
-      const data = await getDeals();
+      const data = await getDeals(selectedYear);
       setDeals(data);
     } catch (err) {
       setError("Failed to load deals");
@@ -34,9 +39,9 @@ const months = [
     }
   };
 
-  useEffect(() => {
+useEffect(() => {
     loadDeals();
-  }, []);
+  }, [selectedYear]);
 
   const handleDealUpdate = (dealId, updates) => {
     setDeals(prev => prev.map(deal => 
@@ -45,11 +50,12 @@ const months = [
     toast.success("Deal timeline updated");
   };
 
-  const getDealsForMonth = (monthIndex) => {
+const getDealsForMonth = (monthIndex) => {
     return deals.filter(deal => {
       const start = deal.startMonth || 1;
       const end = deal.endMonth || 3;
-      return monthIndex >= start && monthIndex <= end;
+      const dealYear = deal.year || currentYear;
+      return monthIndex >= start && monthIndex <= end && dealYear === selectedYear;
     });
   };
 
@@ -58,15 +64,29 @@ const months = [
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Calendar Timeline</h1>
           <p className="text-gray-600 mt-1">Visual timeline of your deals across the year</p>
         </div>
-        <Button>
-          <ApperIcon name="Plus" size={16} className="mr-2" />
-          Add Deal
-        </Button>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <ApperIcon name="Calendar" size={16} className="text-gray-500" />
+            <select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+              className="border border-gray-300 rounded-md px-3 py-1.5 text-sm font-medium bg-white text-gray-700 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+            >
+              {yearOptions.map(year => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
+          </div>
+          <Button>
+            <ApperIcon name="Plus" size={16} className="mr-2" />
+            Add Deal
+          </Button>
+        </div>
       </div>
 
       {deals.length === 0 ? (

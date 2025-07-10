@@ -2,9 +2,18 @@ import dealsData from "@/services/mockData/deals.json";
 
 let deals = [...dealsData];
 
-export const getDeals = async () => {
+export const getDeals = async (year = null) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 500));
+  
+  if (year) {
+    const currentYear = new Date().getFullYear();
+    const filteredDeals = deals.filter(deal => {
+      const dealYear = deal.year || currentYear;
+      return dealYear === year;
+    });
+    return [...filteredDeals];
+  }
   
   return [...deals];
 };
