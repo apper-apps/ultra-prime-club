@@ -643,14 +643,15 @@ const getStatusColor = (status) => {
                                         placeholder="0.0"
                                         className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full placeholder-gray-400" />
                                 </td>
-                                <td
+<td
                                     className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[150px]">
-                                    <select
+                                    <SearchableSelect
                                         value={emptyRow.category}
-                                        onChange={e => handleEmptyRowUpdate(emptyRow.Id, "category", e.target.value)}
-                                        className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full text-gray-500">
-                                        {categoryOptions.map(option => <option key={option} value={option}>{option}</option>)}
-                                    </select>
+                                        onChange={(value) => handleEmptyRowUpdate(emptyRow.Id, "category", value)}
+                                        options={categoryOptions}
+                                        placeholder="Select category..."
+                                        className="text-gray-500"
+                                    />
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap min-w-[100px]">
                                     <Input
@@ -769,14 +770,14 @@ const getStatusColor = (status) => {
                                     }}
                                     className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full" />
                             </td>
-                            <td
+<td
                                 className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[150px]">
-                                <select
+                                <SearchableSelect
                                     value={lead.category}
-                                    onChange={e => handleFieldUpdate(lead.Id, "category", e.target.value)}
-                                    className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full">
-                                    {categoryOptions.map(option => <option key={option} value={option}>{option}</option>)}
-                                </select>
+                                    onChange={(value) => handleFieldUpdate(lead.Id, "category", value)}
+                                    options={categoryOptions}
+                                    placeholder="Select category..."
+                                />
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap min-w-[100px]">
                                 <a
@@ -856,6 +857,94 @@ const getStatusColor = (status) => {
   );
 };
 
+// Searchable Select Component for Categories
+const SearchableSelect = ({ value, onChange, options, placeholder = "Select...", className = "" }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredOptions, setFilteredOptions] = useState(options);
+
+  useEffect(() => {
+    const filtered = options.filter(option =>
+      option.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredOptions(filtered);
+  }, [searchTerm, options]);
+
+  const handleSelect = (option) => {
+    onChange(option);
+    setIsOpen(false);
+    setSearchTerm("");
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && filteredOptions.length > 0) {
+      handleSelect(filteredOptions[0]);
+    } else if (e.key === 'Escape') {
+      setIsOpen(false);
+      setSearchTerm("");
+    }
+  };
+
+  return (
+    <div className={`relative ${className}`}>
+      <div 
+        className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full cursor-pointer flex items-center justify-between"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className={value ? "text-gray-900" : "text-gray-500"}>
+          {value || placeholder}
+        </span>
+        <ApperIcon name={isOpen ? "ChevronUp" : "ChevronDown"} size={14} className="text-gray-400" />
+      </div>
+      
+      {isOpen && (
+        <div className="absolute top-full left-0 right-0 z-50 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-hidden">
+          <div className="p-2 border-b border-gray-200">
+            <div className="relative">
+              <ApperIcon name="Search" size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Search categories..."
+                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+                autoFocus
+              />
+            </div>
+          </div>
+          <div className="max-h-44 overflow-y-auto">
+            {filteredOptions.length > 0 ? (
+              filteredOptions.map((option) => (
+                <div
+                  key={option}
+                  className={`px-3 py-2 cursor-pointer hover:bg-gray-50 text-sm ${
+                    value === option ? 'bg-primary-50 text-primary-700' : 'text-gray-900'
+                  }`}
+                  onClick={() => handleSelect(option)}
+                >
+                  {option}
+                </div>
+              ))
+            ) : (
+              <div className="px-3 py-2 text-sm text-gray-500 italic">
+                No categories found
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+      
+      {isOpen && (
+        <div 
+          className="fixed inset-0 z-40" 
+          onClick={() => {setIsOpen(false); setSearchTerm("");}}
+        />
+      )}
+    </div>
+  );
+};
+
 const AddLeadModal = ({ onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
     websiteUrl: "",
@@ -932,17 +1021,19 @@ const AddLeadModal = ({ onClose, onSubmit }) => {
             />
           </div>
           
-          <div>
+<div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Category
             </label>
-            <Input
-              type="text"
-              value={formData.category}
-              onChange={(e) => setFormData({...formData, category: e.target.value})}
-              placeholder="CRM, Marketing, Productivity"
-              required
-            />
+            <div className="relative">
+              <SearchableSelect
+                value={formData.category}
+                onChange={(value) => setFormData({...formData, category: value})}
+                options={categoryOptions}
+                placeholder="Select category..."
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
+            </div>
           </div>
           
           <div>
@@ -1090,17 +1181,21 @@ const EditLeadModal = ({ lead, onClose, onSubmit }) => {
                         })}
                         required />
                 </div>
-                <div>
+<div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Category
                                     </label>
-                    <Input
-                        type="text"
-                        value={formData.category}
-                        onChange={e => setFormData({
-                            ...formData,
-                            category: e.target.value
-                        })}
-                        required />
+                    <div className="relative">
+                        <SearchableSelect
+                            value={formData.category}
+                            onChange={(value) => setFormData({
+                                ...formData,
+                                category: value
+                            })}
+                            options={categoryOptions}
+                            placeholder="Select category..."
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        />
+                    </div>
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">LinkedIn URL
