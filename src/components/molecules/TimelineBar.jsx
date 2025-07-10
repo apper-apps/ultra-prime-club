@@ -31,10 +31,64 @@ const TimelineBar = ({ deal, onUpdate }) => {
 const handleMouseDown = (e) => {
     if (e.target.classList.contains("resize-handle")) {
       setIsResizing(true);
+      e.preventDefault();
     } else if (!isEditing) {
       setIsDragging(true);
+      e.preventDefault();
     }
   };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging && !isResizing) return;
+
+    const calendar = document.querySelector('.min-w-\\[1200px\\]');
+    if (!calendar) return;
+
+    const rect = calendar.getBoundingClientRect();
+    const monthWidth = rect.width / 12;
+    const relativeX = e.clientX - rect.left;
+    const monthPosition = Math.max(0, Math.min(11, Math.floor(relativeX / monthWidth)));
+
+    if (isDragging) {
+      // Calculate new start position while maintaining duration
+      const duration = endMonth - startMonth + 1;
+      const newStartMonth = Math.max(1, Math.min(12 - duration + 1, monthPosition + 1));
+      const newEndMonth = newStartMonth + duration - 1;
+
+      if (newStartMonth !== startMonth) {
+        onUpdate({
+          startMonth: newStartMonth,
+          endMonth: newEndMonth
+        });
+      }
+    } else if (isResizing) {
+      // Calculate new width from current start position
+      const newEndMonth = Math.max(startMonth, Math.min(12, monthPosition + 1));
+      
+      if (newEndMonth !== endMonth) {
+        onUpdate({
+          endMonth: newEndMonth
+        });
+      }
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    setIsResizing(false);
+  };
+
+  // Add global mouse event listeners when dragging
+  useState(() => {
+    if (isDragging || isResizing) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+      };
+    }
+  }, [isDragging, isResizing]);
 
   const handleDoubleClick = (e) => {
     e.stopPropagation();
@@ -62,22 +116,22 @@ const handleMouseDown = (e) => {
   const leftPosition = ((startMonth - 1) / 12) * 100;
   const width = (duration / 12) * 100;
 
-  return (
+return (
     <motion.div
       ref={barRef}
       initial={{ opacity: 0, scaleX: 0 }}
       animate={{ opacity: 1, scaleX: 1 }}
       transition={{ duration: 0.3 }}
       className={`absolute top-0 h-full rounded-lg bg-gradient-to-r ${getBarColor(deal.value)} 
-        shadow-lg cursor-grab active:cursor-grabbing transition-all duration-200 group
-        ${isDragging ? "ring-2 ring-primary-400 ring-opacity-60" : "hover:shadow-xl"}
-        ${isResizing ? "ring-2 ring-blue-400 ring-opacity-60" : ""}
+        shadow-lg transition-all duration-200 group select-none
+        ${isDragging ? "ring-2 ring-primary-400 ring-opacity-60 cursor-grabbing scale-105 z-10" : "hover:shadow-xl cursor-grab"}
+        ${isResizing ? "ring-2 ring-blue-400 ring-opacity-60 cursor-ew-resize" : ""}
       `}
       style={{
         left: `${leftPosition}%`,
         width: `${width}%`,
         minWidth: "60px"
-}}
+      }}
       onMouseDown={handleMouseDown}
       onDoubleClick={handleDoubleClick}
     >
@@ -103,8 +157,10 @@ const handleMouseDown = (e) => {
           )}
         </div>
         
-        {/* Resize handle */}
-        <div className="resize-handle w-2 h-full bg-white bg-opacity-30 rounded-r-lg cursor-ew-resize opacity-0 group-hover:opacity-100 transition-opacity" />
+{/* Resize handle */}
+        <div className="resize-handle w-3 h-full bg-white bg-opacity-30 rounded-r-lg cursor-ew-resize opacity-0 group-hover:opacity-100 transition-all hover:bg-opacity-50 flex items-center justify-center">
+          <div className="w-0.5 h-4 bg-white opacity-60"></div>
+        </div>
       </div>
       
       {/* Tooltip */}
