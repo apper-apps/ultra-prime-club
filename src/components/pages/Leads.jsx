@@ -194,7 +194,7 @@ const handleFieldUpdate = async (leadId, field, value) => {
   };
 
 // Add empty row for new data entry
-  const addEmptyRow = () => {
+const addEmptyRow = () => {
     const newEmptyRow = {
       Id: nextTempId,
 websiteUrl: "",
@@ -204,6 +204,7 @@ websiteUrl: "",
       linkedinUrl: "",
       status: "Keep an Eye",
       fundingType: "Bootstrapped",
+      followUpDate: "",
       isEmptyRow: true
     };
     setEmptyRows(prev => [...prev, newEmptyRow]);
@@ -591,8 +592,11 @@ const getStatusColor = (status) => {
                             <th
                                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[150px]">Status
                                                     </th>
-                            <th
+<th
                                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[140px]">Funding Type
+                                                    </th>
+                            <th
+                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[130px]">Follow-up Date
                                                     </th>
                             <th
                                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">Added By
@@ -705,6 +709,19 @@ const getStatusColor = (status) => {
                                             {fundingTypeOptions.map(option => <option key={option} value={option}>{option}</option>)}
                                         </select>
                                     </div>
+</td>
+                                <td className="px-6 py-4 whitespace-nowrap min-w-[130px]">
+                                    <Input
+                                        type="date"
+                                        value={emptyRow.followUpDate ? emptyRow.followUpDate.split('T')[0] : ''}
+                                        onChange={e => handleEmptyRowUpdateDebounced(emptyRow.Id, "followUpDate", e.target.value ? new Date(e.target.value).toISOString() : '')}
+                                        onBlur={e => handleEmptyRowUpdate(emptyRow.Id, "followUpDate", e.target.value ? new Date(e.target.value).toISOString() : '')}
+                                        onKeyDown={e => {
+                                            if (e.key === "Enter") {
+                                                handleEmptyRowUpdate(emptyRow.Id, "followUpDate", e.target.value ? new Date(e.target.value).toISOString() : '');
+                                            }
+                                        }}
+                                        className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full placeholder-gray-400 text-sm" />
                                 </td>
                                 <td
                                     className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 min-w-[120px]">
@@ -827,6 +844,31 @@ const getStatusColor = (status) => {
                                         {fundingTypeOptions.map(option => <option key={option} value={option}>{option}</option>)}
                                     </select>
                                 </div>
+</td>
+                            <td className="px-6 py-4 whitespace-nowrap min-w-[130px]">
+                                <Input
+                                    type="date"
+                                    value={lead.followUpDate ? lead.followUpDate.split('T')[0] : ''}
+                                    onChange={e => {
+                                        const newDate = e.target.value ? new Date(e.target.value).toISOString() : '';
+                                        setData(prevData => prevData.map(l => l.Id === lead.Id ? {
+                                            ...l,
+                                            followUpDate: newDate
+                                        } : l));
+
+                                        handleFieldUpdateDebounced(lead.Id, "followUpDate", newDate);
+                                    }}
+                                    onBlur={e => {
+                                        const newDate = e.target.value ? new Date(e.target.value).toISOString() : '';
+                                        handleFieldUpdate(lead.Id, "followUpDate", newDate);
+                                    }}
+                                    onKeyDown={e => {
+                                        if (e.key === "Enter") {
+                                            const newDate = e.target.value ? new Date(e.target.value).toISOString() : '';
+                                            handleFieldUpdate(lead.Id, "followUpDate", newDate);
+                                        }
+                                    }}
+                                    className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full text-sm" />
                             </td>
                             <td
                                 className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[120px]">

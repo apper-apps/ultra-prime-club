@@ -7,12 +7,13 @@ import Loading from "@/components/ui/Loading";
 import Pipeline from "@/components/pages/Pipeline";
 import Leads from "@/components/pages/Leads";
 import MetricCard from "@/components/molecules/MetricCard";
-import { getDashboardMetrics, getRecentActivity, getTodaysMeetings } from "@/services/api/dashboardService";
+import { getDashboardMetrics, getPendingFollowUps, getRecentActivity, getTodaysMeetings } from "@/services/api/dashboardService";
 
 const Dashboard = () => {
-  const [metrics, setMetrics] = useState([]);
+const [metrics, setMetrics] = useState([]);
   const [activity, setActivity] = useState([]);
   const [meetings, setMeetings] = useState([]);
+  const [pendingFollowUps, setPendingFollowUps] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 const loadDashboardData = async () => {
@@ -20,15 +21,17 @@ const loadDashboardData = async () => {
       setLoading(true);
       setError("");
       
-      const [metricsData, activityData, meetingsData] = await Promise.all([
+const [metricsData, activityData, meetingsData, followUpsData] = await Promise.all([
         getDashboardMetrics(),
         getRecentActivity(),
-        getTodaysMeetings()
+        getTodaysMeetings(),
+        getPendingFollowUps()
       ]);
       
       setMetrics(metricsData);
       setActivity(activityData);
       setMeetings(meetingsData);
+      setPendingFollowUps(followUpsData);
     } catch (err) {
       setError("Failed to load dashboard data");
     } finally {
@@ -45,118 +48,156 @@ const loadDashboardData = async () => {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600 mt-1">Welcome back! Here's what's happening with your sales.</p>
+            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+            <p className="text-gray-600 mt-1">Welcome back! Here's what's happening with your sales.</p>
         </div>
-      </div>
-
-      {/* Metrics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {metrics.map((metric, index) => (
-          <MetricCard
+    </div>
+    {/* Metrics Cards */}
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {metrics.map((metric, index) => <MetricCard
             key={metric.id}
             title={metric.title}
             value={metric.value}
             icon={metric.icon}
             trend={metric.trend}
             trendValue={metric.trendValue}
-color={metric.color}
-            delay={index * 0.1}
-/>
-        ))}
-      </div>
-{/* Reports and Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <Card className="p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
-          <div className="space-y-4">
-            {activity.map((item, index) => (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <div className={`w-2 h-2 rounded-full ${
-                  item.type === "meeting" ? "bg-blue-500" :
-                  item.type === "deal" ? "bg-green-500" :
-                  "bg-yellow-500"
-                }`} />
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-900">{item.title}</p>
-                  <p className="text-xs text-gray-500">{item.time}</p>
-                </div>
-              </motion.div>
-            ))}
-</div>
-        </Card>
-
-        <Card className="p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
-          <div className="space-y-3">
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full text-left p-3 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all"
-            >
-              <div className="font-medium text-gray-900">Add New Lead</div>
-              <div className="text-sm text-gray-500">Create a new lead contact</div>
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full text-left p-3 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all"
-            >
-              <div className="font-medium text-gray-900">Schedule Meeting</div>
-              <div className="text-sm text-gray-500">Book a meeting with a lead</div>
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full text-left p-3 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all"
-            >
-              <div className="font-medium text-gray-900">Update Pipeline</div>
-              <div className="text-sm text-gray-500">Move deals through stages</div>
-            </motion.button>
-          </div>
-</Card>
-
-        <Card className="p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Meetings Today</h3>
-          <div className="space-y-3">
-            {meetings.length > 0 ? (
-              meetings.map((meeting, index) => (
-                <motion.div
-                  key={meeting.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="p-3 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <div className="font-medium text-gray-900">{meeting.title}</div>
-                      <div className="text-sm text-gray-500">{meeting.client}</div>
-                    </div>
-                    <div className="text-sm font-medium text-primary-600">
-                      {meeting.time}
-                    </div>
-                  </div>
-                </motion.div>
-              ))
-            ) : (
-              <div className="text-center text-gray-500 py-8">
-                <ApperIcon name="Calendar" size={48} className="mx-auto mb-3 text-gray-300" />
-                <p>No meetings scheduled for today</p>
-              </div>
-            )}
-          </div>
-        </Card>
-      </div>
+            color={metric.color}
+            delay={index * 0.1} />)}
     </div>
+    {/* Reports and Activity */}
+    <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        <Card className="p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
+            <div className="space-y-4">
+                {activity.map((item, index) => <motion.div
+                    key={item.id}
+                    initial={{
+                        opacity: 0,
+                        x: -20
+                    }}
+                    animate={{
+                        opacity: 1,
+                        x: 0
+                    }}
+                    transition={{
+                        delay: index * 0.1
+                    }}
+                    className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                    <div
+                        className={`w-2 h-2 rounded-full ${item.type === "meeting" ? "bg-blue-500" : item.type === "deal" ? "bg-green-500" : "bg-yellow-500"}`} />
+                    <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-900">{item.title}</p>
+                        <p className="text-xs text-gray-500">{item.time}</p>
+                    </div>
+                </motion.div>)}
+            </div>
+        </Card>
+        <Card className="p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+            <div className="space-y-3">
+                <motion.button
+                    whileHover={{
+                        scale: 1.02
+                    }}
+                    whileTap={{
+                        scale: 0.98
+                    }}
+                    className="w-full text-left p-3 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all">
+                    <div className="font-medium text-gray-900">Add New Lead</div>
+                    <div className="text-sm text-gray-500">Create a new lead contact</div>
+                </motion.button>
+                <motion.button
+                    whileHover={{
+                        scale: 1.02
+                    }}
+                    whileTap={{
+                        scale: 0.98
+                    }}
+                    className="w-full text-left p-3 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all">
+                    <div className="font-medium text-gray-900">Schedule Meeting</div>
+                    <div className="text-sm text-gray-500">Book a meeting with a lead</div>
+                </motion.button>
+                <motion.button
+                    whileHover={{
+                        scale: 1.02
+                    }}
+                    whileTap={{
+                        scale: 0.98
+                    }}
+                    className="w-full text-left p-3 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all">
+                    <div className="font-medium text-gray-900">Update Pipeline</div>
+                    <div className="text-sm text-gray-500">Move deals through stages</div>
+                </motion.button>
+            </div>
+        </Card>
+        <Card className="p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Pending Follow-ups</h3>
+            <div className="space-y-3">
+                {pendingFollowUps.length > 0 ? pendingFollowUps.map((followUp, index) => <motion.div
+                    key={followUp.Id}
+                    initial={{
+                        opacity: 0,
+                        y: 10
+                    }}
+                    animate={{
+                        opacity: 1,
+                        y: 0
+                    }}
+                    transition={{
+                        delay: index * 0.1
+                    }}
+                    className="p-3 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all">
+                    <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                            <div className="font-medium text-gray-900">{followUp.websiteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")}</div>
+                            <div className="text-sm text-gray-500">{followUp.category}</div>
+                        </div>
+                        <div className="text-sm font-medium text-primary-600">
+                            {new Date(followUp.followUpDate).toLocaleDateString()}
+                        </div>
+                    </div>
+                </motion.div>) : <div className="text-center text-gray-500 py-8">
+                    <ApperIcon name="Calendar" size={48} className="mx-auto mb-3 text-gray-300" />
+                    <p>No pending follow-ups</p>
+                </div>}
+            </div>
+        </Card>
+        <Card className="p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Meetings Today</h3>
+            <div className="space-y-3">
+                {meetings.length > 0 ? meetings.map((meeting, index) => <motion.div
+                    key={meeting.id}
+                    initial={{
+                        opacity: 0,
+                        y: 10
+                    }}
+                    animate={{
+                        opacity: 1,
+                        y: 0
+                    }}
+                    transition={{
+                        delay: index * 0.1
+                    }}
+                    className="p-3 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all">
+                    <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                            <div className="font-medium text-gray-900">{meeting.title}</div>
+                            <div className="text-sm text-gray-500">{meeting.client}</div>
+                        </div>
+                        <div className="text-sm font-medium text-primary-600">
+                            {meeting.time}
+                        </div>
+                    </div>
+                </motion.div>) : <div className="text-center text-gray-500 py-8">
+                    <ApperIcon name="Calendar" size={48} className="mx-auto mb-3 text-gray-300" />
+                    <p>No meetings scheduled for today</p>
+                </div>}
+            </div>
+        </Card>
+    </div>
+</div>
   );
 };
 

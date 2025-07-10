@@ -95,6 +95,7 @@ const maxId = Math.max(...leads.map(l => l.Id), 0);
     linkedinUrl: leadData.linkedinUrl || "",
     status: leadData.status || "Keep an Eye",
     fundingType: leadData.fundingType || "Bootstrapped",
+    followUpDate: leadData.followUpDate || null,
     addedBy: leadData.addedBy || 1, // Default to first sales rep for demo
     Id: maxId + 1,
     createdAt: new Date().toISOString()
@@ -180,5 +181,26 @@ export const getDailyLeadsReport = async () => {
   });
   
   // Convert to array and sort by lead count (descending)
-  return Object.values(reportData).sort((a, b) => b.leads.length - a.leads.length);
+return Object.values(reportData).sort((a, b) => b.leads.length - a.leads.length);
+};
+
+export const getPendingFollowUps = async () => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 300));
+  
+  // Get current date and 7 days from now
+  const now = new Date();
+  const sevenDaysFromNow = new Date();
+  sevenDaysFromNow.setDate(now.getDate() + 7);
+  
+  // Filter leads with follow-up dates within the next 7 days
+  const pendingFollowUps = leads.filter(lead => {
+    if (!lead.followUpDate) return false;
+    
+    const followUpDate = new Date(lead.followUpDate);
+    return followUpDate >= now && followUpDate <= sevenDaysFromNow;
+  });
+  
+  // Sort by follow-up date (earliest first)
+  return pendingFollowUps.sort((a, b) => new Date(a.followUpDate) - new Date(b.followUpDate));
 };

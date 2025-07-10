@@ -26,5 +26,10 @@ export const getTodaysMeetings = async () => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 300));
   
-  return [...dashboardData.todaysMeetings];
+return [...dashboardData.todaysMeetings];
+};
+
+export const getPendingFollowUps = async () => {
+  const { getPendingFollowUps: getFollowUps } = await import("@/services/api/leadsService");
+  return await getFollowUps();
 };
