@@ -41,17 +41,16 @@ const getBarColor = (edition) => {
     }
   };
 
-  const handleMouseMove = (e) => {
+const handleMouseMove = (e) => {
     if (!isDragging && !isResizing) return;
 
-    const calendar = document.querySelector('.min-w-\\[1200px\\]');
+    const calendar = document.querySelector('.grid.grid-cols-12');
     if (!calendar) return;
 
     const rect = calendar.getBoundingClientRect();
     const monthWidth = rect.width / 12;
     const relativeX = e.clientX - rect.left;
     const monthPosition = Math.max(0, Math.min(11, Math.floor(relativeX / monthWidth)));
-
     if (isDragging) {
 // Calculate new start position while maintaining duration
       const startMonth = deal.startMonth || 1;
@@ -131,16 +130,16 @@ return (
         ${isDragging ? "ring-2 ring-primary-400 ring-opacity-60 cursor-grabbing scale-105 z-10" : "hover:shadow-xl cursor-grab"}
         ${isResizing ? "ring-2 ring-blue-400 ring-opacity-60 cursor-ew-resize" : ""}
       `}
-      style={{
+style={{
         left: `${leftPosition}%`,
         width: `${width}%`,
-        minWidth: "60px",
+        minWidth: "40px",
         background: getBarColor(deal.edition)
       }}
       onMouseDown={handleMouseDown}
       onDoubleClick={handleDoubleClick}
     >
-      <div className="h-full flex items-center justify-between px-3 text-white text-sm font-medium">
+<div className="h-full flex items-center justify-between px-1 sm:px-2 lg:px-3 text-white text-xs sm:text-sm font-medium">
         <div className="flex-1 min-w-0">
           {isEditing ? (
             <form onSubmit={handleNameSubmit} className="flex items-center">
@@ -149,22 +148,22 @@ return (
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
                 onBlur={handleNameBlur}
-                className="bg-white text-gray-900 px-2 py-1 rounded text-sm font-semibold w-full"
+className="bg-white text-gray-900 px-1 sm:px-2 py-1 rounded text-xs sm:text-sm font-semibold w-full"
                 autoFocus
                 onFocus={(e) => e.target.select()}
               />
             </form>
           ) : (
             <>
-              <div className="truncate font-semibold">{deal.name}</div>
-              <div className="text-xs opacity-90">{formatCurrency(deal.value)}</div>
+              <div className="truncate font-semibold text-xs sm:text-sm">{deal.name}</div>
+              <div className="text-xs opacity-90 hidden sm:block">{formatCurrency(deal.value)}</div>
             </>
           )}
         </div>
         
 {/* Resize handle */}
-        <div className="resize-handle w-3 h-full bg-white bg-opacity-30 rounded-r-lg cursor-ew-resize opacity-0 group-hover:opacity-100 transition-all hover:bg-opacity-50 flex items-center justify-center">
-          <div className="w-0.5 h-4 bg-white opacity-60"></div>
+        <div className="resize-handle w-2 sm:w-3 h-full bg-white bg-opacity-30 rounded-r-lg cursor-ew-resize opacity-0 group-hover:opacity-100 transition-all hover:bg-opacity-50 flex items-center justify-center">
+          <div className="w-0.5 h-3 sm:h-4 bg-white opacity-60"></div>
         </div>
       </div>
       

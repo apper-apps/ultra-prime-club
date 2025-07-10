@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
-import Card from "@/components/atoms/Card";
-import Button from "@/components/atoms/Button";
-import TimelineBar from "@/components/molecules/TimelineBar";
-import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
-import Empty from "@/components/ui/Empty";
 import ApperIcon from "@/components/ApperIcon";
+import Button from "@/components/atoms/Button";
+import Card from "@/components/atoms/Card";
+import Empty from "@/components/ui/Empty";
+import Error from "@/components/ui/Error";
+import Loading from "@/components/ui/Loading";
+import TimelineBar from "@/components/molecules/TimelineBar";
 import { getDeals } from "@/services/api/dealsService";
 
 const Calendar = () => {
@@ -76,23 +76,23 @@ const Calendar = () => {
           actionText="Add Deal"
           icon="Calendar"
         />
-      ) : (
+) : (
         <Card className="p-6">
-          <div className="overflow-x-auto">
-            <div className="min-w-[1200px]">
+          <div className="w-full">
+            <div className="w-full">
               {/* Month Headers */}
-              <div className="grid grid-cols-12 gap-4 mb-6">
+              <div className="grid grid-cols-12 gap-1 sm:gap-2 lg:gap-4 mb-6">
                 {months.map((month, index) => (
                   <motion.div
                     key={month}
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.05 }}
+transition={{ delay: index * 0.05 }}
                     className="text-center"
                   >
-                    <div className="bg-gray-100 rounded-lg p-3 mb-2">
-                      <h3 className="font-semibold text-gray-900">{month}</h3>
-                      <p className="text-sm text-gray-500">
+                    <div className="bg-gray-100 rounded-lg p-1 sm:p-2 lg:p-3 mb-2">
+                      <h3 className="font-semibold text-gray-900 text-xs sm:text-sm lg:text-base truncate">{month}</h3>
+                      <p className="text-xs sm:text-sm text-gray-500 hidden sm:block">
                         {getDealsForMonth(index + 1).length} deals
                       </p>
                     </div>
@@ -110,7 +110,7 @@ const Calendar = () => {
                     transition={{ delay: index * 0.1 }}
                     className="relative h-16 bg-gray-50 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
                   >
-                    {/* Timeline Row Background */}
+{/* Timeline Row Background */}
                     <div className="absolute inset-0 grid grid-cols-12 gap-px">
                       {Array.from({ length: 12 }, (_, i) => (
                         <div key={i} className="bg-white opacity-50 rounded-sm" />
@@ -127,38 +127,37 @@ const Calendar = () => {
                   </motion.div>
                 ))}
               </div>
-{/* Legend */}
-              <div className="mt-8 p-4 bg-gray-50 rounded-lg">
+<div className="mt-8 p-4 bg-gray-50 rounded-lg">
                 <h4 className="font-semibold text-gray-900 mb-3">Legend</h4>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4">
                   <div className="flex items-center">
                     <div 
-                      className="w-4 h-4 rounded mr-2" 
+                      className="w-3 h-3 sm:w-4 sm:h-4 rounded mr-1 sm:mr-2 flex-shrink-0" 
                       style={{ background: 'linear-gradient(135deg, #EAC2FF 0%, #D8A3FF 100%)' }}
                     />
-                    <span className="text-sm text-gray-600">Select Edition</span>
+                    <span className="text-xs sm:text-sm text-gray-600 truncate">Select Edition</span>
                   </div>
                   <div className="flex items-center">
-                    <div 
-                      className="w-4 h-4 rounded mr-2" 
+<div 
+                      className="w-3 h-3 sm:w-4 sm:h-4 rounded mr-1 sm:mr-2 flex-shrink-0" 
                       style={{ background: 'linear-gradient(135deg, #FEE8D0 0%, #FDDBB8 100%)' }}
                     />
-                    <span className="text-sm text-gray-600">Black Edition</span>
+                    <span className="text-xs sm:text-sm text-gray-600 truncate">Black Edition</span>
                   </div>
                   <div className="flex items-center">
                     <div 
-                      className="w-4 h-4 rounded mr-2" 
+                      className="w-3 h-3 sm:w-4 sm:h-4 rounded mr-1 sm:mr-2 flex-shrink-0" 
                       style={{ background: 'linear-gradient(135deg, #9FEBE1 0%, #7DD3C7 100%)' }}
                     />
-                    <span className="text-sm text-gray-600">Collector's Edition</span>
+<span className="text-xs sm:text-sm text-gray-600 truncate">Collector's Edition</span>
                   </div>
                   <div className="flex items-center">
                     <div 
-                      className="w-4 h-4 rounded mr-2" 
+                      className="w-3 h-3 sm:w-4 sm:h-4 rounded mr-1 sm:mr-2 flex-shrink-0" 
                       style={{ background: 'linear-gradient(135deg, #FFAEB5 0%, #FF8A94 100%)' }}
                     />
-                    <span className="text-sm text-gray-600">Limited Edition</span>
-                  </div>
+                    <span className="text-xs sm:text-sm text-gray-600 truncate">Limited Edition</span>
+</div>
                 </div>
               </div>
             </div>
