@@ -342,434 +342,392 @@ const getStatusColor = (status) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="space-y-6"
-    >
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    initial={{
+        opacity: 0,
+        y: 20
+    }}
+    animate={{
+        opacity: 1,
+        y: 0
+    }}
+    transition={{
+        duration: 0.3
+    }}
+    className="space-y-6">
+    {/* Header */}
+    <div
+        className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Leads</h1>
-          <p className="text-gray-600">Manage your lead pipeline and track opportunities</p>
+            <h1 className="text-2xl font-bold text-gray-900">Leads</h1>
+            <p className="text-gray-600">Manage your lead pipeline and track opportunities</p>
         </div>
-<Button onClick={() => setShowAddForm(true)} variant="outline" className="shrink-0">
-          <ApperIcon name="Plus" size={16} className="mr-2" />
-          Add New Lead
-        </Button>
-      </div>
-      {/* Search and Filters */}
-      <Card className="p-4">
+        <Button
+            onClick={() => setShowAddForm(true)}
+            variant="outline"
+            className="shrink-0">
+            <ApperIcon name="Plus" size={16} className="mr-2" />Add New Lead
+                    </Button>
+    </div>
+    {/* Search and Filters */}
+    <Card className="p-4">
         <div className="flex flex-col lg:flex-row gap-4">
-          <div className="flex-1">
-            <SearchBar
-              placeholder="Search by website, category, or team size..."
-              onSearch={setSearchTerm}
-            />
-          </div>
-          <div className="flex flex-col sm:flex-row gap-2">
-<select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-            >
-              <option value="all">All Statuses</option>
-              <option value="Launched on AppSumo">Launched on AppSumo</option>
-              <option value="Launched on Prime Club">Launched on Prime Club</option>
-              <option value="Keep an Eye">Keep an Eye</option>
-              <option value="Rejected">Rejected</option>
-              <option value="Unsubscribed">Unsubscribed</option>
-              <option value="Outdated">Outdated</option>
-              <option value="Hotlist">Hotlist</option>
-              <option value="Out of League">Out of League</option>
-              <option value="Connected">Connected</option>
-              <option value="Locked">Locked</option>
-              <option value="Meeting Booked">Meeting Booked</option>
-              <option value="Meeting Done">Meeting Done</option>
-              <option value="Negotiation">Negotiation</option>
-              <option value="Closed Lost">Closed Lost</option>
-            </select>
-            <select
-              value={fundingFilter}
-              onChange={(e) => setFundingFilter(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-            >
-              <option value="all">All Funding Types</option>
-              <option value="Bootstrapped">Bootstrapped</option>
-              <option value="Pre-seed">Pre-seed</option>
-              <option value="Y Combinator">Y Combinator</option>
-              <option value="Angel">Angel</option>
-              <option value="Series A">Series A</option>
-              <option value="Series B">Series B</option>
-              <option value="Series C">Series C</option>
-            </select>
-          </div>
+            <div className="flex-1">
+                <SearchBar
+                    placeholder="Search by website, category, or team size..."
+                    onSearch={setSearchTerm} />
+            </div>
+            <div className="flex flex-col sm:flex-row gap-2">
+                <select
+                    value={statusFilter}
+                    onChange={e => setStatusFilter(e.target.value)}
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    <option value="all">All Statuses</option>
+                    <option value="Launched on AppSumo">Launched on AppSumo</option>
+                    <option value="Launched on Prime Club">Launched on Prime Club</option>
+                    <option value="Keep an Eye">Keep an Eye</option>
+                    <option value="Rejected">Rejected</option>
+                    <option value="Unsubscribed">Unsubscribed</option>
+                    <option value="Outdated">Outdated</option>
+                    <option value="Hotlist">Hotlist</option>
+                    <option value="Out of League">Out of League</option>
+                    <option value="Connected">Connected</option>
+                    <option value="Locked">Locked</option>
+                    <option value="Meeting Booked">Meeting Booked</option>
+                    <option value="Meeting Done">Meeting Done</option>
+                    <option value="Negotiation">Negotiation</option>
+                    <option value="Closed Lost">Closed Lost</option>
+                </select>
+                <select
+                    value={fundingFilter}
+                    onChange={e => setFundingFilter(e.target.value)}
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    <option value="all">All Funding Types</option>
+                    <option value="Bootstrapped">Bootstrapped</option>
+                    <option value="Pre-seed">Pre-seed</option>
+                    <option value="Y Combinator">Y Combinator</option>
+                    <option value="Angel">Angel</option>
+                    <option value="Series A">Series A</option>
+                    <option value="Series B">Series B</option>
+                    <option value="Series C">Series C</option>
+                </select>
+            </div>
         </div>
-      </Card>
-
-{/* Leads Table */}
-      <Card className="overflow-hidden">
-        {filteredAndSortedData.length === 0 ? (
-          <Empty
+    </Card>
+    {/* Leads Table */}
+    <Card className="overflow-hidden">
+        {filteredAndSortedData.length === 0 ? <Empty
             title="No leads found"
             description="Add your first lead to get started with lead management"
             actionText="Add Lead"
             onAction={() => setShowAddForm(true)}
-            icon="Building2"
-          />
-        ) : (
-          <div className="relative">
+            icon="Building2" /> : <div className="relative">
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[1200px]">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[200px]">
-                      <button
-                        onClick={() => handleSort("websiteUrl")}
-                        className="flex items-center gap-1 hover:text-gray-700"
-                      >
-                        Website URL
-                        <ApperIcon name="ArrowUpDown" size={12} />
-                      </button>
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[150px]">
-                      <button
-                        onClick={() => handleSort("teamSize")}
-                        className="flex items-center gap-1 hover:text-gray-700"
-                      >
-                        Team Size
-                        <ApperIcon name="ArrowUpDown" size={12} />
-                      </button>
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">
-                      <button
-                        onClick={() => handleSort("arr")}
-                        className="flex items-center gap-1 hover:text-gray-700"
-                      >
-                        ARR (M)
-                        <ApperIcon name="ArrowUpDown" size={12} />
-                      </button>
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[150px]">
-                      Category
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[100px]">
-                      LinkedIn
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[150px]">
-                      Status
-                    </th>
-<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[140px]">
-                      Funding Type
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">
-                      Added By
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[120px] sticky right-0 bg-gray-50 border-l border-gray-200">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-<tbody className="bg-white divide-y divide-gray-200">
-                  {/* Empty rows for direct data entry - positioned at top */}
-                  {emptyRows.map((emptyRow) => (
-                    <tr key={`empty-${emptyRow.Id}`} className="hover:bg-gray-50 empty-row">
-                      <td className="px-6 py-4 whitespace-nowrap min-w-[200px]">
-<Input
-                          type="url"
-                          value={emptyRow.websiteUrl}
-                          onChange={(e) => setEmptyRows(prev => 
-                            prev.map(row => 
-                              row.Id === emptyRow.Id ? { ...row, websiteUrl: e.target.value } : row
-                            )
-                          )}
-                          onBlur={(e) => handleEmptyRowUpdate(emptyRow.Id, 'websiteUrl', e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              handleEmptyRowUpdate(emptyRow.Id, 'websiteUrl', e.target.value);
-                            }
-                          }}
-                          placeholder="Enter website URL..."
-                          className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 text-primary-600 font-medium placeholder-gray-400"
-                        />
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[150px]">
-                        <select
-                          value={emptyRow.teamSize}
-                          onChange={(e) => handleEmptyRowUpdate(emptyRow.Id, 'teamSize', e.target.value)}
-                          className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full text-gray-500"
-                        >
-                          {teamSizeOptions.map(option => (
-                            <option key={option} value={option}>{option}</option>
-                          ))}
-                        </select>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[120px]">
-<Input
-                          type="number"
-                          step="0.1"
-                          min="0"
-                          value={(emptyRow.arr / 1000000).toFixed(1)}
-                          onChange={(e) => handleEmptyRowUpdateDebounced(emptyRow.Id, 'arr', e.target.value)}
-                          onBlur={(e) => handleEmptyRowUpdate(emptyRow.Id, 'arr', e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              handleEmptyRowUpdate(emptyRow.Id, 'arr', e.target.value);
-                            }
-                          }}
-                          placeholder="0.0"
-                          className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full placeholder-gray-400"
-                        />
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[150px]">
-                        <select
-                          value={emptyRow.category}
-                          onChange={(e) => handleEmptyRowUpdate(emptyRow.Id, 'category', e.target.value)}
-                          className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full text-gray-500"
-                        >
-                          {categoryOptions.map(option => (
-                            <option key={option} value={option}>{option}</option>
-                          ))}
-                        </select>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap min-w-[100px]">
-<Input
-                          type="url"
-                          value={emptyRow.linkedinUrl}
-                          onChange={(e) => handleEmptyRowUpdateDebounced(emptyRow.Id, 'linkedinUrl', e.target.value)}
-                          onBlur={(e) => handleEmptyRowUpdate(emptyRow.Id, 'linkedinUrl', e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              handleEmptyRowUpdate(emptyRow.Id, 'linkedinUrl', e.target.value);
-                            }
-                          }}
-                          placeholder="LinkedIn URL..."
-                          className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full placeholder-gray-400 text-sm"
-                        />
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap min-w-[150px]">
-                        <div className="relative">
-                          <Badge 
-                            variant={getStatusColor(emptyRow.status)}
-                            className="cursor-pointer hover:shadow-md transition-shadow opacity-60"
-                          >
-                            {emptyRow.status}
-                          </Badge>
-                          <select
-                            value={emptyRow.status}
-                            onChange={(e) => handleEmptyRowUpdate(emptyRow.Id, 'status', e.target.value)}
-                            className="absolute inset-0 opacity-0 cursor-pointer w-full"
-                          >
-                            {statusOptions.map(option => (
-                              <option key={option} value={option}>{option}</option>
-                            ))}
-                          </select>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap min-w-[140px]">
-                        <div className="relative">
-                          <Badge 
-                            variant={emptyRow.fundingType === "Series C" ? "primary" : "default"}
-                            className="cursor-pointer hover:shadow-md transition-shadow opacity-60"
-                          >
-                            {emptyRow.fundingType}
-                          </Badge>
-                          <select
-                            value={emptyRow.fundingType}
-                            onChange={(e) => handleEmptyRowUpdate(emptyRow.Id, 'fundingType', e.target.value)}
-                            className="absolute inset-0 opacity-0 cursor-pointer w-full"
-                          >
-                            {fundingTypeOptions.map(option => (
-                              <option key={option} value={option}>{option}</option>
-                            ))}
-                          </select>
-</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 min-w-[120px]">
-                        <span className="italic">Current User</span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium w-[120px] sticky right-0 bg-white border-l border-gray-200">
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => setEmptyRows(prev => prev.filter(row => row.Id !== emptyRow.Id))}
-                            className="text-gray-400 hover:text-red-600 p-1 hover:bg-gray-100 rounded"
-                            title="Remove empty row"
-                          >
-                            <ApperIcon name="X" size={16} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                  {/* Existing leads data */}
-                  {filteredAndSortedData.map((lead) => (
-                    <tr key={lead.Id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap min-w-[200px]">
-<Input
-                          type="url"
-                          value={lead.websiteUrl}
-                          onChange={(e) => {
-                            // Update UI immediately for smooth typing
-                            setData(prevData => 
-                              prevData.map(l => 
-                                l.Id === lead.Id ? { ...l, websiteUrl: e.target.value } : l
-                              )
-                            );
-                            // Debounce the API call
-                            handleFieldUpdateDebounced(lead.Id, 'websiteUrl', e.target.value);
-                          }}
-                          onBlur={(e) => handleFieldUpdate(lead.Id, 'websiteUrl', e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              handleFieldUpdate(lead.Id, 'websiteUrl', e.target.value);
-                            }
-                          }}
-                          className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 text-primary-600 font-medium"
-                        />
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[150px]">
-                        <select
-                          value={lead.teamSize}
-                          onChange={(e) => handleFieldUpdate(lead.Id, 'teamSize', e.target.value)}
-                          className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full"
-                        >
-                          {teamSizeOptions.map(option => (
-                            <option key={option} value={option}>{option}</option>
-                          ))}
-                        </select>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[120px]">
-<Input
-                          type="number"
-                          step="0.1"
-                          min="0"
-                          value={(lead.arr / 1000000).toFixed(1)}
-                          onChange={(e) => {
-                            // Update UI immediately for smooth typing
-                            setData(prevData => 
-                              prevData.map(l => 
-                                l.Id === lead.Id ? { ...l, arr: Number(e.target.value) * 1000000 } : l
-                              )
-                            );
-                            // Debounce the API call
-                            handleFieldUpdateDebounced(lead.Id, 'arr', e.target.value);
-                          }}
-                          onBlur={(e) => handleFieldUpdate(lead.Id, 'arr', e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              handleFieldUpdate(lead.Id, 'arr', e.target.value);
-                            }
-                          }}
-                          className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full"
-                        />
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[150px]">
-                        <select
-                          value={lead.category}
-                          onChange={(e) => handleFieldUpdate(lead.Id, 'category', e.target.value)}
-                          className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full"
-                        >
-                          {categoryOptions.map(option => (
-                            <option key={option} value={option}>{option}</option>
-                          ))}
-                        </select>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap min-w-[100px]">
-                        <a
-                          href={lead.linkedinUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-primary-600 hover:text-primary-800 inline-block p-1"
-                        >
-                          <ApperIcon name="Linkedin" size={16} />
-                        </a>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap min-w-[150px]">
-                        <div className="relative">
-                          <Badge 
-                            variant={getStatusColor(lead.status)}
-                            className="cursor-pointer hover:shadow-md transition-shadow"
-                          >
-                            {lead.status}
-                          </Badge>
-                          <select
-                            value={lead.status}
-                            onChange={(e) => handleStatusChange(lead.Id, e.target.value)}
-                            className="absolute inset-0 opacity-0 cursor-pointer w-full"
-                          >
-                            {statusOptions.map(option => (
-                              <option key={option} value={option}>{option}</option>
-                            ))}
-                          </select>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap min-w-[140px]">
-                        <div className="relative">
-                          <Badge 
-                            variant={lead.fundingType === "Series C" ? "primary" : "default"}
-                            className="cursor-pointer hover:shadow-md transition-shadow"
-                          >
-                            {lead.fundingType}
-                          </Badge>
-                          <select
-                            value={lead.fundingType}
-                            onChange={(e) => handleFieldUpdate(lead.Id, 'fundingType', e.target.value)}
-                            className="absolute inset-0 opacity-0 cursor-pointer w-full"
-                          >
-                            {fundingTypeOptions.map(option => (
-                              <option key={option} value={option}>{option}</option>
-                            ))}
-                          </select>
-</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[120px]">
-                        <div className="flex items-center">
-                          <ApperIcon name="User" size={14} className="mr-2 text-gray-400" />
-                          <span>{lead.addedByName || 'Unknown'}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium w-[120px] sticky right-0 bg-white border-l border-gray-200">
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => setEditingLead(lead)}
-                            className="text-primary-600 hover:text-primary-800 p-1 hover:bg-gray-100 rounded"
-                          >
-                            <ApperIcon name="Edit" size={16} />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(lead.Id)}
-                            className="text-red-600 hover:text-red-800 p-1 hover:bg-gray-100 rounded"
-                          >
-                            <ApperIcon name="Trash2" size={16} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                <table className="w-full min-w-[1200px]">
+                    <thead className="bg-gray-50">
+                        <tr>
+                            <th
+                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[200px]">
+                                <button
+                                    onClick={() => handleSort("websiteUrl")}
+                                    className="flex items-center gap-1 hover:text-gray-700">Website URL
+                                                            <ApperIcon name="ArrowUpDown" size={12} />
+                                </button>
+                            </th>
+                            <th
+                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[150px]">
+                                <button
+                                    onClick={() => handleSort("teamSize")}
+                                    className="flex items-center gap-1 hover:text-gray-700">Team Size
+                                                            <ApperIcon name="ArrowUpDown" size={12} />
+                                </button>
+                            </th>
+                            <th
+                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">
+                                <button
+                                    onClick={() => handleSort("arr")}
+                                    className="flex items-center gap-1 hover:text-gray-700">ARR (M)
+                                                            <ApperIcon name="ArrowUpDown" size={12} />
+                                </button>
+                            </th>
+                            <th
+                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[150px]">Category
+                                                    </th>
+                            <th
+                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[100px]">LinkedIn
+                                                    </th>
+                            <th
+                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[150px]">Status
+                                                    </th>
+                            <th
+                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[140px]">Funding Type
+                                                    </th>
+                            <th
+                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">Added By
+                                                    </th>
+                            <th
+                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[120px] sticky right-0 bg-gray-50 border-l border-gray-200">Actions
+                                                    </th>
+                        </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                        {/* Empty rows for direct data entry - positioned at top */}
+                        {emptyRows.map(
+                            emptyRow => <tr key={`empty-${emptyRow.Id}`} className="hover:bg-gray-50 empty-row">
+                                <td className="px-6 py-4 whitespace-nowrap min-w-[200px]">
+                                    <Input
+                                        type="url"
+                                        value={emptyRow.websiteUrl}
+                                        detectUrlPrefix={true}
+                                        urlPrefix="https://"
+                                        onChange={e => setEmptyRows(prev => prev.map(row => row.Id === emptyRow.Id ? {
+                                            ...row,
+                                            websiteUrl: e.target.value
+                                        } : row))}
+                                        onBlur={e => handleEmptyRowUpdate(emptyRow.Id, "websiteUrl", e.target.value)}
+                                        onKeyDown={e => {
+                                            if (e.key === "Enter") {
+                                                handleEmptyRowUpdate(emptyRow.Id, "websiteUrl", e.target.value);
+                                            }
+                                        }}
+                                        placeholder="Enter website URL..."
+                                        className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 text-primary-600 font-medium placeholder-gray-400" />
+                                </td>
+                                <td
+                                    className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[150px]">
+                                    <select
+                                        value={emptyRow.teamSize}
+                                        onChange={e => handleEmptyRowUpdate(emptyRow.Id, "teamSize", e.target.value)}
+                                        className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full text-gray-500">
+                                        {teamSizeOptions.map(option => <option key={option} value={option}>{option}</option>)}
+                                    </select>
+                                </td>
+                                <td
+                                    className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[120px]">
+                                    <Input
+                                        type="number"
+                                        step="0.1"
+                                        min="0"
+                                        value={(emptyRow.arr / 1000000).toFixed(1)}
+                                        onChange={e => handleEmptyRowUpdateDebounced(emptyRow.Id, "arr", e.target.value)}
+                                        onBlur={e => handleEmptyRowUpdate(emptyRow.Id, "arr", e.target.value)}
+                                        onKeyDown={e => {
+                                            if (e.key === "Enter") {
+                                                handleEmptyRowUpdate(emptyRow.Id, "arr", e.target.value);
+                                            }
+                                        }}
+                                        placeholder="0.0"
+                                        className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full placeholder-gray-400" />
+                                </td>
+                                <td
+                                    className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[150px]">
+                                    <select
+                                        value={emptyRow.category}
+                                        onChange={e => handleEmptyRowUpdate(emptyRow.Id, "category", e.target.value)}
+                                        className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full text-gray-500">
+                                        {categoryOptions.map(option => <option key={option} value={option}>{option}</option>)}
+                                    </select>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap min-w-[100px]">
+                                    <Input
+                                        type="url"
+                                        value={emptyRow.linkedinUrl}
+                                        onChange={e => handleEmptyRowUpdateDebounced(emptyRow.Id, "linkedinUrl", e.target.value)}
+                                        onBlur={e => handleEmptyRowUpdate(emptyRow.Id, "linkedinUrl", e.target.value)}
+                                        onKeyDown={e => {
+                                            if (e.key === "Enter") {
+                                                handleEmptyRowUpdate(emptyRow.Id, "linkedinUrl", e.target.value);
+                                            }
+                                        }}
+                                        placeholder="LinkedIn URL..."
+                                        className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full placeholder-gray-400 text-sm" />
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap min-w-[150px]">
+                                    <div className="relative">
+                                        <Badge
+                                            variant={getStatusColor(emptyRow.status)}
+                                            className="cursor-pointer hover:shadow-md transition-shadow opacity-60">
+                                            {emptyRow.status}
+                                        </Badge>
+                                        <select
+                                            value={emptyRow.status}
+                                            onChange={e => handleEmptyRowUpdate(emptyRow.Id, "status", e.target.value)}
+                                            className="absolute inset-0 opacity-0 cursor-pointer w-full">
+                                            {statusOptions.map(option => <option key={option} value={option}>{option}</option>)}
+                                        </select>
+                                    </div>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap min-w-[140px]">
+                                    <div className="relative">
+                                        <Badge
+                                            variant={emptyRow.fundingType === "Series C" ? "primary" : "default"}
+                                            className="cursor-pointer hover:shadow-md transition-shadow opacity-60">
+                                            {emptyRow.fundingType}
+                                        </Badge>
+                                        <select
+                                            value={emptyRow.fundingType}
+                                            onChange={e => handleEmptyRowUpdate(emptyRow.Id, "fundingType", e.target.value)}
+                                            className="absolute inset-0 opacity-0 cursor-pointer w-full">
+                                            {fundingTypeOptions.map(option => <option key={option} value={option}>{option}</option>)}
+                                        </select>
+                                    </div>
+                                </td>
+                                <td
+                                    className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 min-w-[120px]">
+                                    <span className="italic">Current User</span>
+                                </td>
+                                <td
+                                    className="px-6 py-4 whitespace-nowrap text-sm font-medium w-[120px] sticky right-0 bg-white border-l border-gray-200">
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={() => setEmptyRows(prev => prev.filter(row => row.Id !== emptyRow.Id))}
+                                            className="text-gray-400 hover:text-red-600 p-1 hover:bg-gray-100 rounded"
+                                            title="Remove empty row">
+                                            <ApperIcon name="X" size={16} />
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        )}
+                        {/* Existing leads data */}
+                        {filteredAndSortedData.map(lead => <tr key={lead.Id} className="hover:bg-gray-50">
+                            <td className="px-6 py-4 whitespace-nowrap min-w-[200px]">
+                                <Input
+                                    type="url"
+                                    value={lead.websiteUrl}
+                                    detectUrlPrefix={true}
+                                    urlPrefix="https://"
+                                    onChange={e => {
+                                        setData(prevData => prevData.map(l => l.Id === lead.Id ? {
+                                            ...l,
+                                            websiteUrl: e.target.value
+                                        } : l));
+
+                                        handleFieldUpdateDebounced(lead.Id, "websiteUrl", e.target.value);
+                                    }}
+                                    onBlur={e => handleFieldUpdate(lead.Id, "websiteUrl", e.target.value)}
+                                    onKeyDown={e => {
+                                        if (e.key === "Enter") {
+                                            handleFieldUpdate(lead.Id, "websiteUrl", e.target.value);
+                                        }
+                                    }}
+                                    className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 text-primary-600 font-medium" />
+                            </td>
+                            <td
+                                className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[150px]">
+                                <select
+                                    value={lead.teamSize}
+                                    onChange={e => handleFieldUpdate(lead.Id, "teamSize", e.target.value)}
+                                    className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full">
+                                    {teamSizeOptions.map(option => <option key={option} value={option}>{option}</option>)}
+                                </select>
+                            </td>
+                            <td
+                                className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[120px]">
+                                <Input
+                                    type="number"
+                                    step="0.1"
+                                    min="0"
+                                    value={(lead.arr / 1000000).toFixed(1)}
+                                    onChange={e => {
+                                        setData(prevData => prevData.map(l => l.Id === lead.Id ? {
+                                            ...l,
+                                            arr: Number(e.target.value) * 1000000
+                                        } : l));
+
+                                        handleFieldUpdateDebounced(lead.Id, "arr", e.target.value);
+                                    }}
+                                    onBlur={e => handleFieldUpdate(lead.Id, "arr", e.target.value)}
+                                    onKeyDown={e => {
+                                        if (e.key === "Enter") {
+                                            handleFieldUpdate(lead.Id, "arr", e.target.value);
+                                        }
+                                    }}
+                                    className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full" />
+                            </td>
+                            <td
+                                className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[150px]">
+                                <select
+                                    value={lead.category}
+                                    onChange={e => handleFieldUpdate(lead.Id, "category", e.target.value)}
+                                    className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full">
+                                    {categoryOptions.map(option => <option key={option} value={option}>{option}</option>)}
+                                </select>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap min-w-[100px]">
+                                <a
+                                    href={lead.linkedinUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-primary-600 hover:text-primary-800 inline-block p-1">
+                                    <ApperIcon name="Linkedin" size={16} />
+                                </a>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap min-w-[150px]">
+                                <div className="relative">
+                                    <Badge
+                                        variant={getStatusColor(lead.status)}
+                                        className="cursor-pointer hover:shadow-md transition-shadow">
+                                        {lead.status}
+                                    </Badge>
+                                    <select
+                                        value={lead.status}
+                                        onChange={e => handleStatusChange(lead.Id, e.target.value)}
+                                        className="absolute inset-0 opacity-0 cursor-pointer w-full">
+                                        {statusOptions.map(option => <option key={option} value={option}>{option}</option>)}
+                                    </select>
+                                </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap min-w-[140px]">
+                                <div className="relative">
+                                    <Badge
+                                        variant={lead.fundingType === "Series C" ? "primary" : "default"}
+                                        className="cursor-pointer hover:shadow-md transition-shadow">
+                                        {lead.fundingType}
+                                    </Badge>
+                                    <select
+                                        value={lead.fundingType}
+                                        onChange={e => handleFieldUpdate(lead.Id, "fundingType", e.target.value)}
+                                        className="absolute inset-0 opacity-0 cursor-pointer w-full">
+                                        {fundingTypeOptions.map(option => <option key={option} value={option}>{option}</option>)}
+                                    </select>
+                                </div>
+                            </td>
+                            <td
+                                className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[120px]">
+                                <div className="flex items-center">
+                                    <ApperIcon name="User" size={14} className="mr-2 text-gray-400" />
+                                    <span>{lead.addedByName || "Unknown"}</span>
+                                </div>
+                            </td>
+                            <td
+                                className="px-6 py-4 whitespace-nowrap text-sm font-medium w-[120px] sticky right-0 bg-white border-l border-gray-200">
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => setEditingLead(lead)}
+                                        className="text-primary-600 hover:text-primary-800 p-1 hover:bg-gray-100 rounded">
+                                        <ApperIcon name="Edit" size={16} />
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(lead.Id)}
+                                        className="text-red-600 hover:text-red-800 p-1 hover:bg-gray-100 rounded">
+                                        <ApperIcon name="Trash2" size={16} />
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>)}
+                    </tbody>
+                </table>
             </div>
-          </div>
-        )}
-      </Card>
-
-      {/* Add Lead Modal */}
-      {showAddForm && (
-        <AddLeadModal
-          onClose={() => setShowAddForm(false)}
-          onSubmit={handleAddLead}
-        />
-      )}
-
-      {/* Edit Lead Modal */}
-      {editingLead && (
-        <EditLeadModal
-          lead={editingLead}
-          onClose={() => setEditingLead(null)}
-          onSubmit={handleUpdateLead}
-        />
-      )}
-    </motion.div>
+        </div>}
+    </Card>
+    {/* Add Lead Modal */}
+    {showAddForm && <AddLeadModal onClose={() => setShowAddForm(false)} onSubmit={handleAddLead} />}
+    {/* Edit Lead Modal */}
+    {editingLead && <EditLeadModal
+        lead={editingLead}
+        onClose={() => setEditingLead(null)}
+        onSubmit={handleUpdateLead} />}
+</motion.div>
   );
 };
 
@@ -807,9 +765,11 @@ const AddLeadModal = ({ onClose, onSubmit }) => {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Website URL
             </label>
-            <Input
+<Input
               type="url"
               value={formData.websiteUrl}
+              detectUrlPrefix={true}
+              urlPrefix="https://"
               onChange={(e) => setFormData({...formData, websiteUrl: e.target.value})}
               placeholder="https://example.com"
               required
@@ -952,138 +912,137 @@ const EditLeadModal = ({ lead, onClose, onSubmit }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+    <div
+    className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
         <div className="flex items-center justify-between p-6 border-b">
-          <h3 className="text-lg font-semibold">Edit Lead</h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-            <ApperIcon name="X" size={20} />
-          </button>
+            <h3 className="text-lg font-semibold">Edit Lead</h3>
+            <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+                <ApperIcon name="X" size={20} />
+            </button>
         </div>
-        
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Website URL
-            </label>
-            <Input
-              type="url"
-              value={formData.websiteUrl}
-              onChange={(e) => setFormData({...formData, websiteUrl: e.target.value})}
-              required
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Team Size
-            </label>
-            <select
-              value={formData.teamSize}
-              onChange={(e) => setFormData({...formData, teamSize: e.target.value})}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-            >
-              <option value="1-10">1-10</option>
-              <option value="11-50">11-50</option>
-              <option value="51-100">51-100</option>
-              <option value="101-500">101-500</option>
-              <option value="501-1000">501-1000</option>
-              <option value="1001+">1001+</option>
-            </select>
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              ARR (USD)
-            </label>
-            <Input
-              type="number"
-              value={formData.arr}
-              onChange={(e) => setFormData({...formData, arr: e.target.value})}
-              required
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Category
-            </label>
-            <Input
-              type="text"
-              value={formData.category}
-              onChange={(e) => setFormData({...formData, category: e.target.value})}
-              required
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              LinkedIn URL
-            </label>
-            <Input
-              type="url"
-              value={formData.linkedinUrl}
-              onChange={(e) => setFormData({...formData, linkedinUrl: e.target.value})}
-              required
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Status
-            </label>
-            <select
-              value={formData.status}
-              onChange={(e) => setFormData({...formData, status: e.target.value})}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-            >
-<option value="Launched on AppSumo">Launched on AppSumo</option>
-              <option value="Launched on Prime Club">Launched on Prime Club</option>
-              <option value="Keep an Eye">Keep an Eye</option>
-              <option value="Rejected">Rejected</option>
-              <option value="Unsubscribed">Unsubscribed</option>
-              <option value="Outdated">Outdated</option>
-              <option value="Hotlist">Hotlist</option>
-              <option value="Out of League">Out of League</option>
-              <option value="Connected">Connected</option>
-              <option value="Locked">Locked</option>
-              <option value="Meeting Booked">Meeting Booked</option>
-              <option value="Meeting Done">Meeting Done</option>
-              <option value="Negotiation">Negotiation</option>
-              <option value="Closed Lost">Closed Lost</option>
-            </select>
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Funding Type
-            </label>
-            <select
-              value={formData.fundingType}
-              onChange={(e) => setFormData({...formData, fundingType: e.target.value})}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-            >
-              <option value="Bootstrapped">Bootstrapped</option>
-              <option value="Pre-seed">Pre-seed</option>
-              <option value="Y Combinator">Y Combinator</option>
-              <option value="Angel">Angel</option>
-              <option value="Series A">Series A</option>
-              <option value="Series B">Series B</option>
-              <option value="Series C">Series C</option>
-            </select>
-          </div>
-          
-          <div className="flex justify-end gap-3 pt-4">
-            <Button type="button" variant="outline" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button type="submit">
-              Update Lead
-            </Button>
-          </div>
-        </form>
-      </div>
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Website URL
+                                </label>
+                <Input
+                    type="url"
+                    value={formData.websiteUrl}
+                    detectUrlPrefix={true}
+                    urlPrefix="https://"
+                    onChange={e => setFormData({
+                        ...formData,
+                        websiteUrl: e.target.value
+                    })}
+                    required />
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Team Size
+                                    </label>
+                    <select
+                        value={formData.teamSize}
+                        onChange={e => setFormData({
+                            ...formData,
+                            teamSize: e.target.value
+                        })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                        <option value="1-10">1-10</option>
+                        <option value="11-50">11-50</option>
+                        <option value="51-100">51-100</option>
+                        <option value="101-500">101-500</option>
+                        <option value="501-1000">501-1000</option>
+                        <option value="1001+">1001+</option>
+                    </select>
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">ARR (USD)
+                                    </label>
+                    <Input
+                        type="number"
+                        value={formData.arr}
+                        onChange={e => setFormData({
+                            ...formData,
+                            arr: e.target.value
+                        })}
+                        required />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Category
+                                    </label>
+                    <Input
+                        type="text"
+                        value={formData.category}
+                        onChange={e => setFormData({
+                            ...formData,
+                            category: e.target.value
+                        })}
+                        required />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">LinkedIn URL
+                                    </label>
+                    <Input
+                        type="url"
+                        value={formData.linkedinUrl}
+                        onChange={e => setFormData({
+                            ...formData,
+                            linkedinUrl: e.target.value
+                        })}
+                        required />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Status
+                                    </label>
+                    <select
+                        value={formData.status}
+                        onChange={e => setFormData({
+                            ...formData,
+                            status: e.target.value
+                        })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                        <option value="Launched on AppSumo">Launched on AppSumo</option>
+                        <option value="Launched on Prime Club">Launched on Prime Club</option>
+                        <option value="Keep an Eye">Keep an Eye</option>
+                        <option value="Rejected">Rejected</option>
+                        <option value="Unsubscribed">Unsubscribed</option>
+                        <option value="Outdated">Outdated</option>
+                        <option value="Hotlist">Hotlist</option>
+                        <option value="Out of League">Out of League</option>
+                        <option value="Connected">Connected</option>
+                        <option value="Locked">Locked</option>
+                        <option value="Meeting Booked">Meeting Booked</option>
+                        <option value="Meeting Done">Meeting Done</option>
+                        <option value="Negotiation">Negotiation</option>
+                        <option value="Closed Lost">Closed Lost</option>
+                    </select>
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Funding Type
+                                    </label>
+                    <select
+                        value={formData.fundingType}
+                        onChange={e => setFormData({
+                            ...formData,
+                            fundingType: e.target.value
+                        })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                        <option value="Bootstrapped">Bootstrapped</option>
+                        <option value="Pre-seed">Pre-seed</option>
+                        <option value="Y Combinator">Y Combinator</option>
+                        <option value="Angel">Angel</option>
+                        <option value="Series A">Series A</option>
+                        <option value="Series B">Series B</option>
+                        <option value="Series C">Series C</option>
+                    </select>
+                </div>
+                <div className="flex justify-end gap-3 pt-4">
+                    <Button type="button" variant="outline" onClick={onClose}>Cancel
+                                    </Button>
+                    <Button type="submit">Update Lead
+                                    </Button>
+                </div>
+            </div></form>
     </div>
+</div>
   );
 };
 
