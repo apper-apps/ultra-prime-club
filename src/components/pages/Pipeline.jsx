@@ -1,22 +1,24 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
-import Card from "@/components/atoms/Card";
-import Button from "@/components/atoms/Button";
-import Badge from "@/components/atoms/Badge";
-import DealCard from "@/components/molecules/DealCard";
-import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
-import Empty from "@/components/ui/Empty";
+import DealEditModal from "@/components/molecules/DealEditModal";
 import ApperIcon from "@/components/ApperIcon";
+import Badge from "@/components/atoms/Badge";
+import Button from "@/components/atoms/Button";
+import Card from "@/components/atoms/Card";
+import Empty from "@/components/ui/Empty";
+import Error from "@/components/ui/Error";
+import Loading from "@/components/ui/Loading";
+import DealCard from "@/components/molecules/DealCard";
 import { getDeals, updateDeal } from "@/services/api/dealsService";
 
 const Pipeline = () => {
   const [deals, setDeals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingDeal, setEditingDeal] = useState(null);
   const stages = [
     { id: "Connected", name: "Connected", color: "bg-blue-500" },
     { id: "Locked", name: "Locked", color: "bg-purple-500" },
@@ -72,12 +74,30 @@ const Pipeline = () => {
     } catch (err) {
       toast.error("Failed to update deal stage");
     }
+};
+
+  const handleEditDeal = (deal) => {
+    setEditingDeal(deal);
+    setShowEditModal(true);
+  };
+
+  const handleSaveDeal = async (dealId, updatedData) => {
+    const updatedDeal = await updateDeal(dealId, updatedData);
+    
+    const updatedDeals = deals.map(deal =>
+      deal.Id === dealId ? { ...deal, ...updatedData } : deal
+    );
+    setDeals(updatedDeals);
+  };
+
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
+    setEditingDeal(null);
   };
 
   const getDealsForStage = (stage) => {
     return deals.filter(deal => deal.stage === stage);
   };
-
   const getTotalValue = (stage) => {
     const stageDeals = getDealsForStage(stage);
     return stageDeals.reduce((sum, deal) => sum + deal.value, 0);
@@ -150,10 +170,10 @@ const Pipeline = () => {
                         ) : (
                           stageDeals.map((deal, index) => (
                             <DealCard
-                              key={deal.Id}
+key={deal.Id}
                               deal={deal}
                               index={index}
-                              onEdit={() => toast.info("Edit functionality coming soon")}
+                              onEdit={handleEditDeal}
                             />
                           ))
                         )}
@@ -164,11 +184,16 @@ const Pipeline = () => {
                 </Card>
               </div>
             );
-          })}
+})}
         </div>
       </DragDropContext>
+
+      <DealEditModal
+        isOpen={showEditModal}
+        onClose={handleCloseEditModal}
+        deal={editingDeal}
+        onSave={handleSaveDeal}
+      />
     </div>
   );
-};
-
 export default Pipeline;

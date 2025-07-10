@@ -53,12 +53,13 @@ const DealCard = ({ deal, index, onEdit }) => {
                     {deal.edition}
                   </Badge>
                 )}
-                <button
+<button
                   onClick={(e) => {
                     e.stopPropagation();
                     onEdit?.(deal);
                   }}
                   className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                  title="Edit deal"
                 >
                   <ApperIcon name="MoreHorizontal" size={16} className="text-gray-400" />
                 </button>
