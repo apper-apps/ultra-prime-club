@@ -27,7 +27,7 @@ const navigation = [
             isCollapsed ? "w-16" : "w-64"
           }`}
         >
-          <div className="flex items-center justify-between p-6 border-b border-gray-200">
+<div className="flex items-center justify-between p-6 border-b border-gray-200">
             {!isCollapsed && (
               <div className="flex items-center">
                 <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center">
@@ -35,7 +35,6 @@ const navigation = [
                 </div>
                 <div className="ml-3">
                   <h1 className="text-xl font-bold text-gray-900">Prime Club</h1>
-                  <p className="text-sm text-gray-500">CRM System</p>
                 </div>
               </div>
             )}
@@ -109,14 +108,13 @@ const MobileSidebar = ({ navigation }) => {
             transition={{ duration: 0.3 }}
             className="fixed left-0 top-0 h-full w-80 bg-white shadow-xl"
           >
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+<div className="flex items-center justify-between p-6 border-b border-gray-200">
               <div className="flex items-center">
                 <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center">
                   <ApperIcon name="Zap" size={18} className="text-white" />
                 </div>
                 <div className="ml-3">
                   <h1 className="text-xl font-bold text-gray-900">Prime Club</h1>
-                  <p className="text-sm text-gray-500">CRM System</p>
                 </div>
               </div>
               <button
