@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
-import DealEditModal from "@/components/molecules/DealEditModal";
 import ApperIcon from "@/components/ApperIcon";
 import Badge from "@/components/atoms/Badge";
 import Button from "@/components/atoms/Button";
@@ -11,6 +10,12 @@ import Empty from "@/components/ui/Empty";
 import Error from "@/components/ui/Error";
 import Loading from "@/components/ui/Loading";
 import DealCard from "@/components/molecules/DealCard";
+import DealEditModal from "@/components/molecules/DealEditModal";
+import salesRepsData from "@/services/mockData/salesReps.json";
+import dashboardData from "@/services/mockData/dashboard.json";
+import dealsData from "@/services/mockData/deals.json";
+import leadsData from "@/services/mockData/leads.json";
+import contactsData from "@/services/mockData/contacts.json";
 import { getDeals, updateDeal } from "@/services/api/dealsService";
 
 const Pipeline = () => {
@@ -179,12 +184,12 @@ key={deal.Id}
                         )}
                         {provided.placeholder}
                       </div>
-                    )}
+)}
                   </Droppable>
                 </Card>
               </div>
             );
-})}
+          })}
         </div>
       </DragDropContext>
 
@@ -194,6 +199,8 @@ key={deal.Id}
         deal={editingDeal}
         onSave={handleSaveDeal}
       />
-    </div>
+</div>
   );
+};
+
 export default Pipeline;
