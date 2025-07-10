@@ -100,29 +100,33 @@ const Calendar = () => {
                 ))}
               </div>
 
-              {/* Timeline */}
-              <div className="space-y-4">
+{/* Timeline Rows */}
+              <div className="space-y-3">
                 {deals.map((deal, index) => (
                   <motion.div
                     key={deal.Id}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className="relative"
+                    className="relative h-16 bg-gray-50 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
                   >
-                    <div className="grid grid-cols-12 gap-4 h-16 items-center">
-                      <div className="col-span-12 relative">
-                        <div className="absolute inset-0 bg-gray-100 rounded-lg" />
-                        <TimelineBar
-                          deal={deal}
-                          onUpdate={(updates) => handleDealUpdate(deal.Id, updates)}
-                        />
-                      </div>
+                    {/* Timeline Row Background */}
+                    <div className="absolute inset-0 grid grid-cols-12 gap-px">
+                      {Array.from({ length: 12 }, (_, i) => (
+                        <div key={i} className="bg-white opacity-50 rounded-sm" />
+                      ))}
+                    </div>
+                    
+                    {/* Deal Timeline Bar */}
+                    <div className="relative h-full">
+                      <TimelineBar
+                        deal={deal}
+                        onUpdate={(updates) => handleDealUpdate(deal.Id, updates)}
+                      />
                     </div>
                   </motion.div>
                 ))}
               </div>
-
               {/* Legend */}
               <div className="mt-8 p-4 bg-gray-50 rounded-lg">
                 <h4 className="font-semibold text-gray-900 mb-3">Legend</h4>

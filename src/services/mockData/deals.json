@@ -1,7 +1,7 @@
 [
-  {
+{
     "Id": 1,
-    "name": "Notion Enterprise Package",
+    "name": "Notion LTD",
     "leadName": "John Smith",
     "leadId": "1",
     "value": 125000,
@@ -11,16 +11,16 @@
     "endMonth": 3,
     "createdAt": "2024-01-15T10:30:00Z"
   },
-  {
+{
     "Id": 2,
-    "name": "Canva Pro Subscription",
+    "name": "Canva LTD",
     "leadName": "Emma Wilson",
     "leadId": "2",
     "value": 85000,
     "stage": "Closed",
     "assignedRep": "Mike Davis",
-    "startMonth": 5,
-    "endMonth": 6,
+"startMonth": 5,
+    "endMonth": 7,
     "createdAt": "2024-01-10T14:20:00Z"
   },
   {
@@ -71,28 +71,28 @@
     "endMonth": 9,
     "createdAt": "2024-01-14T13:20:00Z"
   },
-  {
+{
     "Id": 7,
-    "name": "Discord Nitro",
+    "name": "Microsoft LTD",
     "leadName": "Rachel Green",
     "leadId": "8",
-    "value": 35000,
+    "value": 180000,
     "stage": "Connected",
     "assignedRep": "Mike Davis",
-    "startMonth": 7,
+    "startMonth": 8,
     "endMonth": 10,
     "createdAt": "2024-01-22T15:10:00Z"
   },
-  {
+{
     "Id": 8,
-    "name": "Zoom Enterprise",
+    "name": "Adobe LTD",
     "leadName": "Chris Anderson",
     "leadId": "7",
-    "value": 25000,
-    "stage": "Lost",
+    "value": 95000,
+    "stage": "Negotiation",
     "assignedRep": "Tom Wilson",
-    "startMonth": 1,
-    "endMonth": 2,
+    "startMonth": 9,
+    "endMonth": 11,
     "createdAt": "2024-01-08T10:00:00Z"
   }
 ]

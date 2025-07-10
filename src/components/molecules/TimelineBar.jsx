@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 const TimelineBar = ({ deal, onUpdate }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editName, setEditName] = useState(deal.name);
   const barRef = useRef(null);
 
   const months = [
@@ -26,12 +28,32 @@ const TimelineBar = ({ deal, onUpdate }) => {
     return "from-gray-500 to-gray-600";
   };
 
-  const handleMouseDown = (e) => {
+const handleMouseDown = (e) => {
     if (e.target.classList.contains("resize-handle")) {
       setIsResizing(true);
-    } else {
+    } else if (!isEditing) {
       setIsDragging(true);
     }
+  };
+
+  const handleDoubleClick = (e) => {
+    e.stopPropagation();
+    setIsEditing(true);
+  };
+
+  const handleNameSubmit = (e) => {
+    e.preventDefault();
+    if (editName.trim() && editName !== deal.name) {
+      onUpdate({ name: editName.trim() });
+    }
+    setIsEditing(false);
+  };
+
+  const handleNameBlur = () => {
+    if (editName.trim() && editName !== deal.name) {
+      onUpdate({ name: editName.trim() });
+    }
+    setIsEditing(false);
   };
 
   const startMonth = deal.startMonth || 1;
@@ -55,13 +77,30 @@ const TimelineBar = ({ deal, onUpdate }) => {
         left: `${leftPosition}%`,
         width: `${width}%`,
         minWidth: "60px"
-      }}
+}}
       onMouseDown={handleMouseDown}
+      onDoubleClick={handleDoubleClick}
     >
       <div className="h-full flex items-center justify-between px-3 text-white text-sm font-medium">
         <div className="flex-1 min-w-0">
-          <div className="truncate font-semibold">{deal.name}</div>
-          <div className="text-xs opacity-90">{formatCurrency(deal.value)}</div>
+          {isEditing ? (
+            <form onSubmit={handleNameSubmit} className="flex items-center">
+              <input
+                type="text"
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+                onBlur={handleNameBlur}
+                className="bg-white text-gray-900 px-2 py-1 rounded text-sm font-semibold w-full"
+                autoFocus
+                onFocus={(e) => e.target.select()}
+              />
+            </form>
+          ) : (
+            <>
+              <div className="truncate font-semibold">{deal.name}</div>
+              <div className="text-xs opacity-90">{formatCurrency(deal.value)}</div>
+            </>
+          )}
         </div>
         
         {/* Resize handle */}
