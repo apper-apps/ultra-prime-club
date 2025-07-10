@@ -259,7 +259,7 @@ websiteUrl: "",
     }
   };
 
-const teamSizeOptions = ["1-3", "11-50", "51-100", "101-500", "501-1000", "1001+"];
+const teamSizeOptions = ["1-3", "4-10", "11-50", "51-100", "101-500", "501-1000", "1001+"];
   const [categoryOptions, setCategoryOptions] = useState([
     "3D Design Software",
     "Accounting Software", 
