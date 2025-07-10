@@ -12,6 +12,7 @@ const navigation = [
     { to: "/contacts", icon: "Users", label: "Contacts" },
     { to: "/pipeline", icon: "Kanban", label: "Deal Pipeline" },
     { to: "/calendar", icon: "Calendar", label: "Calendar" },
+    { to: "/reports/website-urls", icon: "FileText", label: "URL Reports" },
     { to: "/leaderboard", icon: "Trophy", label: "Leaderboard" }
   ];
 

@@ -9,9 +9,10 @@
     "status": "Keep an Eye",
     "fundingType": "Series A",
     "addedBy": 1,
+    "addedByName": "Sarah Johnson",
     "createdAt": "2024-12-19T10:30:00Z"
   },
-  {
+{
     "Id": 2,
     "websiteUrl": "https://canva.com",
     "teamSize": "501-1000",
@@ -21,9 +22,10 @@
     "status": "Launched on AppSumo",
     "fundingType": "Series C",
     "addedBy": 2,
+    "addedByName": "Mike Davis",
     "createdAt": "2024-12-19T14:20:00Z"
   },
-  {
+{
     "Id": 3,
     "websiteUrl": "https://figma.com",
     "teamSize": "201-500",
@@ -33,9 +35,10 @@
     "status": "Hotlist",
     "fundingType": "Series B",
     "addedBy": 3,
+    "addedByName": "Tom Wilson",
     "createdAt": "2024-01-18T09:15:00Z"
   },
-  {
+{
     "Id": 4,
     "websiteUrl": "https://stripe.com",
     "teamSize": "1001+",
@@ -45,9 +48,10 @@
     "status": "Out of League",
     "fundingType": "Series C",
     "addedBy": 4,
+    "addedByName": "Emily Chen",
     "createdAt": "2024-01-20T11:45:00Z"
   },
-  {
+{
     "Id": 5,
     "websiteUrl": "https://shopify.com",
     "teamSize": "1001+",
@@ -57,9 +61,10 @@
     "status": "Launched on Prime Club",
     "fundingType": "Series C",
     "addedBy": 5,
+    "addedByName": "Alex Rodriguez",
     "createdAt": "2024-01-12T16:30:00Z"
   },
-  {
+{
     "Id": 6,
     "websiteUrl": "https://slack.com",
     "teamSize": "501-1000",
@@ -69,9 +74,10 @@
     "status": "Rejected",
     "fundingType": "Series B",
     "addedBy": 1,
+    "addedByName": "Sarah Johnson",
     "createdAt": "2024-01-14T13:20:00Z"
   },
-  {
+{
     "Id": 7,
     "websiteUrl": "https://zoom.us",
     "teamSize": "1001+",
@@ -81,9 +87,10 @@
     "status": "Unsubscribed",
     "fundingType": "Series C",
     "addedBy": 2,
+    "addedByName": "Mike Davis",
     "createdAt": "2024-01-08T10:00:00Z"
   },
-  {
+{
     "Id": 8,
     "websiteUrl": "https://discord.com",
     "teamSize": "101-500",
@@ -93,6 +100,46 @@
     "status": "Outdated",
     "fundingType": "Y Combinator",
     "addedBy": 3,
+    "addedByName": "Tom Wilson",
     "createdAt": "2024-12-19T15:10:00Z"
+  },
+  {
+    "Id": 9,
+    "websiteUrl": "https://hubspot.com",
+    "teamSize": "1001+",
+    "arr": 15000000,
+    "category": "CRM",
+    "linkedinUrl": "https://linkedin.com/company/hubspot",
+    "status": "Keep an Eye",
+    "fundingType": "Series C",
+    "addedBy": 6,
+    "addedByName": "Shashank Sharma",
+    "createdAt": "2024-12-19T08:45:00Z"
+  },
+  {
+    "Id": 10,
+    "websiteUrl": "https://asana.com",
+    "teamSize": "101-500",
+    "arr": 950000,
+    "category": "Productivity",
+    "linkedinUrl": "https://linkedin.com/company/asana",
+    "status": "Connected",
+    "fundingType": "Series A",
+    "addedBy": 6,
+    "addedByName": "Shashank Sharma",
+    "createdAt": "2024-12-18T14:30:00Z"
+  },
+  {
+    "Id": 11,
+    "websiteUrl": "https://mailchimp.com",
+    "teamSize": "501-1000",
+    "arr": 3200000,
+    "category": "Marketing",
+    "linkedinUrl": "https://linkedin.com/company/mailchimp",
+    "status": "Meeting Booked",
+    "fundingType": "Bootstrapped",
+    "addedBy": 6,
+    "addedByName": "Shashank Sharma",
+    "createdAt": "2024-12-17T11:20:00Z"
   }
 ]

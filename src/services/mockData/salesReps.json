@@ -31,12 +31,20 @@
     "dealsClosed": 28,
     "totalRevenue": 720000
   },
-  {
+{
     "Id": 5,
     "name": "Alex Rodriguez",
     "leadsContacted": 531,
     "meetingsBooked": 65,
     "dealsClosed": 24,
     "totalRevenue": 650000
+  },
+  {
+    "Id": 6,
+    "name": "Shashank Sharma",
+    "leadsContacted": 689,
+    "meetingsBooked": 91,
+    "dealsClosed": 35,
+    "totalRevenue": 890000
   }
 ]

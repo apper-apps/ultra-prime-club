@@ -7,6 +7,7 @@ import Contacts from "@/components/pages/Contacts";
 import Pipeline from "@/components/pages/Pipeline";
 import Calendar from "@/components/pages/Calendar";
 import Leaderboard from "@/components/pages/Leaderboard";
+import WebsiteUrlReport from "@/components/pages/WebsiteUrlReport";
 
 function App() {
   return (
@@ -55,6 +56,15 @@ function App() {
             transition={{ duration: 0.3 }}
           >
             <Calendar />
+          </motion.div>
+        } />
+<Route path="/reports/website-urls" element={
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <WebsiteUrlReport />
           </motion.div>
         } />
         <Route path="/leaderboard" element={
