@@ -133,9 +133,8 @@ const [metricsData, activityData, meetingsData, followUpsData] = await Promise.a
             </div>
         </Card>
         <Card className="p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Pending Follow-ups</h3>
+<h3 className="text-lg font-semibold text-gray-900 mb-4">Pending Follow-ups</h3>
             <div className="space-y-3">
-                {pendingFollowUps.length > 0 ? pendingFollowUps.map((followUp, index) => <motion.div
                 {pendingFollowUps.length > 0 ? pendingFollowUps.map((followUp, index) => <motion.div
                     key={followUp.Id}
                     initial={{

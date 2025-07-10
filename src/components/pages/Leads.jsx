@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
+import Loading from "@/components/ui/Loading";
 import ApperIcon from "@/components/ApperIcon";
 import Badge from "@/components/atoms/Badge";
 import Button from "@/components/atoms/Button";
@@ -8,7 +9,6 @@ import Card from "@/components/atoms/Card";
 import Input from "@/components/atoms/Input";
 import Empty from "@/components/ui/Empty";
 import Error from "@/components/ui/Error";
-import Loading from "@/components/ui/Loading";
 import SearchBar from "@/components/molecules/SearchBar";
 import { createLead, deleteLead, getLeads, updateLead } from "@/services/api/leadsService";
 import { createDeal, getDeals, updateDeal } from "@/services/api/dealsService";
@@ -1137,10 +1137,11 @@ options={categoryOptions}
             />
           </div>
           
-          <div>
+<div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Status
-<select
+            </label>
+            <select
               value={formData.status}
               onChange={(e) => setFormData({...formData, status: e.target.value})}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-300"
@@ -1163,9 +1164,10 @@ options={categoryOptions}
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+<label className="block text-sm font-medium text-gray-700 mb-1">
               Funding Type
-<select
+            </label>
+            <select
               value={formData.fundingType}
               onChange={(e) => setFormData({...formData, fundingType: e.target.value})}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-300"
@@ -1180,19 +1182,20 @@ options={categoryOptions}
             </select>
           </div>
           
-          <div>
+<div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Edition
-<select
+            </label>
+            <select
               value={formData.edition}
               onChange={(e) => setFormData({...formData, edition: e.target.value})}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-300"
             >
               <option value="Select Edition">Select Edition</option>
               <option value="Black Edition">Black Edition</option>
-              <option value="Collector's Edition">Collector's Edition</option>
+<option value="Collector's Edition">Collector's Edition</option>
               <option value="Limited Edition">Limited Edition</option>
-</select>
+            </select>
           </div>
           
           <div className="flex justify-end gap-3 pt-4">
@@ -1280,11 +1283,10 @@ teamSize: e.target.value
                     <Input
                         type="number"
                         value={formData.arr}
-                        onChange={e => setFormData({
+onChange={e => setFormData({
                             ...formData,
                             arr: e.target.value
                         })}
-})}
                         required />
                 </div>
             <div>
@@ -1311,10 +1313,10 @@ category: value
                 <Input
                         type="url"
                         value={formData.linkedinUrl}
-                        onChange={e => setFormData({
+onChange={e => setFormData({
                             ...formData,
                             linkedinUrl: e.target.value
-})}
+                        })}
                         required />
             </div>
             
@@ -1387,9 +1389,9 @@ edition: e.target.value
                     Cancel
                 </Button>
                 <Button type="submit">
-                    Update Lead
+Update Lead
                 </Button>
-</div>
+            </div>
         </form>
     </div>
 </div>

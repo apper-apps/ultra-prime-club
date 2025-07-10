@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import Loading from "@/components/ui/Loading";
 import ApperIcon from "@/components/ApperIcon";
 import Badge from "@/components/atoms/Badge";
 import Avatar from "@/components/atoms/Avatar";
 import Card from "@/components/atoms/Card";
 import Empty from "@/components/ui/Empty";
 import Error from "@/components/ui/Error";
-import Loading from "@/components/ui/Loading";
 import Leads from "@/components/pages/Leads";
 import { getSalesReps } from "@/services/api/salesRepService";
 
@@ -273,6 +273,7 @@ case 3:
                           </div>
                         </div>
                       </div>
+                    </div>
                   </Card>
                 </motion.div>
               );
@@ -318,10 +319,9 @@ case 3:
               <p className="text-4xl font-bold text-accent-600 mb-2">
                 {formatCurrency(salesReps.reduce((sum, rep) => sum + rep.totalRevenue, 0))}
               </p>
-              <p className="text-sm text-gray-600">Team performance</p>
+<p className="text-sm text-gray-600">Team performance</p>
             </Card>
           </div>
-        </div>
         </div>
       )}
     </div>
