@@ -651,10 +651,9 @@ const getStatusColor = (status) => {
                                             if (e.key === "Enter") {
                                                 handleEmptyRowUpdate(emptyRow.Id, "arr", e.target.value);
                                             }
-                                        }}
+}}
                                         placeholder="0.0"
                                         className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full placeholder-gray-400" />
-className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full placeholder-gray-400" />
                                 </td>
                                 <td
                                     className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[150px]">
@@ -792,10 +791,9 @@ className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:bor
                                     onKeyDown={e => {
                                         if (e.key === "Enter") {
                                             handleFieldUpdate(lead.Id, "arr", e.target.value);
-                                        }
+}
                                     }}
                                     className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full" />
-className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full" />
                             </td>
                             <td
                                 className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 min-w-[150px]">
@@ -1291,10 +1289,9 @@ required />
 </div>
             
             <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Category
+<label className="block text-sm font-medium text-gray-700 mb-1">Category
                 </label>
                 <div className="relative">
-<div className="relative">
                     <SearchableSelect
                         value={formData.category}
                         onChange={(value) => setFormData({
@@ -1306,7 +1303,7 @@ required />
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                             onCreateCategory={onCreateCategory}
                         />
-</div>
+                </div>
             </div>
             
             <div>
@@ -1394,7 +1391,7 @@ required />
                     Update Lead
                 </Button>
             </div>
-        </form>
+</form>
     </div>
 </div>
   );
