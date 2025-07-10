@@ -56,10 +56,10 @@ const Loading = ({ type = "default" }) => {
               </div>
             </Card>
           </div>
-        ))}
+))}
       </div>
     );
-}
+  }
 
   return (
     <div className="flex items-center justify-center min-h-[200px]">
@@ -71,3 +71,5 @@ const Loading = ({ type = "default" }) => {
     </div>
   );
 };
+
+export default Loading;
