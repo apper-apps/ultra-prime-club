@@ -21,11 +21,14 @@ const TimelineBar = ({ deal, onUpdate }) => {
     }).format(amount);
   };
 
-  const getBarColor = (value) => {
-    if (value >= 100000) return "from-green-500 to-green-600";
-    if (value >= 50000) return "from-blue-500 to-blue-600";
-    if (value >= 25000) return "from-yellow-500 to-yellow-600";
-    return "from-gray-500 to-gray-600";
+const getBarColor = (edition) => {
+    const colors = {
+      'select': 'linear-gradient(135deg, #EAC2FF 0%, #D8A3FF 100%)',
+      'black': 'linear-gradient(135deg, #FEE8D0 0%, #FDDBB8 100%)',
+      'collector': 'linear-gradient(135deg, #9FEBE1 0%, #7DD3C7 100%)',
+      'limited': 'linear-gradient(135deg, #FFAEB5 0%, #FF8A94 100%)'
+    };
+    return colors[edition?.toLowerCase()] || colors.select;
   };
 
   const handleMouseDown = (e) => {
@@ -124,15 +127,15 @@ return (
       initial={{ opacity: 0, scaleX: 0 }}
       animate={{ opacity: 1, scaleX: 1 }}
       transition={{ duration: 0.3 }}
-      className={`absolute top-0 h-full rounded-lg bg-gradient-to-r ${getBarColor(deal.value)} 
-        shadow-lg transition-all duration-200 group select-none
+      className={`absolute top-0 h-full rounded-lg shadow-lg transition-all duration-200 group select-none
         ${isDragging ? "ring-2 ring-primary-400 ring-opacity-60 cursor-grabbing scale-105 z-10" : "hover:shadow-xl cursor-grab"}
         ${isResizing ? "ring-2 ring-blue-400 ring-opacity-60 cursor-ew-resize" : ""}
       `}
       style={{
         left: `${leftPosition}%`,
         width: `${width}%`,
-        minWidth: "60px"
+        minWidth: "60px",
+        background: getBarColor(deal.edition)
       }}
       onMouseDown={handleMouseDown}
       onDoubleClick={handleDoubleClick}

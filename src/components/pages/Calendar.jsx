@@ -127,25 +127,37 @@ const Calendar = () => {
                   </motion.div>
                 ))}
               </div>
-              {/* Legend */}
+{/* Legend */}
               <div className="mt-8 p-4 bg-gray-50 rounded-lg">
                 <h4 className="font-semibold text-gray-900 mb-3">Legend</h4>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className="flex items-center">
-                    <div className="w-4 h-4 bg-gradient-to-r from-green-500 to-green-600 rounded mr-2" />
-                    <span className="text-sm text-gray-600">$100K+</span>
+                    <div 
+                      className="w-4 h-4 rounded mr-2" 
+                      style={{ background: 'linear-gradient(135deg, #EAC2FF 0%, #D8A3FF 100%)' }}
+                    />
+                    <span className="text-sm text-gray-600">Select Edition</span>
                   </div>
                   <div className="flex items-center">
-                    <div className="w-4 h-4 bg-gradient-to-r from-blue-500 to-blue-600 rounded mr-2" />
-                    <span className="text-sm text-gray-600">$50K - $100K</span>
+                    <div 
+                      className="w-4 h-4 rounded mr-2" 
+                      style={{ background: 'linear-gradient(135deg, #FEE8D0 0%, #FDDBB8 100%)' }}
+                    />
+                    <span className="text-sm text-gray-600">Black Edition</span>
                   </div>
                   <div className="flex items-center">
-                    <div className="w-4 h-4 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded mr-2" />
-                    <span className="text-sm text-gray-600">$25K - $50K</span>
+                    <div 
+                      className="w-4 h-4 rounded mr-2" 
+                      style={{ background: 'linear-gradient(135deg, #9FEBE1 0%, #7DD3C7 100%)' }}
+                    />
+                    <span className="text-sm text-gray-600">Collector's Edition</span>
                   </div>
                   <div className="flex items-center">
-                    <div className="w-4 h-4 bg-gradient-to-r from-gray-500 to-gray-600 rounded mr-2" />
-                    <span className="text-sm text-gray-600">Under $25K</span>
+                    <div 
+                      className="w-4 h-4 rounded mr-2" 
+                      style={{ background: 'linear-gradient(135deg, #FFAEB5 0%, #FF8A94 100%)' }}
+                    />
+                    <span className="text-sm text-gray-600">Limited Edition</span>
                   </div>
                 </div>
               </div>
