@@ -24,9 +24,9 @@ const TimelineBar = ({ deal, onUpdate }) => {
 const getBarColor = (edition) => {
     const colors = {
       'select': 'linear-gradient(135deg, #EAC2FF 0%, #D8A3FF 100%)',
-      'black': 'linear-gradient(135deg, #FFE9CF 0%, #FDDBB8 100%)',
+      'black': 'linear-gradient(135deg, #FEE8D0 0%, #FDDBB8 100%)',
       'collector': 'linear-gradient(135deg, #9FEBE1 0%, #7DD3C7 100%)',
-      'limited': 'linear-gradient(135deg, #FFAEB4 0%, #FF8A94 100%)'
+      'limited': 'linear-gradient(135deg, #FFAEB5 0%, #FF8A94 100%)'
     };
     return colors[edition?.toLowerCase()] || colors.select;
   };

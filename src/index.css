@@ -34,19 +34,19 @@
 }
 
 .Toastify__toast--success {
-  background: linear-gradient(135deg, #9FEBE1 0%, #7DD3C7 100%);
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
 }
 
 .Toastify__toast--error {
-  background: linear-gradient(135deg, #FFAEB4 0%, #FF8A94 100%);
+  background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
 }
 
 .Toastify__toast--warning {
-  background: linear-gradient(135deg, #FFE9CF 0%, #FDDBB8 100%);
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
 }
 
 .Toastify__toast--info {
-  background: linear-gradient(135deg, #B8CEFF 0%, #9BC0F8 100%);
+  background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
 }
 
 /* Custom animations */
@@ -73,7 +73,7 @@
 
 .drag-over {
   background-color: #f0f8ff;
-  border: 2px dashed #D8AEFF;
+  border: 2px dashed #7C3AED;
 }
 
 /* Empty row styles */
@@ -90,52 +90,7 @@
   color: #9ca3af;
   font-style: italic;
 }
+
 .empty-row .opacity-60 {
   opacity: 0.6;
-}
-
-/* Viewport protection for external scripts */
-.viewport-container {
-  min-width: 320px;
-  min-height: 200px;
-  position: relative;
-}
-
-.main-content {
-  min-width: 300px;
-  min-height: 100vh;
-}
-
-.main-viewport {
-  min-width: 280px;
-  min-height: 400px;
-}
-
-/* Canvas error prevention */
-canvas {
-  min-width: 1px !important;
-  min-height: 1px !important;
-}
-
-/* External script compatibility */
-body {
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-/* Prevent zero-dimension elements that might cause canvas errors */
-* {
-  min-width: 0;
-  min-height: 0;
-}
-
-*:not(canvas):not(img):not(svg) {
-  min-width: inherit;
-  min-height: inherit;
-}
-
-/* Ensure main containers have proper dimensions */
-#root {
-  min-width: 320px;
-  min-height: 100vh;
 }

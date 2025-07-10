@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import React from "react";
 import Card from "@/components/atoms/Card";
 
 const Loading = ({ type = "default" }) => {
@@ -56,7 +55,7 @@ const Loading = ({ type = "default" }) => {
               </div>
             </Card>
           </div>
-))}
+        ))}
       </div>
     );
   }
@@ -66,7 +65,7 @@ const Loading = ({ type = "default" }) => {
       <motion.div
         animate={{ rotate: 360 }}
         transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-        className="w-8 h-8 border-2 border-primary-300 border-t-transparent rounded-full"
+        className="w-8 h-8 border-2 border-primary-600 border-t-transparent rounded-full"
       />
     </div>
   );

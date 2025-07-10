@@ -16,7 +16,7 @@ const Empty = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
       className="flex items-center justify-center min-h-[300px]"
->
+    >
       <Card className="p-8 text-center max-w-md">
         <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
           <ApperIcon name={icon} size={32} className="text-gray-400" />

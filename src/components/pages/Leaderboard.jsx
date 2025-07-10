@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import Loading from "@/components/ui/Loading";
-import ApperIcon from "@/components/ApperIcon";
+import Card from "@/components/atoms/Card";
 import Badge from "@/components/atoms/Badge";
 import Avatar from "@/components/atoms/Avatar";
-import Card from "@/components/atoms/Card";
-import Empty from "@/components/ui/Empty";
+import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
-import Leads from "@/components/pages/Leads";
+import Empty from "@/components/ui/Empty";
+import ApperIcon from "@/components/ApperIcon";
 import { getSalesReps } from "@/services/api/salesRepService";
 
 const Leaderboard = () => {
@@ -47,69 +46,42 @@ const Leaderboard = () => {
     }).format(amount);
   };
 
-  const getPerformanceTier = (rank) => {
+const getRankIcon = (rank) => {
     switch (rank) {
-case 1:
-        return {
-          tier: "Gold",
-          color: "from-accent-300 to-accent-400",
-          textColor: "text-accent-700",
-          bgColor: "bg-gradient-to-r from-accent-50 to-accent-100",
-          icon: "Crown"
-        };
+      case 1:
+        return <ApperIcon name="Crown" size={20} className="text-accent-500" />;
       case 2:
-        return {
-          tier: "Silver",
-          color: "from-gray-400 to-gray-600",
-          textColor: "text-gray-700",
-          bgColor: "bg-gradient-to-r from-gray-50 to-gray-100",
-          icon: "Medal"
-        };
-case 3:
-        return {
-          tier: "Bronze",
-          color: "from-primary-300 to-primary-400",
-          textColor: "text-primary-700",
-          bgColor: "bg-gradient-to-r from-primary-50 to-primary-100",
-          icon: "Award"
-        };
+        return <ApperIcon name="Medal" size={20} className="text-primary-400" />;
+      case 3:
+        return <ApperIcon name="Award" size={20} className="text-primary-300" />;
       default:
-        return {
-          tier: "Performer",
-          color: "from-gray-300 to-gray-500",
-          textColor: "text-gray-600",
-          bgColor: "bg-gradient-to-r from-gray-25 to-gray-50",
-          icon: "User"
-        };
+        return <span className="text-gray-500 font-bold">#{rank}</span>;
     }
   };
 
-  const calculateProgress = (value, max) => {
-    return Math.min((value / max) * 100, 100);
+  const getRankColor = (rank) => {
+    switch (rank) {
+      case 1:
+        return "from-accent-100 to-accent-200";
+      case 2:
+        return "from-primary-100 to-primary-200";
+      case 3:
+        return "from-primary-50 to-primary-100";
+      default:
+        return "from-gray-50 to-gray-100";
+    }
   };
-
-  const getMaxValues = () => {
-    if (salesReps.length === 0) return { leads: 0, meetings: 0, deals: 0, revenue: 0 };
-    
-    return {
-      leads: Math.max(...salesReps.map(rep => rep.leadsContacted)),
-      meetings: Math.max(...salesReps.map(rep => rep.meetingsBooked)),
-      deals: Math.max(...salesReps.map(rep => rep.dealsClosed)),
-      revenue: Math.max(...salesReps.map(rep => rep.totalRevenue))
-    };
-  };
-
-  const maxValues = getMaxValues();
 
   if (loading) return <Loading type="table" />;
   if (error) return <Error message={error} onRetry={loadSalesReps} />;
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="text-center">
-        <h1 className="text-4xl font-bold text-gray-900 mb-2">Performance Leaderboard</h1>
-        <p className="text-gray-600">Celebrating excellence and driving success</p>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Leaderboard</h1>
+          <p className="text-gray-600 mt-1">Track and celebrate your top performers</p>
+        </div>
       </div>
 
       {salesReps.length === 0 ? (
@@ -120,206 +92,143 @@ case 3:
           icon="Trophy"
         />
       ) : (
-        <div className="space-y-8">
-          {/* Champion Spotlight */}
+        <div className="space-y-6">
+          {/* Hunter of the Month */}
           {salesReps.length > 0 && (
-<motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              <Card className="relative overflow-hidden bg-gradient-to-br from-accent-300 via-accent-400 to-accent-500 text-white">
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-y-3"></div>
-                <div className="relative p-8">
-                  <div className="flex flex-col lg:flex-row items-center justify-between space-y-6 lg:space-y-0">
-                    <div className="flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-6">
-                      <div className="relative">
-                        <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                          <Avatar name={salesReps[0].name} size="xl" />
-                        </div>
-<div className="absolute -top-2 -right-2 w-10 h-10 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center shadow-lg">
-                          <ApperIcon name="Crown" size={20} className="text-white" />
-                        </div>
-                      </div>
-                      <div className="text-center lg:text-left">
-                        <div className="flex items-center justify-center lg:justify-start space-x-2 mb-2">
-                          <ApperIcon name="Trophy" size={24} className="text-yellow-300" />
-                          <h2 className="text-2xl font-bold">Champion of the Month</h2>
-                        </div>
-                        <p className="text-3xl font-bold mb-2">{salesReps[0].name}</p>
-                        <div className="flex flex-wrap justify-center lg:justify-start gap-4 text-sm">
-                          <span className="bg-white/20 px-3 py-1 rounded-full">
-                            🎯 {salesReps[0].dealsClosed} deals closed
-                          </span>
-                          <span className="bg-white/20 px-3 py-1 rounded-full">
-                            💰 {formatCurrency(salesReps[0].totalRevenue)}
-                          </span>
-                        </div>
-                      </div>
+<Card className="p-6 bg-gradient-to-r from-primary-100 to-primary-200 border-primary-300">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <div className="relative">
+                    <Avatar name={salesReps[0].name} size="xl" />
+                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-accent-400 to-accent-600 rounded-full flex items-center justify-center">
+                      <ApperIcon name="Crown" size={16} className="text-white" />
                     </div>
-                    <div className="text-center">
-                      <div className="text-5xl font-bold mb-2">
-                        {salesReps[0].dealsClosed * 3 + salesReps[0].meetingsBooked * 2 + salesReps[0].leadsContacted}
-                      </div>
-                      <div className="text-xl opacity-90">Performance Score</div>
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900">Hunter of the Month</h2>
+                    <p className="text-xl font-semibold text-primary-700">{salesReps[0].name}</p>
+                    <div className="flex items-center space-x-4 mt-2">
+                      <span className="text-sm text-gray-600">
+                        {salesReps[0].dealsClosed} deals closed
+                      </span>
+                      <span className="text-sm text-gray-600">
+                        {formatCurrency(salesReps[0].totalRevenue)} revenue
+                      </span>
                     </div>
                   </div>
                 </div>
-              </Card>
-            </motion.div>
+                <div className="text-right">
+                  <div className="text-3xl font-bold text-primary-600">
+                    {salesReps[0].dealsClosed * 3 + salesReps[0].meetingsBooked * 2 + salesReps[0].leadsContacted}
+                  </div>
+                  <div className="text-sm text-gray-600">Performance Score</div>
+                </div>
+              </div>
+            </Card>
           )}
 
-          {/* Performance Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {salesReps.map((rep, index) => {
-              const rank = index + 1;
-              const score = rep.dealsClosed * 3 + rep.meetingsBooked * 2 + rep.leadsContacted;
-              const tier = getPerformanceTier(rank);
-              
-              return (
-                <motion.div
-                  key={rep.Id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{ scale: 1.02 }}
-                  className="group"
-                >
-                  <Card className={`relative overflow-hidden ${tier.bgColor} border-2 border-transparent group-hover:border-primary-200 transition-all duration-300`}>
-                    {/* Rank Badge */}
-                    <div className="absolute top-4 right-4">
-                      <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${tier.color} flex items-center justify-center text-white font-bold text-sm shadow-lg`}>
-                        {rank}
-                      </div>
-                    </div>
+          {/* Leaderboard Table */}
+          <Card className="overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th className="text-left py-3 px-6 font-semibold text-gray-900">Rank</th>
+                    <th className="text-left py-3 px-6 font-semibold text-gray-900">Sales Rep</th>
+                    <th className="text-left py-3 px-6 font-semibold text-gray-900">Leads Contacted</th>
+                    <th className="text-left py-3 px-6 font-semibold text-gray-900">Meetings Booked</th>
+                    <th className="text-left py-3 px-6 font-semibold text-gray-900">Deals Closed</th>
+                    <th className="text-left py-3 px-6 font-semibold text-gray-900">Revenue</th>
+                    <th className="text-left py-3 px-6 font-semibold text-gray-900">Score</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {salesReps.map((rep, index) => {
+                    const rank = index + 1;
+                    const score = rep.dealsClosed * 3 + rep.meetingsBooked * 2 + rep.leadsContacted;
+                    
+                    return (
+                      <motion.tr
+                        key={rep.Id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        className={`hover:bg-gray-50 transition-colors ${
+                          rank <= 3 ? "bg-gradient-to-r " + getRankColor(rank) + " bg-opacity-10" : ""
+                        }`}
+                      >
+                        <td className="py-4 px-6">
+                          <div className="flex items-center">
+                            {getRankIcon(rank)}
+                          </div>
+                        </td>
+                        <td className="py-4 px-6">
+                          <div className="flex items-center">
+                            <Avatar name={rep.name} size="sm" />
+                            <div className="ml-3">
+<div className="font-medium text-gray-900">{rep.name}</div>
+                              {rank === 1 && (
+                                <Badge variant="primary" size="sm">
+                                  <ApperIcon name="Crown" size={12} className="mr-1" />
+                                  Hunter of the Month
+                                </Badge>
+                              )}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="py-4 px-6">
+                          <div className="font-medium text-gray-900">{rep.leadsContacted}</div>
+                        </td>
+                        <td className="py-4 px-6">
+                          <div className="font-medium text-gray-900">{rep.meetingsBooked}</div>
+                        </td>
+<td className="py-4 px-6">
+                          <div className="font-medium text-primary-600">{rep.dealsClosed}</div>
+                        </td>
+                        <td className="py-4 px-6">
+                          <div className="font-medium text-gray-900">{formatCurrency(rep.totalRevenue)}</div>
+                        </td>
+<td className="py-4 px-6">
+                          <div className="font-bold text-accent-600">{score}</div>
+                        </td>
+                      </motion.tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </Card>
 
-                    <div className="p-6">
-                      {/* Header */}
-                      <div className="flex items-center space-x-4 mb-6">
-                        <Avatar name={rep.name} size="lg" />
-                        <div>
-                          <h3 className="text-xl font-bold text-gray-900">{rep.name}</h3>
-                          <div className="flex items-center space-x-2">
-                            <ApperIcon name={tier.icon} size={16} className={tier.textColor} />
-                            <span className={`text-sm font-medium ${tier.textColor}`}>
-                              {tier.tier} Tier
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Performance Metrics */}
-                      <div className="space-y-4">
-                        {/* Leads */}
-                        <div>
-                          <div className="flex justify-between items-center mb-1">
-                            <span className="text-sm font-medium text-gray-700">Leads Contacted</span>
-                            <span className="text-sm font-bold text-primary-600">{rep.leadsContacted}</span>
-                          </div>
-<div className="w-full bg-gray-200 rounded-full h-2">
-                            <div
-                              className="bg-gradient-to-r from-primary-300 to-primary-500 h-2 rounded-full transition-all duration-500"
-                              style={{ width: `${calculateProgress(rep.leadsContacted, maxValues.leads)}%` }}
-                            ></div>
-                          </div>
-                        </div>
-
-                        {/* Meetings */}
-                        <div>
-                          <div className="flex justify-between items-center mb-1">
-                            <span className="text-sm font-medium text-gray-700">Meetings Booked</span>
-                            <span className="text-sm font-bold text-info-600">{rep.meetingsBooked}</span>
-                          </div>
-<div className="w-full bg-gray-200 rounded-full h-2">
-                            <div
-                              className="bg-gradient-to-r from-info-300 to-info-400 h-2 rounded-full transition-all duration-500"
-                              style={{ width: `${calculateProgress(rep.meetingsBooked, maxValues.meetings)}%` }}
-                            ></div>
-                          </div>
-                        </div>
-
-                        {/* Deals */}
-                        <div>
-                          <div className="flex justify-between items-center mb-1">
-                            <span className="text-sm font-medium text-gray-700">Deals Closed</span>
-                            <span className="text-sm font-bold text-success-600">{rep.dealsClosed}</span>
-                          </div>
-<div className="w-full bg-gray-200 rounded-full h-2">
-                            <div
-                              className="bg-gradient-to-r from-success-300 to-success-400 h-2 rounded-full transition-all duration-500"
-                              style={{ width: `${calculateProgress(rep.dealsClosed, maxValues.deals)}%` }}
-                            ></div>
-                          </div>
-                        </div>
-
-                        {/* Revenue */}
-                        <div>
-                          <div className="flex justify-between items-center mb-1">
-                            <span className="text-sm font-medium text-gray-700">Revenue</span>
-                            <span className="text-sm font-bold text-accent-600">{formatCurrency(rep.totalRevenue)}</span>
-                          </div>
-<div className="w-full bg-gray-200 rounded-full h-2">
-                            <div
-                              className="bg-gradient-to-r from-accent-300 to-accent-400 h-2 rounded-full transition-all duration-500"
-                              style={{ width: `${calculateProgress(rep.totalRevenue, maxValues.revenue)}%` }}
-                            ></div>
-                          </div>
-                        </div>
-
-{/* Performance Score */}
-                        <div className="mt-6 pt-4 border-t border-gray-200">
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm font-medium text-gray-700">Performance Score</span>
-                            <span className="text-2xl font-bold text-primary-600">{score}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </Card>
-                </motion.div>
-              );
-            })}
-          </div>
-
-<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="p-6 text-center bg-gradient-to-br from-primary-50 to-primary-100 border-primary-200">
-              <div className="w-16 h-16 bg-gradient-to-r from-primary-300 to-primary-400 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                <ApperIcon name="Users" size={28} className="text-white" />
+          {/* Performance Metrics */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+<Card className="p-6 text-center">
+              <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <ApperIcon name="Users" size={24} className="text-primary-600" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Total Leads</h3>
-              <p className="text-4xl font-bold text-primary-600 mb-2">
+              <p className="text-3xl font-bold text-primary-600">
                 {salesReps.reduce((sum, rep) => sum + rep.leadsContacted, 0)}
               </p>
-              <p className="text-sm text-gray-600">Across all reps</p>
             </Card>
-<Card className="p-6 text-center bg-gradient-to-br from-info-50 to-info-100 border-info-200">
-              <div className="w-16 h-16 bg-gradient-to-r from-info-300 to-info-400 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                <ApperIcon name="Calendar" size={28} className="text-white" />
+
+            <Card className="p-6 text-center">
+              <div className="w-12 h-12 bg-primary-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                <ApperIcon name="Calendar" size={24} className="text-primary-700" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Total Meetings</h3>
-              <p className="text-4xl font-bold text-info-600 mb-2">
+              <p className="text-3xl font-bold text-primary-700">
                 {salesReps.reduce((sum, rep) => sum + rep.meetingsBooked, 0)}
               </p>
-              <p className="text-sm text-gray-600">Scheduled & completed</p>
             </Card>
-<Card className="p-6 text-center bg-gradient-to-br from-success-50 to-success-100 border-success-200">
-              <div className="w-16 h-16 bg-gradient-to-r from-success-300 to-success-400 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                <ApperIcon name="CheckCircle" size={28} className="text-white" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Total Deals</h3>
-              <p className="text-4xl font-bold text-success-600 mb-2">
-                {salesReps.reduce((sum, rep) => sum + rep.dealsClosed, 0)}
-              </p>
-              <p className="text-sm text-gray-600">Successfully closed</p>
-            </Card>
-<Card className="p-6 text-center bg-gradient-to-br from-accent-50 to-accent-100 border-accent-200">
-              <div className="w-16 h-16 bg-gradient-to-r from-accent-300 to-accent-400 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                <ApperIcon name="DollarSign" size={28} className="text-white" />
+
+            <Card className="p-6 text-center">
+              <div className="w-12 h-12 bg-accent-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <ApperIcon name="DollarSign" size={24} className="text-accent-600" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Total Revenue</h3>
-              <p className="text-4xl font-bold text-accent-600 mb-2">
+              <p className="text-3xl font-bold text-accent-600">
                 {formatCurrency(salesReps.reduce((sum, rep) => sum + rep.totalRevenue, 0))}
               </p>
-<p className="text-sm text-gray-600">Team performance</p>
             </Card>
           </div>
         </div>

@@ -11,11 +11,11 @@ const Error = ({ message = "Something went wrong", onRetry }) => {
       transition={{ duration: 0.3 }}
       className="flex items-center justify-center min-h-[300px]"
     >
-<div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl w-full">
         {/* Main Error Information Tile */}
-<Card className="p-6 text-center">
-          <div className="w-16 h-16 bg-info-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <ApperIcon name="HelpCircle" size={32} className="text-info-300" />
+        <Card className="p-6 text-center">
+          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <ApperIcon name="HelpCircle" size={32} className="text-blue-600" />
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">We're here to help!</h3>
           <p className="text-gray-600 text-sm leading-relaxed">
@@ -26,7 +26,7 @@ const Error = ({ message = "Something went wrong", onRetry }) => {
         {/* Action Tile */}
         <Card className="p-6 text-center">
           <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <ApperIcon name="RefreshCw" size={32} className="text-primary-300" />
+            <ApperIcon name="RefreshCw" size={32} className="text-primary-600" />
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">Quick Fix</h3>
           <p className="text-gray-600 text-sm mb-4">
