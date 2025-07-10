@@ -1,13 +1,13 @@
-import { Routes, Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Component } from "react";
+import React, { Component } from "react";
 import Layout from "@/components/organisms/Layout";
-import Dashboard from "@/components/pages/Dashboard";
-import Leads from "@/components/pages/Leads";
-import Pipeline from "@/components/pages/Pipeline";
+import Leaderboard from "@/components/pages/Leaderboard";
 import Calendar from "@/components/pages/Calendar";
 import Analytics from "@/components/pages/Analytics";
-import Leaderboard from "@/components/pages/Leaderboard";
+import Pipeline from "@/components/pages/Pipeline";
+import Dashboard from "@/components/pages/Dashboard";
+import Leads from "@/components/pages/Leads";
 
 // Error boundary to handle external script errors (like canvas viewport capture)
 class ErrorBoundary extends Component {
@@ -29,19 +29,24 @@ class ErrorBoundary extends Component {
     console.error('App error:', error, errorInfo);
   }
 
-  render() {
+render() {
     if (this.state.hasError) {
       return (
         <Layout>
           <div className="flex items-center justify-center min-h-screen">
-            <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">Something went wrong</h2>
-              <p className="text-gray-600 mb-4">Please refresh the page to continue.</p>
+            <div className="text-center max-w-md">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">🌟</span>
+              </div>
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">Let's get you back on track!</h2>
+              <p className="text-gray-600 mb-6">
+                Something unexpected happened, but we can fix this together.
+              </p>
               <button
                 onClick={() => window.location.reload()}
-                className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+                className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
               >
-                Refresh Page
+                Refresh & Continue
               </button>
             </div>
           </div>
