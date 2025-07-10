@@ -4,6 +4,8 @@ import ApperIcon from "@/components/ApperIcon";
 import Card from "@/components/atoms/Card";
 import Error from "@/components/ui/Error";
 import Loading from "@/components/ui/Loading";
+import Pipeline from "@/components/pages/Pipeline";
+import Leads from "@/components/pages/Leads";
 import MetricCard from "@/components/molecules/MetricCard";
 import { getDailyLeadsReport, getDashboardMetrics, getRecentActivity } from "@/services/api/dashboardService";
 
@@ -58,14 +60,13 @@ return (
             animate={{ opacity: 1, y: 0 }}
             className="p-4 bg-red-50 border border-red-200 rounded-lg"
           >
-            <div className="flex items-center space-x-2 mb-2">
+<div className="flex items-center space-x-2 mb-2">
               <ApperIcon name="AlertTriangle" size={16} className="text-red-600" />
               <h4 className="font-medium text-red-800">Performance Alert</h4>
             </div>
             <p className="text-sm text-red-700 mb-3">
-              The following sales reps have added fewer than 5 leads today:
+              The following sales reps have added fewer than 10 leads today:
             </p>
-            <div className="space-y-2">
               {leadsData
                 .filter(rep => rep.lowPerformance)
                 .map((rep, index) => (
@@ -177,9 +178,9 @@ const Dashboard = () => {
             delay={index * 0.1}
           />
         ))}
-      </div>
+</div>
 
-{/* Reports and Activity */}
+      {/* Reports and Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
@@ -236,9 +237,9 @@ const Dashboard = () => {
               <div className="text-sm text-gray-500">Move deals through stages</div>
             </motion.button>
           </div>
-        </Card>
+</Card>
       </div>
-</div>
+    </div>
   );
 };
 
