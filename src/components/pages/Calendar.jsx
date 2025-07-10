@@ -15,9 +15,9 @@ const Calendar = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+const months = [
+    "Jan", "Feb", "March", "April", "May", "June",
+    "July", "Aug", "Sep", "Oct", "Nov", "Dec"
   ];
 
   const loadDeals = async () => {
