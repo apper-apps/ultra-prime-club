@@ -28,12 +28,28 @@ const Leads = () => {
     loadLeads();
   }, []);
 
-  const loadLeads = async () => {
+const loadLeads = async () => {
     try {
       setLoading(true);
       setError(null);
-      const leadsData = await getLeads();
-      setData(leadsData);
+      const response = await getLeads();
+      
+      // Handle both old format (direct array) and new format (object with leads and deduplication info)
+      if (response.leads) {
+        setData(response.leads);
+        
+        // Show deduplication result if duplicates were removed
+        if (response.deduplicationResult) {
+          const { duplicateCount, duplicatesRemoved } = response.deduplicationResult;
+          toast.info(
+            `Automatically removed ${duplicateCount} duplicate website URL${duplicateCount > 1 ? 's' : ''}`,
+            { autoClose: 5000 }
+          );
+        }
+      } else {
+        // Fallback for old format
+        setData(response);
+      }
     } catch (err) {
       setError(err.message);
     } finally {
