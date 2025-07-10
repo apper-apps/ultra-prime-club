@@ -22,17 +22,29 @@ class ErrorBoundary extends Component {
     };
   }
 
-  static getDerivedStateFromError(error) {
+static getDerivedStateFromError(error) {
     // Check if it's a canvas-related error from external scripts
     const isCanvasError = error.message?.includes('canvas') || 
                          error.message?.includes('viewport') ||
                          error.message?.includes('drawImage') ||
-                         error.message?.includes('InvalidStateError');
+                         error.message?.includes('InvalidStateError') ||
+                         error.stack?.includes('apper-dev-script');
+    
+    // Log external script canvas errors but don't crash the app
+    if (isCanvasError) {
+      console.warn('External script canvas error detected:', error.message);
+      // Don't set hasError to true for external canvas errors
+      return { 
+        hasError: false, 
+        error,
+        isCanvasError: true
+      };
+    }
     
     return { 
       hasError: true, 
       error,
-      isCanvasError
+      isCanvasError: false
     };
   }
 
@@ -81,14 +93,14 @@ class ErrorBoundary extends Component {
     });
   }
 
-  render() {
-    // Don't render error UI for canvas errors from external scripts
+render() {
+    // Always render children for canvas errors from external scripts
     if (this.state.isCanvasError && !this.state.hasError) {
       return this.props.children;
     }
 
-if (this.state.hasError && !this.state.isCanvasError) {
-return (
+    if (this.state.hasError && !this.state.isCanvasError) {
+      return (
         <div className="flex items-center justify-center min-h-screen bg-gray-50">
           <div className="text-center max-w-md mx-auto p-6">
             <div className="mb-4">
