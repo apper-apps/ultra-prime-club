@@ -1325,7 +1325,7 @@ emptyRow => <tr key={`empty-${emptyRow.Id}`} className="hover:bg-gray-50 empty-r
                                             )}
                                         </div>
                                     </div>
-                                </td>
+</td>
                             </tr>
                         )}
                         )}
