@@ -704,9 +704,8 @@ const handleSort = (field) => {
             onAction={() => setShowAddForm(true)}
             icon="Building2" /> : <div className="relative">
             <div className="overflow-x-auto">
-                <table className="w-full min-w-[1200px]">
+<table className="w-full min-w-[1200px]">
                     <thead className="bg-gray-50">
-<thead className="bg-gray-50">
                         <tr>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[50px]">
                                 <input
@@ -748,7 +747,7 @@ const handleSort = (field) => {
                                                     </th>
                             <th
                                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[150px]">Status
-</th>
+                            </th>
                             <th
                                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[140px]">Funding Type
                                                     </th>
@@ -761,6 +760,7 @@ const handleSort = (field) => {
                             <th
                                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[120px] sticky right-0 bg-gray-50 border-l border-gray-200">Actions
                                                     </th>
+                        </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                         {/* Empty rows for direct data entry - positioned at top */}
