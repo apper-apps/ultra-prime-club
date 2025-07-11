@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
-import { motion } from 'framer-motion';
-import ApperIcon from '@/components/ApperIcon';
-import { Button } from '@/components/atoms/Button';
-import { Input } from '@/components/atoms/Input';
-import { Card } from '@/components/atoms/Card';
-import Loading from '@/components/ui/Loading';
-import Error from '@/components/ui/Error';
-import userService from '@/services/api/userService';
+import { useState, useEffect } from 'react'
+import { toast } from 'react-toastify'
+import { motion } from 'framer-motion'
+import ApperIcon from '@/components/ApperIcon'
+import Button from '@/components/atoms/Button'
+import { Input } from '@/components/atoms/Input'
+import { Card } from '@/components/atoms/Card'
+import Loading from '@/components/ui/Loading'
+import Error from '@/components/ui/Error'
+import userService from '@/services/api/userService'
 
 const AccountSettings = () => {
   const [settings, setSettings] = useState(null);
