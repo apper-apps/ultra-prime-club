@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
-import { toast } from "react-toastify";
-import ApperIcon from "@/components/ApperIcon";
-import { Button } from "@/atoms/Button";
-import { Input } from "@/atoms/Input";
-import { Card } from "@/atoms/Card";
-import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
+import { useState, useEffect } from 'react'
+import { toast } from 'react-toastify'
+import ApperIcon from '@/components/ApperIcon'
+import Button from "@/atoms/Button"
+import { Input } from '@/atoms/Input'
+import { Card } from '@/atoms/Card'
+import Loading from '@/components/ui/Loading'
+import Error from '@/components/ui/Error'
 import userService from "@/services/api/userService";
 
 const AccountSettings = () => {
