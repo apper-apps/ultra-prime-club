@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Chart from "react-apexcharts";
 import ApperIcon from "@/components/ApperIcon";
 import Button from "@/components/atoms/Button";
+import Badge from "@/components/atoms/Badge";
 import Card from "@/components/atoms/Card";
 import Error from "@/components/ui/Error";
 import Loading from "@/components/ui/Loading";
@@ -287,30 +288,60 @@ setTeamPerformance(teamPerformanceData);
               </Button>
             ))}
           </div>
-
-          {/* Leads List */}
+{/* Leads List */}
           <div className="space-y-3 max-h-80 overflow-y-auto">
-            {userLeads.length > 0 ? userLeads.map((lead, index) => (
-              <motion.div
-                key={lead.Id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-              >
-                <div className="flex-1">
-                  <div className="font-medium text-gray-900 text-sm">
-                    {lead.websiteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+            {userLeads.length > 0 ? userLeads.map((lead, index) => {
+              // Map status to badge variant
+              const getStatusVariant = (status) => {
+                switch (status) {
+                  case 'Connected':
+                  case 'Meeting Done':
+                  case 'Launched on AppSumo':
+                  case 'Launched on Prime Club':
+                    return 'success';
+                  case 'Meeting Booked':
+                  case 'Negotiation':
+                  case 'Hotlist':
+                    return 'warning';
+                  case 'Rejected':
+                  case 'Unsubscribed':
+                  case 'Closed Lost':
+                  case 'Out of League':
+                    return 'error';
+                  default:
+                    return 'default';
+                }
+              };
+
+              return (
+                <motion.div
+                  key={lead.Id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                >
+                  <div className="flex-1">
+                    <div className="font-medium text-gray-900 text-sm">
+                      {lead.websiteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+                    </div>
+                    <div className="text-xs text-gray-500">{lead.category}</div>
                   </div>
-                  <div className="text-xs text-gray-500">{lead.category}</div>
-                </div>
-                <div className="text-right">
-                  <div className="text-xs text-gray-500">
-                    {new Date(lead.createdAt).toLocaleDateString()}
+                  <div className="text-right space-y-1">
+                    <Badge 
+                      variant={getStatusVariant(lead.status)} 
+                      size="sm"
+                      className="text-xs"
+                    >
+                      {lead.status}
+                    </Badge>
+                    <div className="text-xs text-gray-500">
+                      {new Date(lead.createdAt).toLocaleDateString()}
+                    </div>
                   </div>
-                </div>
-              </motion.div>
-            )) : (
+                </motion.div>
+              );
+            }) : (
               <div className="text-center text-gray-500 py-8">
                 <ApperIcon name="FileText" size={48} className="mx-auto mb-3 text-gray-300" />
                 <p>No leads for selected period</p>
