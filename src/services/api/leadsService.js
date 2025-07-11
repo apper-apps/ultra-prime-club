@@ -98,6 +98,7 @@ const maxId = Math.max(...leads.map(l => l.Id), 0);
     edition: leadData.edition || "Select Edition",
     followUpDate: leadData.followUpDate || null,
     addedBy: leadData.addedBy || 1, // Default to first sales rep for demo
+    cofounders: [], // Initialize empty cofounders array
     Id: maxId + 1,
     createdAt: new Date().toISOString()
   };
@@ -185,6 +186,99 @@ export const getDailyLeadsReport = async () => {
 return Object.values(reportData).sort((a, b) => b.leads.length - a.leads.length);
 };
 
+// Co-founder management functions
+export const addCofounder = async (leadId, cofounderData) => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 300));
+  
+  const leadIndex = leads.findIndex(l => l.Id === leadId);
+  if (leadIndex === -1) {
+    throw new Error("Lead not found");
+  }
+  
+  const lead = leads[leadIndex];
+  
+  // Initialize cofounders array if it doesn't exist
+  if (!lead.cofounders) {
+    lead.cofounders = [];
+  }
+  
+  // Generate new cofounder ID
+  const maxCofounderId = lead.cofounders.length > 0 
+    ? Math.max(...lead.cofounders.map(cf => cf.Id), 0) 
+    : 0;
+  
+  const newCofounder = {
+    Id: maxCofounderId + 1,
+    fullName: cofounderData.fullName || "",
+    linkedinUrl: cofounderData.linkedinUrl || "",
+    createdAt: new Date().toISOString()
+  };
+  
+  lead.cofounders.push(newCofounder);
+  leads[leadIndex] = lead;
+  
+  return { ...lead };
+};
+
+export const updateCofounder = async (leadId, cofounderId, updates) => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 300));
+  
+  const leadIndex = leads.findIndex(l => l.Id === leadId);
+  if (leadIndex === -1) {
+    throw new Error("Lead not found");
+  }
+  
+  const lead = leads[leadIndex];
+  
+  if (!lead.cofounders) {
+    throw new Error("No co-founders found for this lead");
+  }
+  
+  const cofounderIndex = lead.cofounders.findIndex(cf => cf.Id === cofounderId);
+  if (cofounderIndex === -1) {
+    throw new Error("Co-founder not found");
+  }
+  
+  // Update cofounder
+  lead.cofounders[cofounderIndex] = {
+    ...lead.cofounders[cofounderIndex],
+    ...updates,
+    updatedAt: new Date().toISOString()
+  };
+  
+  leads[leadIndex] = lead;
+  
+  return { ...lead };
+};
+
+export const deleteCofounder = async (leadId, cofounderId) => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 300));
+  
+  const leadIndex = leads.findIndex(l => l.Id === leadId);
+  if (leadIndex === -1) {
+    throw new Error("Lead not found");
+  }
+  
+  const lead = leads[leadIndex];
+  
+  if (!lead.cofounders) {
+    throw new Error("No co-founders found for this lead");
+  }
+  
+  const cofounderIndex = lead.cofounders.findIndex(cf => cf.Id === cofounderId);
+  if (cofounderIndex === -1) {
+    throw new Error("Co-founder not found");
+  }
+  
+  // Remove cofounder
+  lead.cofounders.splice(cofounderIndex, 1);
+  leads[leadIndex] = lead;
+  
+  return { ...lead };
+};
 export const getPendingFollowUps = async () => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 300));
