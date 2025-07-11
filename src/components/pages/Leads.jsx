@@ -800,8 +800,8 @@ icon="Building2" /> : <div className="relative">
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                         {/* Empty rows for direct data entry - positioned at top */}
-                        {emptyRows.map(
-emptyRow => <tr key={`empty-${emptyRow.Id}`} className="hover:bg-gray-50 empty-row">
+{emptyRows.map(
+(emptyRow, index) => <tr key={`empty-${emptyRow.Id}`} className={`hover:bg-gray-50 ${index === 0 ? 'first-empty-row' : 'empty-row'}`}>
                                 <td className="px-6 py-4 whitespace-nowrap w-[50px]">
                                     <input
                                         type="checkbox"
@@ -810,11 +810,12 @@ emptyRow => <tr key={`empty-${emptyRow.Id}`} className="hover:bg-gray-50 empty-r
                                     />
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap min-w-[200px]">
-                                    <Input
+<Input
                                         type="url"
                                         value={emptyRow.websiteUrl}
                                         detectUrlPrefix={true}
                                         urlPrefix="https://"
+                                        blinkingCursor={index === 0 && !emptyRow.websiteUrl}
                                         onChange={e => setEmptyRows(prev => prev.map(row => row.Id === emptyRow.Id ? {
                                             ...row,
                                             websiteUrl: e.target.value
