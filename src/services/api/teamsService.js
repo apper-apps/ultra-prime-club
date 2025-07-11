@@ -1,182 +1,155 @@
-import teamsData from "@/services/mockData/teams.json";
-import salesRepsData from "@/services/mockData/salesReps.json";
+import teamMembersData from "@/services/mockData/teams.json";
 
-let teams = [...teamsData];
-let salesReps = [...salesRepsData];
+let teamMembers = [...teamMembersData];
 
-export const getTeams = async () => {
+export const getTeamMembers = async () => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 300));
   
-  return [...teams];
+  return [...teamMembers];
 };
-
-export const getTeamById = async (id) => {
+export const getTeamMemberById = async (id) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 200));
   
-  const team = teams.find(t => t.Id === id);
-  if (!team) {
-    throw new Error("Team not found");
+  const member = teamMembers.find(m => m.Id === id);
+  if (!member) {
+    throw new Error("Team member not found");
   }
   
-  return { ...team };
+  return { ...member };
 };
-
-export const createTeam = async (teamData) => {
+export const inviteTeamMember = async (memberData) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 300));
   
   // Validate required fields
-  if (!teamData.name || !teamData.name.trim()) {
-    throw new Error("Team name is required");
+  if (!memberData.name || !memberData.name.trim()) {
+    throw new Error("Member name is required");
   }
   
-  if (!teamData.leaderId) {
-    throw new Error("Team leader is required");
+  if (!memberData.email || !memberData.email.trim()) {
+    throw new Error("Member email is required");
   }
   
-  // Validate leader exists
-  const leader = salesReps.find(rep => rep.Id === teamData.leaderId);
-  if (!leader) {
-    throw new Error("Invalid team leader selected");
+  // Check if email already exists
+  const existingMember = teamMembers.find(m => m.email.toLowerCase() === memberData.email.toLowerCase());
+  if (existingMember) {
+    throw new Error("A team member with this email already exists");
   }
   
-  const maxId = Math.max(...teams.map(t => t.Id), 0);
-  const newTeam = {
+  const maxId = Math.max(...teamMembers.map(m => m.Id), 0);
+  const newMember = {
     Id: maxId + 1,
-    name: teamData.name.trim(),
-    description: teamData.description || "",
-    leaderId: teamData.leaderId,
-    leaderName: leader.name,
-    members: teamData.members || [teamData.leaderId],
-    memberNames: teamData.members ? 
-      teamData.members.map(memberId => {
-        const member = salesReps.find(rep => rep.Id === memberId);
-        return member ? member.name : "Unknown";
-      }) : [leader.name],
-    performance: {
-      totalLeads: 0,
-      totalDeals: 0,
-      totalRevenue: 0,
-      avgDealSize: 0,
-      conversionRate: 0
+    name: memberData.name.trim(),
+    email: memberData.email.trim().toLowerCase(),
+    role: memberData.role || "viewer",
+    permissions: memberData.permissions || {
+      dashboard: true,
+      leads: false,
+      hotlist: false,
+      pipeline: false,
+      calendar: false,
+      analytics: false,
+      leaderboard: false,
+      contacts: false
     },
+    status: "pending",
     createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
+    lastLogin: null
   };
   
-  teams.push(newTeam);
-  return { ...newTeam };
+  teamMembers.push(newMember);
+  return { ...newMember };
 };
-
-export const updateTeam = async (id, updates) => {
+export const updateTeamMember = async (id, updates) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 300));
   
-  const index = teams.findIndex(t => t.Id === id);
+  const index = teamMembers.findIndex(m => m.Id === id);
   if (index === -1) {
-    throw new Error("Team not found");
+    throw new Error("Team member not found");
   }
   
-  // If leader is being updated, validate and update leader name
-  if (updates.leaderId) {
-    const leader = salesReps.find(rep => rep.Id === updates.leaderId);
-    if (!leader) {
-      throw new Error("Invalid team leader selected");
+  // If email is being updated, check for duplicates
+  if (updates.email && updates.email.toLowerCase() !== teamMembers[index].email.toLowerCase()) {
+    const existingMember = teamMembers.find(m => m.email.toLowerCase() === updates.email.toLowerCase());
+    if (existingMember) {
+      throw new Error("A team member with this email already exists");
     }
-    updates.leaderName = leader.name;
   }
   
-  // If members are being updated, update member names
-  if (updates.members) {
-    updates.memberNames = updates.members.map(memberId => {
-      const member = salesReps.find(rep => rep.Id === memberId);
-      return member ? member.name : "Unknown";
-    });
-  }
-  
-  teams[index] = { 
-    ...teams[index], 
+  teamMembers[index] = { 
+    ...teamMembers[index], 
     ...updates,
     updatedAt: new Date().toISOString()
   };
   
-  return { ...teams[index] };
+  return { ...teamMembers[index] };
 };
-
-export const deleteTeam = async (id) => {
+export const removeTeamMember = async (id) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 300));
   
-  const index = teams.findIndex(t => t.Id === id);
+  const index = teamMembers.findIndex(m => m.Id === id);
   if (index === -1) {
-    throw new Error("Team not found");
+    throw new Error("Team member not found");
   }
   
-  teams.splice(index, 1);
+  teamMembers.splice(index, 1);
   return { success: true };
 };
-
-export const getTeamPerformance = async (id) => {
+export const getTeamMemberPerformance = async (id) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 250));
   
-  const team = teams.find(t => t.Id === id);
-  if (!team) {
-    throw new Error("Team not found");
+  const member = teamMembers.find(m => m.Id === id);
+  if (!member) {
+    throw new Error("Team member not found");
   }
   
-  // Calculate real-time performance based on team members
-  const memberPerformance = team.members.map(memberId => {
-    const member = salesReps.find(rep => rep.Id === memberId);
-    return member || { leadsContacted: 0, meetingsBooked: 0, dealsClosed: 0, totalRevenue: 0 };
-  });
+  // Mock performance data for team members
+  const mockPerformance = {
+    totalLeads: Math.floor(Math.random() * 50) + 20,
+    totalDeals: Math.floor(Math.random() * 10) + 5,
+    totalRevenue: Math.floor(Math.random() * 50000) + 10000,
+    totalMeetings: Math.floor(Math.random() * 20) + 10,
+    conversionRate: Math.floor(Math.random() * 15) + 5,
+    avgDealSize: 0
+  };
   
-  const performance = memberPerformance.reduce((acc, member) => ({
-    totalLeads: acc.totalLeads + member.leadsContacted,
-    totalDeals: acc.totalDeals + member.dealsClosed,
-    totalRevenue: acc.totalRevenue + member.totalRevenue,
-    totalMeetings: acc.totalMeetings + member.meetingsBooked
-  }), { totalLeads: 0, totalDeals: 0, totalRevenue: 0, totalMeetings: 0 });
+  mockPerformance.avgDealSize = mockPerformance.totalDeals > 0 ? 
+    Math.round(mockPerformance.totalRevenue / mockPerformance.totalDeals) : 0;
   
-  performance.avgDealSize = performance.totalDeals > 0 ? 
-    Math.round(performance.totalRevenue / performance.totalDeals) : 0;
-  performance.conversionRate = performance.totalLeads > 0 ? 
-    Math.round((performance.totalDeals / performance.totalLeads) * 100 * 10) / 10 : 0;
-  
-  return performance;
+  return mockPerformance;
 };
-
-export const getAvailableSalesReps = async () => {
+export const activateTeamMember = async (id) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 200));
   
-  return [...salesReps];
-};
-
-export const getTeamMemberPerformance = async (teamId) => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 250));
-  
-  const team = teams.find(t => t.Id === teamId);
-  if (!team) {
-    throw new Error("Team not found");
+  const index = teamMembers.findIndex(m => m.Id === id);
+  if (index === -1) {
+    throw new Error("Team member not found");
   }
   
-  const memberPerformance = team.members.map(memberId => {
-    const member = salesReps.find(rep => rep.Id === memberId);
-    if (!member) return null;
-    
-    const performance = {
-      ...member,
-      performanceScore: member.dealsClosed * 3 + member.meetingsBooked * 2 + member.leadsContacted,
-      conversionRate: member.leadsContacted > 0 ? 
-        Math.round((member.dealsClosed / member.leadsContacted) * 100 * 10) / 10 : 0
-    };
-    
-    return performance;
-  }).filter(Boolean);
+  teamMembers[index].status = "active";
+  teamMembers[index].updatedAt = new Date().toISOString();
   
-  return memberPerformance.sort((a, b) => b.performanceScore - a.performanceScore);
+  return { ...teamMembers[index] };
+};
+
+export const deactivateTeamMember = async (id) => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 200));
+  
+  const index = teamMembers.findIndex(m => m.Id === id);
+  if (index === -1) {
+    throw new Error("Team member not found");
+  }
+  
+  teamMembers[index].status = "inactive";
+  teamMembers[index].updatedAt = new Date().toISOString();
+  
+  return { ...teamMembers[index] };
 };

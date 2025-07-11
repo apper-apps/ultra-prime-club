@@ -10,12 +10,11 @@ import Pipeline from "@/components/pages/Pipeline";
 import Dashboard from "@/components/pages/Dashboard";
 import Leads from "@/components/pages/Leads";
 import Hotlist from "@/components/pages/Hotlist";
-import Teams from "@/components/pages/Teams";
-// Error Boundary Component
+
 class ErrorBoundary extends Component {
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       hasError: false, 
       error: null, 
       errorInfo: null,
@@ -166,15 +165,6 @@ animate={{ opacity: 1, y: 0 }}
               <Hotlist />
             </motion.div>
 } />
-          <Route path="/teams" element={
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Teams />
-            </motion.div>
-          } />
           <Route path="/pipeline" element={
             <motion.div
               initial={{ opacity: 0, y: 20 }}

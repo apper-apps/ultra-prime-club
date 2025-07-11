@@ -1,74 +1,82 @@
 [
   {
     "Id": 1,
-    "name": "Enterprise Sales",
-    "description": "Focused on large enterprise accounts and high-value deals",
-    "leaderId": 1,
-    "leaderName": "Sarah Johnson",
-    "members": [1, 2],
-    "memberNames": ["Sarah Johnson", "Mike Davis"],
-    "performance": {
-      "totalLeads": 1570,
-      "totalDeals": 83,
-      "totalRevenue": 2230000,
-      "avgDealSize": 26867,
-      "conversionRate": 5.3
+    "name": "Sarah Johnson",
+    "email": "sarah.johnson@example.com",
+    "role": "admin",
+    "permissions": {
+      "dashboard": true,
+      "leads": true,
+      "hotlist": true,
+      "pipeline": true,
+      "calendar": true,
+      "analytics": true,
+      "leaderboard": true,
+      "contacts": true
     },
+    "status": "active",
     "createdAt": "2024-01-15T10:30:00Z",
-    "updatedAt": "2024-12-19T15:45:00Z"
+    "updatedAt": "2024-12-19T15:45:00Z",
+    "lastLogin": "2024-12-19T14:30:00Z"
   },
   {
     "Id": 2,
-    "name": "SMB Sales",
-    "description": "Small to medium business sales and quick turnaround deals",
-    "leaderId": 3,
-    "leaderName": "Tom Wilson",
-    "members": [3, 4],
-    "memberNames": ["Tom Wilson", "Emily Chen"],
-    "performance": {
-      "totalLeads": 1246,
-      "totalDeals": 60,
-      "totalRevenue": 1595000,
-      "avgDealSize": 26583,
-      "conversionRate": 4.8
+    "name": "Mike Davis",
+    "email": "mike.davis@example.com",
+    "role": "editor",
+    "permissions": {
+      "dashboard": true,
+      "leads": true,
+      "hotlist": true,
+      "pipeline": true,
+      "calendar": true,
+      "analytics": false,
+      "leaderboard": false,
+      "contacts": true
     },
+    "status": "active",
     "createdAt": "2024-01-20T14:15:00Z",
-    "updatedAt": "2024-12-18T11:20:00Z"
+    "updatedAt": "2024-12-18T11:20:00Z",
+    "lastLogin": "2024-12-18T16:45:00Z"
   },
   {
     "Id": 3,
-    "name": "Growth Team",
-    "description": "Focused on scaling accounts and expanding existing relationships",
-    "leaderId": 5,
-    "leaderName": "Alex Rodriguez",
-    "members": [5, 6],
-    "memberNames": ["Alex Rodriguez", "Shashank Sharma"],
-    "performance": {
-      "totalLeads": 1220,
-      "totalDeals": 59,
-      "totalRevenue": 1540000,
-      "avgDealSize": 26102,
-      "conversionRate": 4.8
+    "name": "Emily Chen",
+    "email": "emily.chen@example.com",
+    "role": "viewer",
+    "permissions": {
+      "dashboard": true,
+      "leads": false,
+      "hotlist": false,
+      "pipeline": false,
+      "calendar": false,
+      "analytics": false,
+      "leaderboard": false,
+      "contacts": false
     },
+    "status": "active",
     "createdAt": "2024-02-01T09:45:00Z",
-    "updatedAt": "2024-12-17T16:30:00Z"
+    "updatedAt": "2024-12-17T16:30:00Z",
+    "lastLogin": "2024-12-17T13:20:00Z"
   },
   {
     "Id": 4,
-    "name": "Strategic Partnerships",
-    "description": "Building and maintaining strategic partnerships and alliances",
-    "leaderId": 1,
-    "leaderName": "Sarah Johnson",
-    "members": [1],
-    "memberNames": ["Sarah Johnson"],
-    "performance": {
-      "totalLeads": 450,
-      "totalDeals": 15,
-      "totalRevenue": 850000,
-      "avgDealSize": 56667,
-      "conversionRate": 3.3
+    "name": "Tom Wilson",
+    "email": "tom.wilson@example.com",
+    "role": "editor",
+    "permissions": {
+      "dashboard": true,
+      "leads": true,
+      "hotlist": true,
+      "pipeline": true,
+      "calendar": true,
+      "analytics": false,
+      "leaderboard": false,
+      "contacts": true
     },
+    "status": "pending",
     "createdAt": "2024-03-10T11:20:00Z",
-    "updatedAt": "2024-12-16T14:10:00Z"
+    "updatedAt": "2024-12-16T14:10:00Z",
+    "lastLogin": null
   }
 ]
