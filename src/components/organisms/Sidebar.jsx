@@ -13,9 +13,7 @@ const navigation = [
     { to: "/pipeline", icon: "Kanban", label: "Deal Pipeline" },
     { to: "/calendar", icon: "Calendar", label: "Calendar" },
     { to: "/analytics", icon: "TrendingUp", label: "Analytics" },
-    { to: "/leaderboard", icon: "Trophy", label: "Leaderboard" },
-    { to: "/teams", icon: "Users", label: "Teams" },
-    { to: "/contacts", icon: "Users", label: "Contacts" }
+    { to: "/leaderboard", icon: "Trophy", label: "Leaderboard" }
   ];
 
   return (
@@ -151,7 +149,6 @@ const UserSettings = ({ isCollapsed }) => {
 
 const settingsItems = [
     { icon: "User", label: "Profile", action: () => console.log("Profile") },
-    { icon: "Users", label: "Team Management", action: () => window.location.href = "/teams" },
     { icon: "Settings", label: "Account Settings", action: () => console.log("Account Settings") },
     { icon: "Palette", label: "Preferences", action: () => console.log("Preferences") },
     { icon: "LogOut", label: "Logout", action: () => console.log("Logout") }
