@@ -65,27 +65,6 @@
   background-size: 800px 104px;
 }
 
-/* Blinking cursor animation */
-@keyframes blink {
-  0%, 50% {
-    opacity: 1;
-  }
-  51%, 100% {
-    opacity: 0;
-  }
-}
-
-.blinking-cursor {
-  animation: blink 1s infinite;
-}
-
-.blinking-cursor::after {
-  content: '|';
-  animation: blink 1s infinite;
-  color: #7C3AED;
-  font-weight: bold;
-}
-
 /* Drag and drop styles */
 .dragging {
   opacity: 0.5;
@@ -113,25 +92,6 @@
 }
 
 .empty-row .opacity-60 {
-  opacity: 0.6;
-}
-
-/* First empty row styles */
-.first-empty-row {
-  background-color: #ffffff;
-}
-
-.first-empty-row:hover {
-  background-color: #ffffff;
-}
-
-.first-empty-row input::placeholder,
-.first-empty-row select {
-  color: #9ca3af;
-  font-style: italic;
-}
-
-.first-empty-row .opacity-60 {
   opacity: 0.6;
 }
 
