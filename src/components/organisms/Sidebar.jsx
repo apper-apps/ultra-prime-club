@@ -147,8 +147,9 @@ const MobileSidebar = ({ navigation }) => {
 const UserSettings = ({ isCollapsed }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const settingsItems = [
+const settingsItems = [
     { icon: "User", label: "Profile", action: () => console.log("Profile") },
+    { icon: "Users", label: "Team", action: () => window.location.href = "/team" },
     { icon: "Settings", label: "Account Settings", action: () => console.log("Account Settings") },
     { icon: "Palette", label: "Preferences", action: () => console.log("Preferences") },
     { icon: "LogOut", label: "Logout", action: () => console.log("Logout") }

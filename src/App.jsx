@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { motion } from "framer-motion";
 import React, { Component } from "react";
-import Hotlist from "@/components/pages/Hotlist";
+import Team from "@/components/pages/Team";
 import Layout from "@/components/organisms/Layout";
 import Error from "@/components/ui/Error";
 import Leaderboard from "@/components/pages/Leaderboard";
@@ -10,6 +10,7 @@ import Analytics from "@/components/pages/Analytics";
 import Pipeline from "@/components/pages/Pipeline";
 import Dashboard from "@/components/pages/Dashboard";
 import Leads from "@/components/pages/Leads";
+import Hotlist from "@/components/pages/Hotlist";
 // Error Boundary Component
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -113,18 +114,18 @@ class ErrorBoundary extends Component {
               >
                 Reload Page
 </button>
-          </div>
-          {(typeof process !== 'undefined' && process.env?.NODE_ENV === 'development') && this.state.error && (
-            <details className="mt-4 text-left">
-              <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700">
-                Error Details
-              </summary>
-              <pre className="mt-2 text-xs text-red-600 bg-red-50 p-2 rounded overflow-auto">
-                {this.state.error.message}
-              </pre>
-            </details>
+            </div>
+            {(import.meta.env?.DEV || (typeof process !== 'undefined' && process.env?.NODE_ENV === 'development')) && this.state.error && (
+              <details className="mt-4 text-left">
+                <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700">
+                  Error Details
+                </summary>
+                <pre className="mt-2 text-xs text-red-600 bg-red-50 p-2 rounded overflow-auto">
+                  {this.state.error.message}
+                </pre>
+              </details>
             )}
-          </div>
+            </div>
         </div>
       );
     }
@@ -199,6 +200,15 @@ function App() {
               transition={{ duration: 0.3 }}
             >
               <Leaderboard />
+            </motion.div>
+} />
+          <Route path="/team" element={
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Team />
             </motion.div>
           } />
         </Routes>
