@@ -78,7 +78,7 @@
 
 /* Empty row styles */
 .empty-row {
-  background-color: #fafafa;
+  background-color: white;
 }
 
 .empty-row:hover {
