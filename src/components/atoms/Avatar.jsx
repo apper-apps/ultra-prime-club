@@ -1,37 +1,47 @@
-import { forwardRef, useState } from "react";
-import { cn } from "@/utils/cn";
+import { forwardRef, useState } from 'react'
+import { cn } from '@/utils/cn'
+
+const sizes = {
+  sm: 'h-6 w-6 text-xs',
+  md: 'h-8 w-8 text-sm',
+  lg: 'h-10 w-10 text-base',
+  xl: 'h-12 w-12 text-lg',
+  '2xl': 'h-16 w-16 text-xl',
+}
+
+const getInitials = (name) => {
+  if (!name) return '?'
+  return name
+    .split(' ')
+    .map(word => word.charAt(0))
+    .join('')
+    .toUpperCase()
+    .slice(0, 2)
+}
 
 const Avatar = forwardRef(({ 
   src, 
   alt, 
   name, 
-  size = "md", 
+  size = 'md', 
   className,
   ...props 
 }, ref) => {
-  const [imageError, setImageError] = useState(false);
-  const [imageLoading, setImageLoading] = useState(true);
+  const [imageLoading, setImageLoading] = useState(true)
+  const [imageError, setImageError] = useState(false)
   
-  const sizes = {
-    sm: "w-8 h-8 text-xs",
-    md: "w-10 h-10 text-sm",
-    lg: "w-12 h-12 text-base",
-    xl: "w-16 h-16 text-lg"
-  };
-
-  const handleImageError = () => {
-    setImageError(true);
-    setImageLoading(false);
-  };
-
   const handleImageLoad = () => {
-    setImageLoading(false);
-    setImageError(false);
-  };
-  const getInitials = (name) => {
-    if (!name) return "?";
-    return name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
-  };
+    setImageLoading(false)
+    setImageError(false)
+  }
+  
+  const handleImageError = () => {
+    setImageLoading(false)
+    setImageError(true)
+  }
+
+  // Validate image src
+  const isValidSrc = src && typeof src === 'string' && src.trim() !== ''
 
   return (
     <div
@@ -39,27 +49,34 @@ const Avatar = forwardRef(({
       className={cn(
         "inline-flex items-center justify-center rounded-full bg-gradient-to-br from-primary-400 to-primary-600 text-white font-semibold shrink-0",
         sizes[size],
-        className
+className
       )}
       {...props}
     >
-{src && !imageError ? (
-        <img 
-          src={src} 
-          alt={alt || name} 
-          className="w-full h-full rounded-full object-cover"
-          onError={handleImageError}
-          onLoad={handleImageLoad}
-          style={{ display: imageLoading ? 'none' : 'block' }}
-        />
+      {isValidSrc && !imageError ? (
+        <>
+          <img 
+            src={src} 
+            alt={alt || name || 'Avatar'} 
+            className="w-full h-full rounded-full object-cover"
+            onError={handleImageError}
+            onLoad={handleImageLoad}
+            style={{ display: imageLoading ? 'none' : 'block' }}
+          />
+          {imageLoading && (
+            <div className="w-full h-full rounded-full bg-gray-200 animate-pulse flex items-center justify-center">
+              <span className="text-gray-400 text-xs">...</span>
+            </div>
+          )}
+        </>
       ) : null}
-      {(!src || imageError || imageLoading) && (
+      {(!isValidSrc || imageError || (imageLoading && isValidSrc)) && (
         <span>{getInitials(name)}</span>
       )}
     </div>
-  );
-});
+  )
+})
 
-Avatar.displayName = "Avatar";
+Avatar.displayName = 'Avatar'
 
-export default Avatar;
+export default Avatar
