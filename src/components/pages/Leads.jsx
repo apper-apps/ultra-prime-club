@@ -211,25 +211,73 @@ websiteUrl: "",
     setNextTempId(prev => prev - 1);
   };
 
-// Handle updates to empty rows
-  const handleEmptyRowUpdate = async (tempId, field, value) => {
-    setEmptyRows(prev => 
-      prev.map(row => 
-        row.Id === tempId ? { ...row, [field]: field === 'arr' ? Number(value) * 1000000 : value } : row
-      )
-    );
+// Utility function to parse multiple URLs from input
+const parseMultipleUrls = (input) => {
+  if (!input || !input.trim()) return [];
+  
+  // Split by newlines first, then by spaces to handle various paste formats
+  const lines = input.split(/\r?\n/).filter(line => line.trim());
+  const urls = [];
+  
+  lines.forEach(line => {
+    // Split each line by spaces and filter out empty strings
+    const wordsInLine = line.split(/\s+/).filter(word => word.trim());
+    wordsInLine.forEach(word => {
+      const trimmedWord = word.trim();
+      if (trimmedWord) {
+        // Clean up common URL prefixes and suffixes
+        let cleanUrl = trimmedWord.replace(/^https?:\/\//, '').replace(/\/$/, '');
+        // Add https:// prefix if not present
+        if (!cleanUrl.includes('://')) {
+          cleanUrl = 'https://' + cleanUrl;
+        }
+        urls.push(cleanUrl);
+      }
+    });
+  });
+  
+  // Remove duplicates and filter out invalid URLs
+  const uniqueUrls = [...new Set(urls)].filter(url => {
+    try {
+      new URL(url);
+      return url.includes('.') && url.length > 4; // Basic URL validation
+    } catch {
+      return false;
+    }
+  });
+  
+  return uniqueUrls;
+};
 
-    // If websiteUrl is provided, create a real lead
-    if (field === 'websiteUrl' && value.trim()) {
-      const emptyRow = emptyRows.find(row => row.Id === tempId);
-      if (emptyRow) {
-        try {
+// Handle updates to empty rows
+const handleEmptyRowUpdate = async (tempId, field, value) => {
+  setEmptyRows(prev => 
+    prev.map(row => 
+      row.Id === tempId ? { ...row, [field]: field === 'arr' ? Number(value) * 1000000 : value } : row
+    )
+  );
+
+  // If websiteUrl is provided, create lead(s)
+  if (field === 'websiteUrl' && value.trim()) {
+    const emptyRow = emptyRows.find(row => row.Id === tempId);
+    if (emptyRow) {
+      try {
+        // Parse multiple URLs from the input
+        const urls = parseMultipleUrls(value);
+        
+        if (urls.length === 0) {
+          toast.error("No valid URLs found in the input");
+          return;
+        }
+        
+        if (urls.length === 1) {
+          // Single URL - existing behavior
           const leadData = {
-            websiteUrl: value,
+            websiteUrl: urls[0],
             teamSize: emptyRow.teamSize,
             arr: emptyRow.arr,
             category: emptyRow.category,
-            linkedinUrl: emptyRow.linkedinUrl || `https://linkedin.com/company/${value.replace(/^https?:\/\//, '').replace(/\/$/, '')}`,
+            linkedinUrl: emptyRow.linkedinUrl || `https://linkedin.com/company/${urls[0].replace(/^https?:\/\//, '').replace(/\/$/, '')}`,
             status: emptyRow.status,
             fundingType: emptyRow.fundingType
           };
@@ -241,12 +289,54 @@ websiteUrl: "",
           setEmptyRows(prev => prev.filter(row => row.Id !== tempId));
           
           toast.success("Lead created successfully!");
-        } catch (err) {
-          toast.error("Failed to create lead: " + err.message);
+        } else {
+          // Multiple URLs - create separate leads for each
+          const successfulLeads = [];
+          const failedUrls = [];
+          
+          for (const url of urls) {
+            try {
+              const leadData = {
+                websiteUrl: url,
+                teamSize: emptyRow.teamSize,
+                arr: emptyRow.arr,
+                category: emptyRow.category,
+                linkedinUrl: emptyRow.linkedinUrl || `https://linkedin.com/company/${url.replace(/^https?:\/\//, '').replace(/\/$/, '')}`,
+                status: emptyRow.status,
+                fundingType: emptyRow.fundingType
+              };
+              
+              const newLead = await createLead(leadData);
+              successfulLeads.push(newLead);
+            } catch (err) {
+              failedUrls.push({ url, error: err.message });
+            }
+          }
+          
+          // Update the data with all successful leads
+          if (successfulLeads.length > 0) {
+            setData(prevData => [...successfulLeads, ...prevData]);
+          }
+          
+          // Remove the empty row that was converted
+          setEmptyRows(prev => prev.filter(row => row.Id !== tempId));
+          
+          // Provide feedback to user
+          if (successfulLeads.length > 0 && failedUrls.length === 0) {
+            toast.success(`Successfully created ${successfulLeads.length} leads from ${urls.length} URLs!`);
+          } else if (successfulLeads.length > 0 && failedUrls.length > 0) {
+            toast.success(`Created ${successfulLeads.length} leads successfully`);
+            toast.warning(`Failed to create ${failedUrls.length} leads (duplicates or invalid URLs)`);
+          } else {
+            toast.error("Failed to create any leads - all URLs were duplicates or invalid");
+          }
         }
+      } catch (err) {
+        toast.error("Failed to create lead: " + err.message);
       }
     }
-  };
+  }
+};
 
   // Debounced version for non-submission updates
   const handleEmptyRowUpdateDebounced = (tempId, field, value) => {
