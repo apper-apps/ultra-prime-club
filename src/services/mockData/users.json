@@ -1,0 +1,42 @@
+[
+  {
+    "Id": 1,
+    "email": "admin@primeclub.com",
+    "password": "admin123",
+    "firstName": "Admin",
+    "lastName": "User",
+    "role": "admin",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "lastLogin": "2024-01-15T08:30:00.000Z"
+  },
+  {
+    "Id": 2,
+    "email": "john.doe@primeclub.com",
+    "password": "john123",
+    "firstName": "John",
+    "lastName": "Doe",
+    "role": "sales_rep",
+    "createdAt": "2024-01-02T00:00:00.000Z",
+    "lastLogin": "2024-01-14T09:15:00.000Z"
+  },
+  {
+    "Id": 3,
+    "email": "jane.smith@primeclub.com",
+    "password": "jane123",
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "role": "manager",
+    "createdAt": "2024-01-03T00:00:00.000Z",
+    "lastLogin": "2024-01-13T10:45:00.000Z"
+  },
+  {
+    "Id": 4,
+    "email": "mike.johnson@primeclub.com",
+    "password": "mike123",
+    "firstName": "Mike",
+    "lastName": "Johnson",
+    "role": "sales_rep",
+    "createdAt": "2024-01-04T00:00:00.000Z",
+    "lastLogin": "2024-01-12T14:20:00.000Z"
+  }
+]
