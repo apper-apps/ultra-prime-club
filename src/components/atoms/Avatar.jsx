@@ -102,10 +102,9 @@ const Avatar = forwardRef(({
         <span className={cn(
           "font-medium",
           imageLoading && "opacity-0"
-        )}>
+)}>
           {displayFallback}
         </span>
-</span>
       )}
     </div>
   )
