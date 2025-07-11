@@ -1177,7 +1177,7 @@ onBlur={e => handleFieldUpdate(lead.Id, "arr", e.target.value)}
                                     </button>
                                 </div>
                             </td>
-                        </tr>
+</tr>
                         {/* Co-founder management row */}
                         {expandedCofounder === lead.Id && (
                             <tr key={`cofounders-${lead.Id}`} className="bg-gray-50 border-t-0">
@@ -1325,10 +1325,11 @@ onBlur={e => handleFieldUpdate(lead.Id, "arr", e.target.value)}
                                             )}
                                         </div>
                                     </div>
-</td>
+                                </td>
                             </tr>
                         )}
-                        )}
+                    </>
+                ))}
                     </tbody>
                 </table>
             </div>
