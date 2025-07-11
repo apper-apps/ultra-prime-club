@@ -10,10 +10,7 @@ import Pipeline from "@/components/pages/Pipeline";
 import Dashboard from "@/components/pages/Dashboard";
 import Leads from "@/components/pages/Leads";
 import Hotlist from "@/components/pages/Hotlist";
-import SignIn from "@/components/pages/SignIn";
-import SignUp from "@/components/pages/SignUp";
-import { AuthProvider } from "@/contexts/AuthContext";
-import ProtectedRoute from "@/components/organisms/ProtectedRoute";
+
 class ErrorBoundary extends Component {
   constructor(props) {
     super(props);
@@ -139,107 +136,73 @@ class ErrorBoundary extends Component {
 function App() {
   return (
     <ErrorBoundary>
-      <AuthProvider>
-        <Layout>
-          <Routes>
-            <Route path="/signin" element={
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <SignIn />
-              </motion.div>
-            } />
-            <Route path="/signup" element={
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <SignUp />
-              </motion.div>
-            } />
-            <Route path="/" element={
-              <ProtectedRoute>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Dashboard />
-                </motion.div>
-              </ProtectedRoute>
-            } />
-<Route path="/leads" element={
-              <ProtectedRoute>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Leads />
-                </motion.div>
-              </ProtectedRoute>
-            } />
-            <Route path="/hotlist" element={
-              <ProtectedRoute>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Hotlist />
-                </motion.div>
-              </ProtectedRoute>
-            } />
-            <Route path="/pipeline" element={
-              <ProtectedRoute>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Pipeline />
-                </motion.div>
-              </ProtectedRoute>
-            } />
-            <Route path="/analytics" element={
-              <ProtectedRoute>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Analytics />
-                </motion.div>
-              </ProtectedRoute>
-            } />
-            <Route path="/calendar" element={
-              <ProtectedRoute>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Calendar />
-                </motion.div>
-              </ProtectedRoute>
-            } />
-            <Route path="/leaderboard" element={
-              <ProtectedRoute>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Leaderboard />
-                </motion.div>
-              </ProtectedRoute>
-            } />
-</Routes>
-        </Layout>
-      </AuthProvider>
+      <Layout>
+        <Routes>
+          <Route path="/" element={
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Dashboard />
+            </motion.div>
+          } />
+          <Route path="/leads" element={
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Leads />
+            </motion.div>
+          } />
+          <Route path="/hotlist" element={
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Hotlist />
+            </motion.div>
+} />
+          <Route path="/pipeline" element={
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Pipeline />
+            </motion.div>
+          } />
+          <Route path="/analytics" element={
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Analytics />
+            </motion.div>
+          } />
+          <Route path="/calendar" element={
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Calendar />
+            </motion.div>
+          } />
+          <Route path="/leaderboard" element={
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Leaderboard />
+            </motion.div>
+          } />
+        </Routes>
+      </Layout>
     </ErrorBoundary>
   );
 }

@@ -21,9 +21,8 @@ import {
   getSalesFunnelAnalysis,
   getTeamPerformanceRankings,
   getRevenueTrendsData,
-getDetailedRecentActivity,
-  getUserLeadsReport,
-  getLeadQuotaAlerts
+  getDetailedRecentActivity,
+  getUserLeadsReport
 } from "@/services/api/dashboardService";
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -37,8 +36,7 @@ const [teamPerformance, setTeamPerformance] = useState([]);
   const [revenueTrends, setRevenueTrends] = useState(null);
   const [detailedActivity, setDetailedActivity] = useState([]);
   const [userLeads, setUserLeads] = useState([]);
-const [selectedPeriod, setSelectedPeriod] = useState('today');
-  const [quotaAlerts, setQuotaAlerts] = useState([]);
+  const [selectedPeriod, setSelectedPeriod] = useState('today');
   const [loading, setLoading] = useState(true);
 const [error, setError] = useState("");
 
@@ -47,7 +45,7 @@ const [error, setError] = useState("");
       setLoading(true);
       setError("");
       
-const [
+      const [
         metricsData, 
         activityData, 
         meetingsData, 
@@ -57,8 +55,7 @@ const [
         teamPerformanceData,
         revenueTrendsData,
         detailedActivityData,
-        userLeadsData,
-        quotaAlertsData
+        userLeadsData
       ] = await Promise.all([
         getDashboardMetrics(),
         getRecentActivity(),
@@ -69,11 +66,10 @@ const [
         getTeamPerformanceRankings(),
         getRevenueTrendsData(),
         getDetailedRecentActivity(),
-        getUserLeadsReport(1, selectedPeriod), // Shashank Sharma's ID
-        getLeadQuotaAlerts()
+        getUserLeadsReport(1, selectedPeriod) // Shashank Sharma's ID
       ]);
       
-setMetrics(metricsData);
+      setMetrics(metricsData);
       setActivity(activityData);
       setMeetings(meetingsData);
       setPendingFollowUps(followUpsData);
@@ -83,7 +79,6 @@ setTeamPerformance(teamPerformanceData);
       setRevenueTrends(revenueTrendsData);
       setDetailedActivity(detailedActivityData);
       setUserLeads(userLeadsData);
-      setQuotaAlerts(quotaAlertsData);
     } catch (err) {
       setError("Failed to load dashboard data");
     } finally {
@@ -108,7 +103,7 @@ setTeamPerformance(teamPerformanceData);
   if (loading) return <Loading type="cards" />;
   if (error) return <Error message={error} onRetry={loadDashboardData} />;
 
-return (
+  return (
     <div className="space-y-8">
     <div className="flex items-center justify-between">
         <div>
@@ -116,54 +111,6 @@ return (
             <p className="text-gray-600 mt-1">Welcome back! Here's what's happening with your sales.</p>
         </div>
     </div>
-    
-    {/* Lead Quota Alerts */}
-    {quotaAlerts.length > 0 && (
-      <div className="space-y-4">
-        <div className="flex items-center gap-2">
-          <ApperIcon name="AlertTriangle" size={20} className="text-amber-500" />
-          <h2 className="text-lg font-semibold text-gray-900">Lead Quota Alerts</h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {quotaAlerts.map((alert, index) => (
-            <motion.div
-              key={alert.repId}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-            >
-              <Card className="p-4 border-l-4 border-l-amber-500 bg-amber-50">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="w-6 h-6 bg-gradient-to-br from-amber-500 to-amber-600 rounded-full flex items-center justify-center">
-                        <span className="text-white text-xs font-semibold">
-                          {alert.repName.charAt(0)}
-                        </span>
-                      </div>
-                      <h3 className="font-semibold text-gray-900 text-sm">{alert.repName}</h3>
-                    </div>
-                    <p className="text-sm text-gray-600 mb-2">
-                      {alert.currentLeads} of {alert.requiredLeads} leads today
-                    </p>
-                    <div className="flex items-center gap-2">
-                      <Badge variant="warning" size="sm">
-                        {alert.deficit} leads short
-                      </Badge>
-                      <span className="text-xs text-gray-500">
-                        {alert.date}
-                      </span>
-                    </div>
-                  </div>
-                  <ApperIcon name="TrendingDown" size={16} className="text-amber-600 mt-1" />
-                </div>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    )}
-    
     {/* Metrics Cards */}
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {metrics.map((metric, index) => <MetricCard

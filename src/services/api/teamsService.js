@@ -153,31 +153,3 @@ export const deactivateTeamMember = async (id) => {
   
   return { ...teamMembers[index] };
 };
-
-export const getCurrentUserPermissions = async (userEmail) => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 200));
-  
-  if (!userEmail) {
-    throw new Error("User email is required");
-  }
-  
-  // Find user in teams data by email
-  const teamMember = teamMembers.find(m => m.email.toLowerCase() === userEmail.toLowerCase());
-  
-  if (!teamMember) {
-    // Return default viewer permissions if user not found in teams
-    return {
-      dashboard: true,
-      leads: false,
-      hotlist: false,
-      pipeline: false,
-      calendar: false,
-      analytics: false,
-      leaderboard: false,
-      contacts: false
-    };
-  }
-  
-  return { ...teamMember.permissions };
-};
