@@ -35,19 +35,30 @@
         }
       });
       
-      // Add image loading timeout protection
+// Add image loading timeout protection with avatar-specific handling
       window.addEventListener('DOMContentLoaded', function() {
         const images = document.querySelectorAll('img');
         images.forEach(img => {
           const timeout = setTimeout(() => {
             if (!img.complete) {
               console.warn('Image loading timeout:', img.src);
-              img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100"%3E%3Crect width="100" height="100" fill="%23f0f0f0"/%3E%3C/svg%3E';
+              // Dispatch custom event for avatar components to handle
+              if (img.closest('.avatar-image')) {
+                img.dispatchEvent(new Event('error'));
+              } else {
+                img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100"%3E%3Crect width="100" height="100" fill="%23f0f0f0"/%3E%3C/svg%3E';
+              }
             }
-          }, 5000); // 5 second timeout
+          }, 3000); // 3 second timeout for better UX
           
-          img.addEventListener('load', () => clearTimeout(timeout));
-          img.addEventListener('error', () => clearTimeout(timeout));
+          img.addEventListener('load', () => {
+            clearTimeout(timeout);
+            img.classList.add('loaded');
+          });
+          img.addEventListener('error', () => {
+            clearTimeout(timeout);
+            console.warn('Image error handled globally:', img.src);
+          });
         });
       });
     </script>
