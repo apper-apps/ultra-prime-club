@@ -153,9 +153,12 @@ const UserSettings = ({ isCollapsed }) => {
     { icon: "LogOut", label: "Logout", action: () => console.log("Logout") }
   ];
 
-  return (
+return (
     <div className="relative">
-      <div className="flex items-center justify-between">
+      <button
+        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+        className="w-full flex items-center p-2 hover:bg-gray-100 rounded-lg transition-colors"
+      >
         <div className="flex items-center">
           <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
             <span className="text-white text-sm font-semibold">U</span>
@@ -167,17 +170,14 @@ const UserSettings = ({ isCollapsed }) => {
             </div>
           )}
         </div>
-        <button
-          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
-        >
+        {!isCollapsed && (
           <ApperIcon 
-            name="Settings" 
+            name="ChevronDown" 
             size={16} 
-            className="text-gray-500 hover:text-gray-700" 
+            className="text-gray-500 ml-auto" 
           />
-        </button>
-      </div>
+        )}
+      </button>
 
       {isDropdownOpen && (
         <>
