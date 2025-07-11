@@ -25,17 +25,28 @@ class ErrorBoundary extends Component {
     };
   }
 
-  static getDerivedStateFromError(error) {
+static getDerivedStateFromError(error) {
     // Check if it's a canvas-related error from external scripts
     const isCanvasError = error.message?.includes('canvas') || 
                          error.message?.includes('viewport') ||
                          error.message?.includes('drawImage') ||
-                         error.message?.includes('InvalidStateError');
+                         error.message?.includes('InvalidStateError') ||
+                         error.message?.includes('width or height of 0') ||
+                         error.name === 'InvalidStateError';
+    
+    // For canvas errors from external scripts, don't show error UI
+    if (isCanvasError) {
+      return { 
+        hasError: false, 
+        error: null,
+        isCanvasError: true
+      };
+    }
     
     return { 
       hasError: true, 
       error,
-      isCanvasError
+      isCanvasError: false
     };
   }
 
@@ -54,18 +65,13 @@ class ErrorBoundary extends Component {
     if (error.message?.includes('canvas') || 
         error.message?.includes('viewport') || 
         error.message?.includes('drawImage') ||
-        error.message?.includes('InvalidStateError')) {
-      console.warn('External script canvas error caught:', {
+        error.message?.includes('InvalidStateError') ||
+        error.message?.includes('width or height of 0') ||
+        error.name === 'InvalidStateError') {
+      console.warn('External script canvas error caught by ErrorBoundary:', {
         ...errorDetails,
         type: 'CANVAS_ERROR',
         source: 'EXTERNAL_SCRIPT'
-      });
-      
-      // For canvas errors, don't show error UI - just log and continue
-      this.setState({ 
-        hasError: false, 
-        error: null,
-        isCanvasError: true 
       });
       return;
     }
@@ -84,13 +90,13 @@ class ErrorBoundary extends Component {
     });
   }
 
-  render() {
-    // Don't render error UI for canvas errors from external scripts
-    if (this.state.isCanvasError && !this.state.hasError) {
+render() {
+    // Canvas errors are handled silently - don't show error UI
+    if (this.state.isCanvasError) {
       return this.props.children;
     }
 
-    if (this.state.hasError && !this.state.isCanvasError) {
+if (this.state.hasError) {
       return (
         <div className="flex items-center justify-center min-h-screen bg-gray-50">
           <div className="text-center max-w-md mx-auto p-6">
@@ -136,7 +142,72 @@ class ErrorBoundary extends Component {
     return this.props.children;
   }
 }
+// Global error handler for external script errors
+class GlobalErrorHandler {
+  constructor() {
+    this.setupErrorHandlers();
+  }
 
+  setupErrorHandlers() {
+    // Handle unhandled promise rejections
+    window.addEventListener('unhandledrejection', (event) => {
+      const error = event.reason;
+      if (this.isCanvasError(error)) {
+        console.warn('Unhandled canvas error prevented:', {
+          message: error.message || 'Unknown canvas error',
+          stack: error.stack,
+          timestamp: new Date().toISOString(),
+          source: 'EXTERNAL_SCRIPT'
+        });
+        event.preventDefault(); // Prevent default error handling
+      }
+    });
+
+    // Handle global JavaScript errors
+    window.addEventListener('error', (event) => {
+      if (this.isCanvasError(event.error) || this.isCanvasErrorFromMessage(event.message)) {
+        console.warn('Global canvas error prevented:', {
+          message: event.message,
+          filename: event.filename,
+          lineno: event.lineno,
+          colno: event.colno,
+          error: event.error,
+          timestamp: new Date().toISOString(),
+          source: 'EXTERNAL_SCRIPT'
+        });
+        event.preventDefault(); // Prevent default error handling
+        return true; // Indicate error was handled
+      }
+    });
+  }
+
+  isCanvasError(error) {
+    if (!error) return false;
+    
+    const message = error.message || '';
+    const name = error.name || '';
+    
+    return message.includes('canvas') || 
+           message.includes('viewport') ||
+           message.includes('drawImage') ||
+           message.includes('InvalidStateError') ||
+           message.includes('width or height of 0') ||
+           name === 'InvalidStateError';
+  }
+
+  isCanvasErrorFromMessage(message) {
+    if (!message) return false;
+    
+    return message.includes('canvas') || 
+           message.includes('viewport') ||
+           message.includes('drawImage') ||
+           message.includes('InvalidStateError') ||
+           message.includes('width or height of 0');
+  }
+}
+
+// Initialize global error handler
+const globalErrorHandler = new GlobalErrorHandler();
 function App() {
   return (
     <ErrorBoundary>
