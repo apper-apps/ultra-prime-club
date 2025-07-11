@@ -85,6 +85,11 @@
   background-color: #f5f5f5;
 }
 
+.empty-row input::-moz-placeholder {
+  color: #9ca3af;
+  font-style: italic;
+}
+
 .empty-row input::placeholder,
 .empty-row select {
   color: #9ca3af;
@@ -100,7 +105,46 @@
   border-bottom: 1px solid #e5e7eb;
   background-color: #f9fafb;
 }
-
 .top-scrollbar-content {
   pointer-events: none;
+}
+
+/* Viewport stability and canvas error prevention */
+html, body {
+  min-height: 100vh;
+  min-width: 100vw;
+}
+
+#root {
+  min-height: 100vh;
+  min-width: 100%;
+}
+
+/* Ensure no elements have zero dimensions that could cause canvas errors */
+* {
+  min-height: 0;
+}
+
+*:not(script):not(style):not(meta):not(title):not(link) {
+  min-width: 0;
+}
+
+/* Prevent canvas rendering issues */
+canvas {
+  min-width: 1px;
+  min-height: 1px;
+}
+
+/* Ensure viewport capture targets are properly sized */
+.viewport-capture-ready {
+  min-width: 1px;
+  min-height: 1px;
+  visibility: visible;
+}
+
+/* Loading state protection */
+.loading-viewport {
+  min-width: 100px;
+  min-height: 100px;
+  background-color: transparent;
 }
