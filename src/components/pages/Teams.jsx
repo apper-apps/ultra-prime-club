@@ -377,10 +377,10 @@ if (loading) return <Loading />;
                 </div>
               </div>
             </Card>
-          </motion.div>
-))}
+</motion.div>
+        ))}
       </div>
-    </div>
+
       {/* Invite Member Modal */}
       {showInviteModal && (
         <InviteMemberModal

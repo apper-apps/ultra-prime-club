@@ -13,7 +13,9 @@ const navigation = [
     { to: "/pipeline", icon: "Kanban", label: "Deal Pipeline" },
     { to: "/calendar", icon: "Calendar", label: "Calendar" },
     { to: "/analytics", icon: "TrendingUp", label: "Analytics" },
-    { to: "/leaderboard", icon: "Trophy", label: "Leaderboard" }
+    { to: "/leaderboard", icon: "Trophy", label: "Leaderboard" },
+    { to: "/teams", icon: "Users", label: "Teams" },
+    { to: "/contacts", icon: "Users", label: "Contacts" }
   ];
 
   return (
@@ -146,11 +148,10 @@ const MobileSidebar = ({ navigation }) => {
 
 const UserSettings = ({ isCollapsed }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [showTeamManagement, setShowTeamManagement] = useState(false);
 
 const settingsItems = [
     { icon: "User", label: "Profile", action: () => console.log("Profile") },
-    { icon: "Users", label: "Team Management", action: () => setShowTeamManagement(true) },
+    { icon: "Users", label: "Team Management", action: () => window.location.href = "/teams" },
     { icon: "Settings", label: "Account Settings", action: () => console.log("Account Settings") },
     { icon: "Palette", label: "Preferences", action: () => console.log("Preferences") },
     { icon: "LogOut", label: "Logout", action: () => console.log("Logout") }
@@ -207,36 +208,6 @@ return (
           </div>
 </>
       )}
-      
-      {/* Team Management Modal */}
-      {showTeamManagement && (
-        <TeamManagement onClose={() => setShowTeamManagement(false)} />
-      )}
-    </div>
-  );
-};
-
-// Team Management Component
-const TeamManagement = ({ onClose }) => {
-  return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-6 border-b">
-          <h3 className="text-lg font-semibold">Team Management</h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-            <ApperIcon name="X" size={20} />
-          </button>
-        </div>
-        <div className="p-6">
-          <p className="text-gray-600 mb-4">
-            Manage your team members and control their access to different features.
-          </p>
-          <div className="text-center py-8">
-            <ApperIcon name="Users" size={48} className="mx-auto text-gray-400 mb-4" />
-            <p className="text-gray-500">Team management interface will be implemented here.</p>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
