@@ -26,7 +26,8 @@ const Leads = () => {
   const [editingLead, setEditingLead] = useState(null);
   const [emptyRows, setEmptyRows] = useState([]);
   const [nextTempId, setNextTempId] = useState(-1);
-
+  const [selectedLeads, setSelectedLeads] = useState([]);
+  const [showBulkDeleteDialog, setShowBulkDeleteDialog] = useState(false);
   useEffect(() => {
     loadLeads();
   }, []);
@@ -119,15 +120,50 @@ toast.success(`Lead status updated and deal moved to ${targetStage} stage!`);
     }
   };
 
-  const handleDelete = async (leadId) => {
+const handleDelete = async (leadId) => {
     if (!confirm("Are you sure you want to delete this lead?")) return;
     
     try {
       await deleteLead(leadId);
       setData(prevData => prevData.filter(lead => lead.Id !== leadId));
+      setSelectedLeads(prevSelected => prevSelected.filter(id => id !== leadId));
       toast.success("Lead deleted successfully!");
     } catch (err) {
       toast.error("Failed to delete lead");
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedLeads.length === 0) return;
+    
+    try {
+      let successCount = 0;
+      let failCount = 0;
+      
+      for (const leadId of selectedLeads) {
+        try {
+          await deleteLead(leadId);
+          successCount++;
+        } catch (err) {
+          failCount++;
+        }
+      }
+      
+      // Update the data by removing successfully deleted leads
+      setData(prevData => prevData.filter(lead => !selectedLeads.includes(lead.Id)));
+      setSelectedLeads([]);
+      setShowBulkDeleteDialog(false);
+      
+      if (successCount > 0 && failCount === 0) {
+        toast.success(`Successfully deleted ${successCount} lead${successCount > 1 ? 's' : ''}`);
+      } else if (successCount > 0 && failCount > 0) {
+        toast.warning(`Deleted ${successCount} lead${successCount > 1 ? 's' : ''}, failed to delete ${failCount}`);
+      } else {
+        toast.error("Failed to delete selected leads");
+      }
+    } catch (err) {
+      toast.error("Failed to delete leads");
+      setShowBulkDeleteDialog(false);
     }
   };
 
@@ -155,6 +191,28 @@ const handleUpdateLead = async (leadId, updates) => {
     } catch (err) {
       toast.error("Failed to update lead");
     }
+  };
+
+  const toggleLeadSelection = (leadId) => {
+    setSelectedLeads(prevSelected => {
+      if (prevSelected.includes(leadId)) {
+        return prevSelected.filter(id => id !== leadId);
+      } else {
+        return [...prevSelected, leadId];
+      }
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedLeads.length === filteredAndSortedData.length) {
+      setSelectedLeads([]);
+    } else {
+      setSelectedLeads(filteredAndSortedData.map(lead => lead.Id));
+    }
+  };
+
+  const clearSelection = () => {
+    setSelectedLeads([]);
   };
 
 const handleFieldUpdate = async (leadId, field, value) => {
@@ -545,7 +603,7 @@ const getStatusColor = (status) => {
       }
     });
 
-  const handleSort = (field) => {
+const handleSort = (field) => {
     if (sortBy === field) {
       setSortOrder(sortOrder === "asc" ? "desc" : "asc");
     } else {
@@ -648,7 +706,16 @@ const getStatusColor = (status) => {
             <div className="overflow-x-auto">
                 <table className="w-full min-w-[1200px]">
                     <thead className="bg-gray-50">
+<thead className="bg-gray-50">
                         <tr>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[50px]">
+                                <input
+                                    type="checkbox"
+                                    checked={selectedLeads.length === filteredAndSortedData.length && filteredAndSortedData.length > 0}
+                                    onChange={toggleSelectAll}
+                                    className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                                />
+                            </th>
                             <th
                                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[200px]">
                                 <button
@@ -694,12 +761,18 @@ const getStatusColor = (status) => {
                             <th
                                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[120px] sticky right-0 bg-gray-50 border-l border-gray-200">Actions
                                                     </th>
-                        </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                         {/* Empty rows for direct data entry - positioned at top */}
                         {emptyRows.map(
-                            emptyRow => <tr key={`empty-${emptyRow.Id}`} className="hover:bg-gray-50 empty-row">
+emptyRow => <tr key={`empty-${emptyRow.Id}`} className="hover:bg-gray-50 empty-row">
+                                <td className="px-6 py-4 whitespace-nowrap w-[50px]">
+                                    <input
+                                        type="checkbox"
+                                        disabled
+                                        className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 opacity-50"
+                                    />
+                                </td>
                                 <td className="px-6 py-4 whitespace-nowrap min-w-[200px]">
                                     <Input
                                         type="url"
@@ -830,7 +903,15 @@ const getStatusColor = (status) => {
                             </tr>
                         )}
                         {/* Existing leads data */}
-                        {filteredAndSortedData.map(lead => <tr key={lead.Id} className="hover:bg-gray-50">
+{filteredAndSortedData.map(lead => <tr key={lead.Id} className="hover:bg-gray-50">
+                            <td className="px-6 py-4 whitespace-nowrap w-[50px]">
+                                <input
+                                    type="checkbox"
+                                    checked={selectedLeads.includes(lead.Id)}
+                                    onChange={() => toggleLeadSelection(lead.Id)}
+                                    className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                                />
+                            </td>
                             <td className="px-6 py-4 whitespace-nowrap min-w-[200px]">
                                 <Input
                                     type="url"
@@ -985,7 +1066,41 @@ const getStatusColor = (status) => {
                 </table>
             </div>
 </div>}
-    </Card>
+</Card>
+    
+    {/* Bulk Actions */}
+    {selectedLeads.length > 0 && (
+      <Card className="p-4 bg-primary-50 border-primary-200">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <ApperIcon name="CheckCircle" size={20} className="text-primary-600" />
+            <span className="text-sm font-medium text-primary-700">
+              {selectedLeads.length} lead{selectedLeads.length > 1 ? 's' : ''} selected
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={clearSelection}
+              className="text-primary-600 border-primary-300 hover:bg-primary-100"
+            >
+              Clear Selection
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowBulkDeleteDialog(true)}
+              className="text-red-600 border-red-300 hover:bg-red-50"
+            >
+              <ApperIcon name="Trash2" size={16} className="mr-2" />
+              Delete Selected
+            </Button>
+          </div>
+        </div>
+      </Card>
+    )}
+    
     {/* Add Lead Modal */}
     {showAddForm && <AddLeadModal
       onClose={() => setShowAddForm(false)} 
@@ -1000,7 +1115,15 @@ const getStatusColor = (status) => {
         onSubmit={handleUpdateLead}
         categoryOptions={categoryOptions}
         onCreateCategory={handleCreateCategory}
-/>}
+    />}
+    {/* Bulk Delete Confirmation Dialog */}
+    {showBulkDeleteDialog && (
+      <BulkDeleteConfirmationDialog
+        selectedCount={selectedLeads.length}
+        onConfirm={handleBulkDelete}
+        onCancel={() => setShowBulkDeleteDialog(false)}
+      />
+    )}
 </motion.div>
   );
 };
@@ -1484,6 +1607,59 @@ required />
 </form>
     </div>
 </div>
+  );
+};
+
+};
+
+const BulkDeleteConfirmationDialog = ({ selectedCount, onConfirm, onCancel }) => {
+  return (
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+        <div className="flex items-center justify-between p-6 border-b">
+          <div className="flex items-center gap-3">
+            <div className="flex-shrink-0 w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+              <ApperIcon name="AlertTriangle" size={20} className="text-red-600" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900">Confirm Bulk Delete</h3>
+              <p className="text-sm text-gray-600">This action cannot be undone</p>
+            </div>
+          </div>
+          <button onClick={onCancel} className="text-gray-400 hover:text-gray-600">
+            <ApperIcon name="X" size={20} />
+          </button>
+        </div>
+        
+        <div className="p-6">
+          <p className="text-gray-700 mb-4">
+            Are you sure you want to delete <span className="font-semibold">{selectedCount}</span> selected lead{selectedCount > 1 ? 's' : ''}?
+          </p>
+          <p className="text-sm text-gray-500 mb-6">
+            This will permanently remove the selected leads from your database. This action cannot be undone.
+          </p>
+          
+          <div className="flex justify-end gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onCancel}
+              className="px-4 py-2"
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              onClick={onConfirm}
+              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white"
+            >
+              <ApperIcon name="Trash2" size={16} className="mr-2" />
+              Delete {selectedCount} Lead{selectedCount > 1 ? 's' : ''}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
