@@ -233,7 +233,8 @@ export const getUserLeadsReport = async (userId, period = 'today') => {
     
     // Sort by creation date (most recent first)
     return filteredLeads.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-  } catch (error) {
+} catch (error) {
     // Fallback data
     return [];
   }
+};
