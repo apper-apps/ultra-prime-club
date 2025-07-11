@@ -1,4 +1,3 @@
-import React from "react";
 import salesRepsData from "@/services/mockData/salesReps.json";
 import dashboardData from "@/services/mockData/dashboard.json";
 import { getWebsiteUrlActivity } from "@/services/api/reportService";
@@ -18,12 +17,6 @@ export const getRecentActivity = async () => {
   return [...dashboardData.recentActivity];
 };
 
-export const getDailyLeadsReport = async () => {
-  // Simulate API delay
-await new Promise(resolve => setTimeout(resolve, 300));
-  
-  return await getLeadsReport();
-};
 
 export const getTodaysMeetings = async () => {
   // Simulate API delay
