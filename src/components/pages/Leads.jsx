@@ -9,17 +9,16 @@ import Input from "@/components/atoms/Input";
 import Empty from "@/components/ui/Empty";
 import Error from "@/components/ui/Error";
 import Loading from "@/components/ui/Loading";
-import Hotlist from "@/components/pages/Hotlist";
 import SearchBar from "@/components/molecules/SearchBar";
-import { addCofounder, createLead, deleteCofounder, deleteLead, getLeads, updateCofounder, updateLead } from "@/services/api/leadsService";
+import { createLead, deleteLead, getLeads, updateLead } from "@/services/api/leadsService";
 import { createDeal, getDeals, updateDeal } from "@/services/api/dealsService";
 
 const Leads = () => {
-const [data, setData] = useState([]);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
+const [statusFilter, setStatusFilter] = useState("all");
   const [fundingFilter, setFundingFilter] = useState("all");
   const [sortBy, setSortBy] = useState("websiteUrl");
   const [sortOrder, setSortOrder] = useState("desc");
@@ -29,11 +28,8 @@ const [data, setData] = useState([]);
   const [nextTempId, setNextTempId] = useState(-1);
   const [selectedLeads, setSelectedLeads] = useState([]);
   const [showBulkDeleteDialog, setShowBulkDeleteDialog] = useState(false);
-  const [topScrollbarRef, setTopScrollbarRef] = useState(null);
+const [topScrollbarRef, setTopScrollbarRef] = useState(null);
   const [tableScrollbarRef, setTableScrollbarRef] = useState(null);
-  const [expandedCofounder, setExpandedCofounder] = useState(null);
-  const [cofounderData, setCofounderData] = useState({});
-  const [editingCofounder, setEditingCofounder] = useState(null);
 
   useEffect(() => {
     loadLeads();
@@ -434,67 +430,6 @@ const handleEmptyRowUpdate = async (tempId, field, value) => {
         )
       );
     }
-  };
-
-  // Co-founder management functions
-  const handleAddCofounder = async (leadId) => {
-    const newCofounder = {
-      fullName: '',
-      linkedinUrl: ''
-    };
-    
-    try {
-      const updatedLead = await addCofounder(leadId, newCofounder);
-      setData(prevData => 
-        prevData.map(lead => 
-          lead.Id === leadId ? updatedLead : lead
-        )
-      );
-      
-      // Set the new cofounder in edit mode
-      const newCofounderId = updatedLead.cofounders[updatedLead.cofounders.length - 1].Id;
-      setEditingCofounder(`${leadId}-${newCofounderId}`);
-      
-      toast.success("Co-founder added successfully!");
-    } catch (err) {
-      toast.error("Failed to add co-founder");
-    }
-  };
-
-  const handleUpdateCofounder = async (leadId, cofounderId, updates) => {
-    try {
-      const updatedLead = await updateCofounder(leadId, cofounderId, updates);
-      setData(prevData => 
-        prevData.map(lead => 
-          lead.Id === leadId ? updatedLead : lead
-        )
-      );
-      setEditingCofounder(null);
-      toast.success("Co-founder updated successfully!");
-    } catch (err) {
-      toast.error("Failed to update co-founder");
-    }
-  };
-
-  const handleDeleteCofounder = async (leadId, cofounderId) => {
-    if (!confirm("Are you sure you want to delete this co-founder?")) return;
-    
-    try {
-      const updatedLead = await deleteCofounder(leadId, cofounderId);
-      setData(prevData => 
-        prevData.map(lead => 
-          lead.Id === leadId ? updatedLead : lead
-        )
-      );
-      toast.success("Co-founder deleted successfully!");
-    } catch (err) {
-      toast.error("Failed to delete co-founder");
-    }
-  };
-
-  const toggleCofounderExpansion = (leadId) => {
-    setExpandedCofounder(expandedCofounder === leadId ? null : leadId);
-    setEditingCofounder(null);
   };
 
 const teamSizeOptions = ["1-3", "4-10", "11-50", "51-100", "101-500", "501-1000", "1001+"];
@@ -1065,11 +1000,11 @@ emptyRow => <tr key={`empty-${emptyRow.Id}`} className="hover:bg-gray-50 empty-r
 
                                         handleFieldUpdateDebounced(lead.Id, "arr", e.target.value);
                                     }}
-onBlur={e => handleFieldUpdate(lead.Id, "arr", e.target.value)}
+                                    onBlur={e => handleFieldUpdate(lead.Id, "arr", e.target.value)}
                                     onKeyDown={e => {
                                         if (e.key === "Enter") {
                                             handleFieldUpdate(lead.Id, "arr", e.target.value);
-                                        }
+}
                                     }}
                                     className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full" />
                             </td>
@@ -1153,18 +1088,9 @@ onBlur={e => handleFieldUpdate(lead.Id, "arr", e.target.value)}
                                     <span>{lead.addedByName || "Unknown"}</span>
                                 </div>
                             </td>
-<td
+                            <td
                                 className="px-6 py-4 whitespace-nowrap text-sm font-medium w-[120px] sticky right-0 bg-white border-l border-gray-200">
                                 <div className="flex items-center gap-2">
-                                    <button
-                                        onClick={() => toggleCofounderExpansion(lead.Id)}
-                                        className="text-gray-600 hover:text-primary-600 p-1 hover:bg-gray-100 rounded transition-colors"
-                                        title="Manage Co-founders">
-                                        <ApperIcon 
-                                            name={expandedCofounder === lead.Id ? "ChevronUp" : "ChevronDown"} 
-                                            size={16} 
-                                        />
-                                    </button>
                                     <button
                                         onClick={() => setEditingLead(lead)}
                                         className="text-primary-600 hover:text-primary-800 p-1 hover:bg-gray-100 rounded">
@@ -1177,159 +1103,7 @@ onBlur={e => handleFieldUpdate(lead.Id, "arr", e.target.value)}
                                     </button>
                                 </div>
                             </td>
-</tr>
-                        {/* Co-founder management row */}
-                        {expandedCofounder === lead.Id && (
-                            <tr key={`cofounders-${lead.Id}`} className="bg-gray-50 border-t-0">
-                                <td colSpan="11" className="px-6 py-4">
-                                    <div className="space-y-4">
-                                        <div className="flex items-center justify-between">
-                                            <h4 className="text-sm font-medium text-gray-900">Co-founders</h4>
-                                            <Button
-                                                onClick={() => handleAddCofounder(lead.Id)}
-                                                size="sm"
-                                                variant="outline"
-                                                className="text-primary-600 border-primary-300 hover:bg-primary-50">
-                                                <ApperIcon name="Plus" size={14} className="mr-1" />
-                                                Add Co-founder
-                                            </Button>
-                                        </div>
-                                        
-                                        <div className="space-y-3">
-                                            {lead.cofounders && lead.cofounders.length > 0 ? (
-                                                lead.cofounders.map((cofounder, index) => (
-                                                    <div key={cofounder.Id} className="bg-white p-4 rounded-lg border border-gray-200">
-                                                        <div className="flex items-center justify-between mb-2">
-                                                            <span className="text-sm font-medium text-gray-700">
-                                                                Co-founder {index + 1}
-                                                            </span>
-                                                            <div className="flex items-center gap-2">
-                                                                <button
-                                                                    onClick={() => setEditingCofounder(`${lead.Id}-${cofounder.Id}`)}
-                                                                    className="text-primary-600 hover:text-primary-800 p-1 hover:bg-gray-100 rounded">
-                                                                    <ApperIcon name="Edit" size={14} />
-                                                                </button>
-                                                                <button
-                                                                    onClick={() => handleDeleteCofounder(lead.Id, cofounder.Id)}
-                                                                    className="text-red-600 hover:text-red-800 p-1 hover:bg-gray-100 rounded">
-                                                                    <ApperIcon name="Trash2" size={14} />
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                        
-                                                        {editingCofounder === `${lead.Id}-${cofounder.Id}` ? (
-                                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                                                <div>
-                                                                    <label className="block text-xs font-medium text-gray-700 mb-1">
-                                                                        Full Name
-                                                                    </label>
-                                                                    <Input
-                                                                        value={cofounder.fullName}
-                                                                        onChange={(e) => {
-                                                                            const updated = { ...cofounder, fullName: e.target.value };
-                                                                            setData(prevData => 
-                                                                                prevData.map(l => 
-                                                                                    l.Id === lead.Id ? {
-                                                                                        ...l,
-                                                                                        cofounders: l.cofounders.map(cf => 
-                                                                                            cf.Id === cofounder.Id ? updated : cf
-                                                                                        )
-                                                                                    } : l
-                                                                                )
-                                                                            );
-                                                                        }}
-                                                                        placeholder="Enter full name"
-                                                                        className="text-sm"
-                                                                    />
-                                                                </div>
-                                                                <div>
-                                                                    <label className="block text-xs font-medium text-gray-700 mb-1">
-                                                                        LinkedIn URL
-                                                                    </label>
-                                                                    <Input
-                                                                        type="url"
-                                                                        value={cofounder.linkedinUrl}
-                                                                        onChange={(e) => {
-                                                                            const updated = { ...cofounder, linkedinUrl: e.target.value };
-                                                                            setData(prevData => 
-                                                                                prevData.map(l => 
-                                                                                    l.Id === lead.Id ? {
-                                                                                        ...l,
-                                                                                        cofounders: l.cofounders.map(cf => 
-                                                                                            cf.Id === cofounder.Id ? updated : cf
-                                                                                        )
-                                                                                    } : l
-                                                                                )
-                                                                            );
-                                                                        }}
-                                                                        placeholder="https://linkedin.com/in/..."
-                                                                        className="text-sm"
-                                                                    />
-                                                                </div>
-                                                                <div className="md:col-span-2">
-                                                                    <div className="flex justify-end gap-2">
-                                                                        <Button
-                                                                            onClick={() => setEditingCofounder(null)}
-                                                                            size="sm"
-                                                                            variant="outline">
-                                                                            Cancel
-                                                                        </Button>
-                                                                        <Button
-                                                                            onClick={() => handleUpdateCofounder(lead.Id, cofounder.Id, {
-                                                                                fullName: cofounder.fullName,
-                                                                                linkedinUrl: cofounder.linkedinUrl
-                                                                            })}
-                                                                            size="sm">
-                                                                            Save
-                                                                        </Button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        ) : (
-                                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                                                <div>
-                                                                    <label className="block text-xs font-medium text-gray-600 mb-1">
-                                                                        Full Name
-                                                                    </label>
-                                                                    <p className="text-sm text-gray-900">
-                                                                        {cofounder.fullName || 'Not specified'}
-                                                                    </p>
-                                                                </div>
-                                                                <div>
-                                                                    <label className="block text-xs font-medium text-gray-600 mb-1">
-                                                                        LinkedIn URL
-                                                                    </label>
-                                                                    <div className="flex items-center gap-2">
-                                                                        {cofounder.linkedinUrl ? (
-                                                                            <a
-                                                                                href={cofounder.linkedinUrl}
-                                                                                target="_blank"
-                                                                                rel="noopener noreferrer"
-                                                                                className="text-primary-600 hover:text-primary-800 inline-flex items-center gap-1">
-                                                                                <ApperIcon name="Linkedin" size={14} />
-                                                                                <span className="text-sm">LinkedIn Profile</span>
-                                                                            </a>
-                                                                        ) : (
-                                                                            <span className="text-sm text-gray-500">Not specified</span>
-                                                                        )}
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                ))
-                                            ) : (
-                                                <div className="text-center py-4 text-gray-500">
-                                                    <p className="text-sm">No co-founders added yet</p>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        )}
-                    </>
-                ))}
+                        </tr>)}
                     </tbody>
                 </table>
             </div>
