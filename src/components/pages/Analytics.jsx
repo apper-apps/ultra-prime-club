@@ -1,20 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import ApperIcon from '@/components/ApperIcon';
-import Card from '@/components/atoms/Card';
-import Button from '@/components/atoms/Button';
-import MetricCard from '@/components/molecules/MetricCard';
-import Loading from '@/components/ui/Loading';
-import Error from '@/components/ui/Error';
-import Chart from 'react-apexcharts';
-import { 
-  getLeadsAnalytics, 
-  getDailyLeadsChart, 
-  getLeadsMetrics, 
-  getUserPerformance 
-} from '@/services/api/analyticsService';
-import { getLeads } from '@/services/api/leadsService';
-import salesRepData from '@/services/mockData/salesReps.json';
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import Chart from "react-apexcharts";
+import ApperIcon from "@/components/ApperIcon";
+import Button from "@/components/atoms/Button";
+import Card from "@/components/atoms/Card";
+import Error from "@/components/ui/Error";
+import Loading from "@/components/ui/Loading";
+import Leads from "@/components/pages/Leads";
+import MetricCard from "@/components/molecules/MetricCard";
+import salesRepData from "@/services/mockData/salesReps.json";
+import { getDailyLeadsChart, getLeadsAnalytics, getLeadsMetrics, getUserPerformance } from "@/services/api/analyticsService";
+import { getLeads } from "@/services/api/leadsService";
 
 const Analytics = () => {
   const [loading, setLoading] = useState(true);
@@ -24,11 +20,11 @@ const Analytics = () => {
   const [filteredLeads, setFilteredLeads] = useState([]);
   const [userPerformance, setUserPerformance] = useState([]);
   
-  // Filters
+// Filters
   const [selectedUser, setSelectedUser] = useState('all');
   const [selectedPeriod, setSelectedPeriod] = useState('week');
   const [chartDays, setChartDays] = useState(30);
-
+  const [chartPeriod, setChartPeriod] = useState(30);
   const periods = [
     { value: 'today', label: 'Today' },
     { value: 'yesterday', label: 'Yesterday' },
@@ -72,7 +68,7 @@ const Analytics = () => {
     }
   };
 
-  useEffect(() => {
+useEffect(() => {
     loadAnalyticsData();
   }, [selectedUser, selectedPeriod, chartDays]);
 
@@ -218,7 +214,7 @@ const Analytics = () => {
                 Daily lead generation trends
               </p>
             </div>
-            <select
+<select
               value={chartDays}
               onChange={(e) => setChartDays(parseInt(e.target.value))}
               className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white text-sm"
@@ -231,14 +227,38 @@ const Analytics = () => {
             </select>
           </div>
           
-          {chartData && (
-            <Chart
-              options={chartOptions}
-              series={chartData.series}
-              type="area"
-              height={350}
-            />
-          )}
+          {/* Chart container with dimension validation */}
+          <div className="min-h-[350px] w-full viewport-capture-ready">
+            {chartData && chartData.series && chartData.series.length > 0 ? (
+              <div className="w-full h-full">
+                <Chart
+                  options={{
+                    ...chartOptions,
+                    chart: {
+                      ...chartOptions.chart,
+                      width: '100%',
+                      height: 350,
+                      parentHeightOffset: 0,
+                      toolbar: {
+                        show: false
+                      }
+                    }
+                  }}
+                  series={chartData.series}
+                  type="area"
+                  height={350}
+                  width="100%"
+                />
+              </div>
+            ) : (
+              <div className="flex items-center justify-center h-[350px] bg-gray-50 rounded-lg">
+                <div className="text-center">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-3"></div>
+                  <p className="text-gray-500">Loading chart data...</p>
+                </div>
+              </div>
+            )}
+          </div>
         </Card>
 
         {/* Status Distribution */}
@@ -286,28 +306,34 @@ const Analytics = () => {
             </p>
           </div>
           
-          <div className="space-y-4">
-            {userPerformance.slice(0, 6).map((rep, index) => (
-              <div key={rep.Id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-700 rounded-full flex items-center justify-center">
-                    <span className="text-white text-sm font-semibold">
-                      {rep.name.charAt(0)}
-                    </span>
+<div className="space-y-4">
+            {userPerformance && userPerformance.length > 0 ? (
+              userPerformance.slice(0, 6).map((rep, index) => (
+                <div key={rep.Id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-700 rounded-full flex items-center justify-center">
+                      <span className="text-white text-sm font-semibold">
+                        {rep.name?.charAt(0) || 'N'}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">{rep.name || 'Unknown'}</p>
+                      <p className="text-xs text-gray-500">
+                        {rep.todayLeads || 0} today • {rep.weekLeads || 0} this week
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-medium text-gray-900">{rep.name}</p>
-                    <p className="text-xs text-gray-500">
-                      {rep.todayLeads} today • {rep.weekLeads} this week
-                    </p>
+                  <div className="text-right">
+                    <p className="font-semibold text-gray-900">{rep.totalLeads || 0}</p>
+                    <p className="text-xs text-gray-500">total leads</p>
                   </div>
                 </div>
-                <div className="text-right">
-                  <p className="font-semibold text-gray-900">{rep.totalLeads}</p>
-                  <p className="text-xs text-gray-500">total leads</p>
-                </div>
+              ))
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                <p>No performance data available</p>
               </div>
-            ))}
+            )}
           </div>
         </Card>
 
@@ -323,37 +349,37 @@ const Analytics = () => {
             </p>
           </div>
           
-          <div className="space-y-3 max-h-96 overflow-y-auto">
-            {filteredLeads.slice(0, 10).map((lead) => (
-              <div key={lead.Id} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-gray-900 truncate">
-                    {lead.websiteUrl.replace(/^https?:\/\//, '')}
-                  </p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-xs text-gray-500">
-                      {lead.addedByName}
-                    </span>
-                    <span className="text-xs text-gray-400">•</span>
-                    <span className="text-xs text-gray-500">
-                      {new Date(lead.createdAt).toLocaleDateString()}
+<div className="space-y-3 max-h-96 overflow-y-auto">
+            {filteredLeads && filteredLeads.length > 0 ? (
+              filteredLeads.slice(0, 10).map((lead) => (
+                <div key={lead.Id} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-gray-900 truncate">
+                      {lead.websiteUrl?.replace(/^https?:\/\//, '') || 'Unknown URL'}
+                    </p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-xs text-gray-500">
+                        {lead.addedByName || 'Unknown'}
+                      </span>
+                      <span className="text-xs text-gray-400">•</span>
+                      <span className="text-xs text-gray-500">
+                        {lead.createdAt ? new Date(lead.createdAt).toLocaleDateString() : 'Unknown date'}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="ml-4">
+                    <span className={`px-2 py-1 text-xs rounded-full ${
+                      lead.status === 'Hotlist' ? 'bg-red-100 text-red-800' :
+                      lead.status === 'Connected' ? 'bg-green-100 text-green-800' :
+                      lead.status === 'Meeting Booked' ? 'bg-blue-100 text-blue-800' :
+                      'bg-gray-100 text-gray-800'
+                    }`}>
+                      {lead.status || 'Unknown'}
                     </span>
                   </div>
                 </div>
-                <div className="ml-4">
-                  <span className={`px-2 py-1 text-xs rounded-full ${
-                    lead.status === 'Hotlist' ? 'bg-red-100 text-red-800' :
-                    lead.status === 'Connected' ? 'bg-green-100 text-green-800' :
-                    lead.status === 'Meeting Booked' ? 'bg-blue-100 text-blue-800' :
-                    'bg-gray-100 text-gray-800'
-                  }`}>
-                    {lead.status}
-                  </span>
-                </div>
-              </div>
-            ))}
-            
-            {filteredLeads.length === 0 && (
+              ))
+            ) : (
               <div className="text-center py-8 text-gray-500">
                 <ApperIcon name="Search" size={48} className="mx-auto mb-3 text-gray-300" />
                 <p>No leads found for the selected filters</p>
