@@ -28,7 +28,19 @@ const getBarColor = (edition) => {
       'collector': 'linear-gradient(135deg, #9FEBE1 0%, #7DD3C7 100%)',
       'limited': 'linear-gradient(135deg, #FFAEB5 0%, #FF8A94 100%)'
     };
-    return colors[edition?.toLowerCase()] || colors.select;
+    
+    // Handle full edition names from mock data
+    const editionMap = {
+      'select edition': 'select',
+      'black edition': 'black',
+      'collector\'s edition': 'collector',
+      'limited edition': 'limited'
+    };
+    
+    const normalizedEdition = edition?.toLowerCase();
+    const mappedEdition = editionMap[normalizedEdition] || normalizedEdition;
+    
+    return colors[mappedEdition] || colors.select;
   };
 
   const handleMouseDown = (e) => {
