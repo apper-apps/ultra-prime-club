@@ -18,9 +18,9 @@ const Leads = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
+const [statusFilter, setStatusFilter] = useState("all");
   const [fundingFilter, setFundingFilter] = useState("all");
-  const [sortBy, setSortBy] = useState("createdAt");
+  const [sortBy, setSortBy] = useState("websiteUrl");
   const [sortOrder, setSortOrder] = useState("desc");
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingLead, setEditingLead] = useState(null);
@@ -606,7 +606,7 @@ const getStatusColor = (status) => {
       
       return matchesSearch && matchesStatus && matchesFunding;
     })
-    .sort((a, b) => {
+.sort((a, b) => {
       let aValue = a[sortBy];
       let bValue = b[sortBy];
       
@@ -618,6 +618,12 @@ const getStatusColor = (status) => {
       if (sortBy === "createdAt") {
         aValue = new Date(aValue);
         bValue = new Date(bValue);
+      }
+      
+      if (sortBy === "websiteUrl") {
+        // Sort websiteUrl by creation date (newest first) instead of alphabetical
+        aValue = new Date(a.createdAt);
+        bValue = new Date(b.createdAt);
       }
       
       if (sortOrder === "asc") {
