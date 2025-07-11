@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { toast } from 'react-toastify';
-import ApperIcon from '@/components/ApperIcon';
-import Badge from '@/components/atoms/Badge';
-import Button from '@/components/atoms/Button';
-import Card from '@/components/atoms/Card';
-import Input from '@/components/atoms/Input';
-import Empty from '@/components/ui/Empty';
-import Error from '@/components/ui/Error';
-import Loading from '@/components/ui/Loading';
-import SearchBar from '@/components/molecules/SearchBar';
-import { getLeads, updateLead, deleteLead } from '@/services/api/leadsService';
-import { createDeal, getDeals, updateDeal } from '@/services/api/dealsService';
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import ApperIcon from "@/components/ApperIcon";
+import Badge from "@/components/atoms/Badge";
+import Button from "@/components/atoms/Button";
+import Card from "@/components/atoms/Card";
+import Input from "@/components/atoms/Input";
+import Empty from "@/components/ui/Empty";
+import Error from "@/components/ui/Error";
+import Loading from "@/components/ui/Loading";
+import Team from "@/components/pages/Team";
+import SearchBar from "@/components/molecules/SearchBar";
+import { deleteLead, getLeads, updateLead } from "@/services/api/leadsService";
+import { createDeal, getDeals, updateDeal } from "@/services/api/dealsService";
 
 const Hotlist = () => {
   const [leads, setLeads] = useState([]);
@@ -121,31 +122,39 @@ const Hotlist = () => {
       console.error('Error deleting lead:', err);
       toast.error('Failed to delete lead');
     }
-  };
+};
 
   const handleBulkDelete = async () => {
-    const successCount = 0;
-    const failCount = 0;
+    if (!selectedLeads.length) return;
     
-    for (const leadId of selectedLeads) {
-      try {
-        await deleteLead(leadId);
-        setLeads(prev => prev.filter(lead => lead.Id !== leadId));
-        successCount++;
-      } catch (err) {
-        console.error(`Error deleting lead ${leadId}:`, err);
-        failCount++;
+    try {
+      let successCount = 0;
+      let failCount = 0;
+
+      for (const leadId of selectedLeads) {
+        try {
+          await deleteLead(leadId);
+          setLeads(prev => prev.filter(lead => lead.Id !== leadId));
+          successCount++;
+        } catch (err) {
+          console.error(`Error deleting lead ${leadId}:`, err);
+          failCount++;
+        }
       }
-    }
-    
-    setSelectedLeads([]);
-    setShowBulkDeleteDialog(false);
-    
-    if (successCount > 0) {
-      toast.success(`${successCount} lead(s) deleted successfully`);
-    }
-    if (failCount > 0) {
-      toast.error(`Failed to delete ${failCount} lead(s)`);
+      
+      setSelectedLeads([]);
+      setShowBulkDeleteDialog(false);
+      
+      if (successCount > 0) {
+        toast.success(`${successCount} lead(s) deleted successfully`);
+      }
+      if (failCount > 0) {
+        toast.error(`Failed to delete ${failCount} lead(s)`);
+      }
+    } catch (err) {
+      console.error('Error in bulk delete:', err);
+      toast.error('Failed to delete leads');
+      setShowBulkDeleteDialog(false);
     }
   };
 
