@@ -179,13 +179,13 @@ return (
         )}
       </button>
 
-      {isDropdownOpen && (
+{isDropdownOpen && (
         <>
           <div 
             className="fixed inset-0 z-40"
             onClick={() => setIsDropdownOpen(false)}
           />
-          <div className={`absolute ${isCollapsed ? 'left-0' : 'right-0'} bottom-full mb-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50`}>
+          <div className={`absolute ${isCollapsed ? 'left-0' : 'left-0'} bottom-full mb-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-50`}>
             <div className="py-2">
               {settingsItems.map((item, index) => (
                 <button
