@@ -9,7 +9,6 @@ import Input from "@/components/atoms/Input";
 import Empty from "@/components/ui/Empty";
 import Error from "@/components/ui/Error";
 import Loading from "@/components/ui/Loading";
-import Team from "@/components/pages/Team";
 import SearchBar from "@/components/molecules/SearchBar";
 import { deleteLead, getLeads, updateLead } from "@/services/api/leadsService";
 import { createDeal, getDeals, updateDeal } from "@/services/api/dealsService";
