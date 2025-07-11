@@ -1,8 +1,8 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import ApperIcon from "@/components/ApperIcon";
 import NavItem from "@/components/molecules/NavItem";
-
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -145,11 +145,12 @@ const MobileSidebar = ({ navigation }) => {
 
 const UserSettings = ({ isCollapsed }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const navigate = useNavigate();
 
   const settingsItems = [
-    { icon: "User", label: "Profile", action: () => console.log("Profile") },
-    { icon: "Settings", label: "Account Settings", action: () => console.log("Account Settings") },
-    { icon: "Palette", label: "Preferences", action: () => console.log("Preferences") },
+    { icon: "User", label: "Profile", action: () => navigate("/profile") },
+    { icon: "Settings", label: "Account Settings", action: () => navigate("/account-settings") },
+    { icon: "Palette", label: "Preferences", action: () => navigate("/preferences") },
     { icon: "LogOut", label: "Logout", action: () => console.log("Logout") }
   ];
 

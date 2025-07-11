@@ -1,6 +1,9 @@
 import { Route, Routes } from "react-router-dom";
 import { motion } from "framer-motion";
 import React, { Component } from "react";
+import Profile from "@/components/pages/Profile";
+import AccountSettings from "@/components/pages/AccountSettings";
+import Preferences from "@/components/pages/Preferences";
 import Layout from "@/components/organisms/Layout";
 import Error from "@/components/ui/Error";
 import Leaderboard from "@/components/pages/Leaderboard";
@@ -112,11 +115,12 @@ class ErrorBoundary extends Component {
                 className="w-full px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors"
               >
                 Reload Page
-              </button>
-            </div>
-            {process.env.NODE_ENV === 'development' && this.state.error && (
-              <details className="mt-4 text-left">
-                <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700">
+</button>
+          </div>
+          {/* eslint-disable-next-line no-undef */}
+          {process.env.NODE_ENV === 'development' && this.state.error && (
+            <details className="mt-4 text-left">
+              <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700">
                   Error Details
                 </summary>
                 <pre className="mt-2 text-xs text-red-600 bg-red-50 p-2 rounded overflow-auto">
@@ -183,13 +187,40 @@ function App() {
               <Calendar />
             </motion.div>
           } />
-          <Route path="/leaderboard" element={
+<Route path="/leaderboard" element={
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
               <Leaderboard />
+            </motion.div>
+          } />
+          <Route path="/profile" element={
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Profile />
+            </motion.div>
+          } />
+          <Route path="/account-settings" element={
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <AccountSettings />
+            </motion.div>
+          } />
+          <Route path="/preferences" element={
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Preferences />
             </motion.div>
           } />
         </Routes>
