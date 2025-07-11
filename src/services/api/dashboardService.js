@@ -1,8 +1,9 @@
-import dashboardData from "@/services/mockData/dashboard.json";
-import { getDailyLeadsReport as getLeadsReport } from "@/services/api/leadsService";
-import { getLeadsAnalytics, getDailyLeadsChart, getUserPerformance } from "@/services/api/analyticsService";
-import { getWebsiteUrlActivity } from "@/services/api/reportService";
+import React from "react";
 import salesRepsData from "@/services/mockData/salesReps.json";
+import dashboardData from "@/services/mockData/dashboard.json";
+import { getWebsiteUrlActivity } from "@/services/api/reportService";
+import { getDailyLeadsChart, getLeadsAnalytics, getUserPerformance } from "@/services/api/analyticsService";
+import { getDailyLeadsReport, getLeads, getLeadsReport, getPendingFollowUps } from "@/services/api/leadsService";
 export const getDashboardMetrics = async () => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 300));
@@ -173,7 +174,7 @@ export const getDetailedRecentActivity = async () => {
     // Add dashboard activity
     const dashboardActivity = [...dashboardData.recentActivity];
     
-    return [...detailedActivity, ...dashboardActivity]
+return [...detailedActivity, ...dashboardActivity]
       .sort((a, b) => new Date(b.date || Date.now()) - new Date(a.date || Date.now()))
       .slice(0, 15);
   } catch (error) {
@@ -181,3 +182,58 @@ export const getDetailedRecentActivity = async () => {
     return [...dashboardData.recentActivity];
   }
 };
+
+export const getUserLeadsReport = async (userId, period = 'today') => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 300));
+  
+  try {
+    const { getLeads } = await import("@/services/api/leadsService");
+    const leadsData = await getLeads();
+    const allLeads = leadsData.leads;
+    
+    // Filter leads by user
+    const userLeads = allLeads.filter(lead => lead.addedBy === userId);
+    
+    // Calculate date range based on period
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    
+    let startDate, endDate;
+    
+    switch (period) {
+      case 'today':
+        startDate = today;
+        endDate = new Date(today.getTime() + 24 * 60 * 60 * 1000);
+        break;
+      case 'yesterday':
+        startDate = new Date(today.getTime() - 24 * 60 * 60 * 1000);
+        endDate = today;
+        break;
+      case 'week':
+        const weekStart = new Date(today);
+        weekStart.setDate(today.getDate() - today.getDay());
+        startDate = weekStart;
+        endDate = new Date(weekStart.getTime() + 7 * 24 * 60 * 60 * 1000);
+        break;
+      case 'month':
+        startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+        endDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+        break;
+      default:
+        startDate = today;
+        endDate = new Date(today.getTime() + 24 * 60 * 60 * 1000);
+    }
+    
+    // Filter leads by date range
+    const filteredLeads = userLeads.filter(lead => {
+      const leadDate = new Date(lead.createdAt);
+      return leadDate >= startDate && leadDate < endDate;
+    });
+    
+    // Sort by creation date (most recent first)
+    return filteredLeads.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  } catch (error) {
+    // Fallback data
+    return [];
+  }

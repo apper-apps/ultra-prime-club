@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import Chart from "react-apexcharts";
 import ApperIcon from "@/components/ApperIcon";
-import Card from "@/components/atoms/Card";
 import Button from "@/components/atoms/Button";
+import Card from "@/components/atoms/Card";
 import Error from "@/components/ui/Error";
 import Loading from "@/components/ui/Loading";
+import Analytics from "@/components/pages/Analytics";
 import Pipeline from "@/components/pages/Pipeline";
 import Leads from "@/components/pages/Leads";
 import MetricCard from "@/components/molecules/MetricCard";
-import Chart from "react-apexcharts";
 import { 
   getDashboardMetrics, 
   getPendingFollowUps, 
@@ -19,7 +20,8 @@ import {
   getSalesFunnelAnalysis,
   getTeamPerformanceRankings,
   getRevenueTrendsData,
-  getDetailedRecentActivity
+  getDetailedRecentActivity,
+  getUserLeadsReport
 } from "@/services/api/dashboardService";
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -29,12 +31,15 @@ const Dashboard = () => {
   const [pendingFollowUps, setPendingFollowUps] = useState([]);
   const [leadChart, setLeadChart] = useState(null);
   const [salesFunnel, setSalesFunnel] = useState(null);
-  const [teamPerformance, setTeamPerformance] = useState([]);
+const [teamPerformance, setTeamPerformance] = useState([]);
   const [revenueTrends, setRevenueTrends] = useState(null);
   const [detailedActivity, setDetailedActivity] = useState([]);
+  const [userLeads, setUserLeads] = useState([]);
+  const [selectedPeriod, setSelectedPeriod] = useState('today');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-const loadDashboardData = async () => {
+const [error, setError] = useState("");
+
+  const loadDashboardData = async () => {
     try {
       setLoading(true);
       setError("");
@@ -48,7 +53,8 @@ const loadDashboardData = async () => {
         salesFunnelData,
         teamPerformanceData,
         revenueTrendsData,
-        detailedActivityData
+        detailedActivityData,
+        userLeadsData
       ] = await Promise.all([
         getDashboardMetrics(),
         getRecentActivity(),
@@ -58,7 +64,8 @@ const loadDashboardData = async () => {
         getSalesFunnelAnalysis(),
         getTeamPerformanceRankings(),
         getRevenueTrendsData(),
-        getDetailedRecentActivity()
+        getDetailedRecentActivity(),
+        getUserLeadsReport(1, selectedPeriod) // Shashank Sharma's ID
       ]);
       
       setMetrics(metricsData);
@@ -67,13 +74,24 @@ const loadDashboardData = async () => {
       setPendingFollowUps(followUpsData);
       setLeadChart(leadChartData);
       setSalesFunnel(salesFunnelData);
-      setTeamPerformance(teamPerformanceData);
+setTeamPerformance(teamPerformanceData);
       setRevenueTrends(revenueTrendsData);
       setDetailedActivity(detailedActivityData);
+      setUserLeads(userLeadsData);
     } catch (err) {
       setError("Failed to load dashboard data");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePeriodChange = async (period) => {
+    setSelectedPeriod(period);
+    try {
+      const userLeadsData = await getUserLeadsReport(1, period); // Shashank Sharma's ID
+      setUserLeads(userLeadsData);
+    } catch (err) {
+      console.error("Failed to load user leads:", err);
     }
   };
 
@@ -237,11 +255,70 @@ const loadDashboardData = async () => {
               series={revenueTrends.series}
               type="line"
               height={280}
-            />
+/>
           )}
         </Card>
       </div>
 
+      {/* Shashank Sharma Report */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900">Shashank Sharma</h3>
+              <p className="text-sm text-gray-600">Lead performance report</p>
+            </div>
+            <ApperIcon name="User" size={20} className="text-primary-600" />
+          </div>
+          
+          {/* Time Period Selector */}
+          <div className="flex flex-wrap gap-2 mb-6">
+            {['today', 'yesterday', 'week', 'month'].map((period) => (
+              <Button
+                key={period}
+                variant={selectedPeriod === period ? "default" : "outline"}
+                size="sm"
+                onClick={() => handlePeriodChange(period)}
+                className="text-xs"
+              >
+                {period === 'today' ? 'Today' : 
+                 period === 'yesterday' ? 'Yesterday' : 
+                 period === 'week' ? 'This Week' : 'This Month'}
+              </Button>
+            ))}
+          </div>
+
+          {/* Leads List */}
+          <div className="space-y-3 max-h-80 overflow-y-auto">
+            {userLeads.length > 0 ? userLeads.map((lead, index) => (
+              <motion.div
+                key={lead.Id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <div className="flex-1">
+                  <div className="font-medium text-gray-900 text-sm">
+                    {lead.websiteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+                  </div>
+                  <div className="text-xs text-gray-500">{lead.category}</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-xs text-gray-500">
+                    {new Date(lead.createdAt).toLocaleDateString()}
+                  </div>
+                </div>
+              </motion.div>
+            )) : (
+              <div className="text-center text-gray-500 py-8">
+                <ApperIcon name="FileText" size={48} className="mx-auto mb-3 text-gray-300" />
+                <p>No leads for selected period</p>
+              </div>
+            )}
+          </div>
+        </Card>
+      </div>
       {/* Recent Activity & Quick Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="p-6">
