@@ -1,7 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import { motion } from "framer-motion";
 import React, { Component } from "react";
-import Team from "@/components/pages/Team";
 import Layout from "@/components/organisms/Layout";
 import Error from "@/components/ui/Error";
 import Leaderboard from "@/components/pages/Leaderboard";
@@ -115,7 +114,7 @@ class ErrorBoundary extends Component {
                 Reload Page
 </button>
             </div>
-            {(import.meta.env?.DEV || (typeof process !== 'undefined' && process.env?.NODE_ENV === 'development')) && this.state.error && (
+            {import.meta.env?.DEV && this.state.error && (
               <details className="mt-4 text-left">
                 <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700">
                   Error Details
@@ -151,9 +150,9 @@ function App() {
           <Route path="/leads" element={
             <motion.div
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
->
+            >
               <Leads />
             </motion.div>
           } />
@@ -197,18 +196,9 @@ function App() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
+transition={{ duration: 0.3 }}
             >
               <Leaderboard />
-            </motion.div>
-} />
-          <Route path="/team" element={
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Team />
             </motion.div>
           } />
         </Routes>
