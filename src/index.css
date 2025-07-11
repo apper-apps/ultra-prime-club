@@ -94,3 +94,13 @@
 .empty-row .opacity-60 {
   opacity: 0.6;
 }
+
+/* Top scrollbar styles */
+.top-scrollbar {
+  border-bottom: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+}
+
+.top-scrollbar-content {
+  pointer-events: none;
+}
