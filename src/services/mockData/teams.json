@@ -9,7 +9,7 @@
     "joinDate": "2023-01-15T00:00:00Z",
     "lastActive": "2024-01-15T10:30:00Z",
     "status": "Active",
-    "avatar": "https://ui-avatars.com/api/?name=John+Smith&background=7C3AED&color=fff",
+"avatar": null,
     "phone": "+1 (555) 123-4567",
     "location": "New York, NY"
   },
@@ -23,7 +23,7 @@
     "joinDate": "2023-02-20T00:00:00Z",
     "lastActive": "2024-01-15T09:15:00Z",
     "status": "Active",
-    "avatar": "https://ui-avatars.com/api/?name=Sarah+Johnson&background=10B981&color=fff",
+"avatar": null,
     "phone": "+1 (555) 234-5678",
     "location": "San Francisco, CA"
   },
@@ -37,7 +37,7 @@
     "joinDate": "2023-03-10T00:00:00Z",
     "lastActive": "2024-01-15T08:45:00Z",
     "status": "Active",
-    "avatar": "https://ui-avatars.com/api/?name=Mike+Davis&background=F59E0B&color=fff",
+"avatar": null,
     "phone": "+1 (555) 345-6789",
     "location": "Austin, TX"
   },
@@ -51,7 +51,7 @@
     "joinDate": "2023-04-05T00:00:00Z",
     "lastActive": "2024-01-14T16:20:00Z",
     "status": "Active",
-    "avatar": "https://ui-avatars.com/api/?name=Emily+Chen&background=EF4444&color=fff",
+"avatar": null,
     "phone": "+1 (555) 456-7890",
     "location": "Seattle, WA"
   },
@@ -65,7 +65,7 @@
     "joinDate": "2023-05-12T00:00:00Z",
     "lastActive": "2024-01-15T07:30:00Z",
     "status": "Inactive",
-    "avatar": "https://ui-avatars.com/api/?name=David+Wilson&background=6B7280&color=fff",
+"avatar": null,
     "phone": "+1 (555) 567-8901",
     "location": "Chicago, IL"
   },
@@ -79,7 +79,7 @@
     "joinDate": "2023-06-18T00:00:00Z",
     "lastActive": "2024-01-15T11:00:00Z",
     "status": "Active",
-    "avatar": "https://ui-avatars.com/api/?name=Lisa+Anderson&background=8B5CF6&color=fff",
+"avatar": null,
     "phone": "+1 (555) 678-9012",
     "location": "Los Angeles, CA"
   },
@@ -93,7 +93,7 @@
     "joinDate": "2023-07-22T00:00:00Z",
     "lastActive": "2024-01-15T09:45:00Z",
     "status": "Active",
-    "avatar": "https://ui-avatars.com/api/?name=Tom+Rodriguez&background=059669&color=fff",
+"avatar": null,
     "phone": "+1 (555) 789-0123",
     "location": "Miami, FL"
   },
@@ -107,7 +107,7 @@
     "joinDate": "2023-08-30T00:00:00Z",
     "lastActive": "2024-01-15T08:15:00Z",
     "status": "Active",
-    "avatar": "https://ui-avatars.com/api/?name=Jennifer+Taylor&background=DC2626&color=fff",
+"avatar": null,
     "phone": "+1 (555) 890-1234",
     "location": "Boston, MA"
   }

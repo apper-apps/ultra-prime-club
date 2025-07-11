@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { forwardRef, useState } from "react";
 import { cn } from "@/utils/cn";
 
 const Avatar = forwardRef(({ 
@@ -9,6 +9,9 @@ const Avatar = forwardRef(({
   className,
   ...props 
 }, ref) => {
+  const [imageError, setImageError] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
+  
   const sizes = {
     sm: "w-8 h-8 text-xs",
     md: "w-10 h-10 text-sm",
@@ -16,6 +19,15 @@ const Avatar = forwardRef(({
     xl: "w-16 h-16 text-lg"
   };
 
+  const handleImageError = () => {
+    setImageError(true);
+    setImageLoading(false);
+  };
+
+  const handleImageLoad = () => {
+    setImageLoading(false);
+    setImageError(false);
+  };
   const getInitials = (name) => {
     if (!name) return "?";
     return name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
@@ -31,13 +43,17 @@ const Avatar = forwardRef(({
       )}
       {...props}
     >
-      {src ? (
+{src && !imageError ? (
         <img 
           src={src} 
           alt={alt || name} 
           className="w-full h-full rounded-full object-cover"
+          onError={handleImageError}
+          onLoad={handleImageLoad}
+          style={{ display: imageLoading ? 'none' : 'block' }}
         />
-      ) : (
+      ) : null}
+      {(!src || imageError || imageLoading) && (
         <span>{getInitials(name)}</span>
       )}
     </div>
