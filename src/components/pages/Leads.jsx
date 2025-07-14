@@ -17,9 +17,11 @@ const Leads = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
-const [statusFilter, setStatusFilter] = useState("all");
+const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [fundingFilter, setFundingFilter] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [teamSizeFilter, setTeamSizeFilter] = useState("all");
   const [sortBy, setSortBy] = useState("websiteUrl");
   const [sortOrder, setSortOrder] = useState("desc");
   const [showAddForm, setShowAddForm] = useState(false);
@@ -594,7 +596,7 @@ const getStatusColor = (status) => {
     return colors[status] || "default";
   };
 
-  const filteredAndSortedData = data
+const filteredAndSortedData = data
     .filter(lead => {
       const matchesSearch = !searchTerm || 
         lead.websiteUrl.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -603,8 +605,10 @@ const getStatusColor = (status) => {
       
       const matchesStatus = statusFilter === "all" || lead.status === statusFilter;
       const matchesFunding = fundingFilter === "all" || lead.fundingType === fundingFilter;
+      const matchesCategory = categoryFilter === "all" || lead.category === categoryFilter;
+      const matchesTeamSize = teamSizeFilter === "all" || lead.teamSize === teamSizeFilter;
       
-      return matchesSearch && matchesStatus && matchesFunding;
+      return matchesSearch && matchesStatus && matchesFunding && matchesCategory && matchesTeamSize;
     })
 .sort((a, b) => {
       let aValue = a[sortBy];
@@ -687,7 +691,7 @@ const handleSort = (field) => {
                 <SearchBar
                     placeholder="Search by website, category, or team size..."
                     onSearch={setSearchTerm} />
-            </div>
+</div>
             <div className="flex flex-col sm:flex-row gap-2">
                 <select
                     value={statusFilter}
@@ -721,6 +725,24 @@ const handleSort = (field) => {
                     <option value="Series A">Series A</option>
                     <option value="Series B">Series B</option>
                     <option value="Series C">Series C</option>
+                </select>
+                <select
+                    value={categoryFilter}
+                    onChange={e => setCategoryFilter(e.target.value)}
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    <option value="all">All Categories</option>
+                    {categoryOptions.map(category => (
+                        <option key={category} value={category}>{category}</option>
+                    ))}
+                </select>
+                <select
+                    value={teamSizeFilter}
+                    onChange={e => setTeamSizeFilter(e.target.value)}
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+                    <option value="all">All Team Sizes</option>
+                    {teamSizeOptions.map(size => (
+                        <option key={size} value={size}>{size}</option>
+                    ))}
                 </select>
             </div>
         </div>
