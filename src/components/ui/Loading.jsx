@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import Card from "@/components/atoms/Card";
 
 const Loading = ({ type = "default" }) => {
@@ -60,13 +59,9 @@ const Loading = ({ type = "default" }) => {
     );
   }
 
-  return (
+return (
     <div className="flex items-center justify-center min-h-[200px]">
-      <motion.div
-        animate={{ rotate: 360 }}
-        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-        className="w-8 h-8 border-2 border-primary-600 border-t-transparent rounded-full"
-      />
+      <div className="w-8 h-8 border-2 border-primary-600 border-t-transparent rounded-full animate-spin" />
     </div>
   );
 };
