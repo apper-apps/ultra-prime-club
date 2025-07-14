@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Chart from "react-apexcharts";
 import ApperIcon from "@/components/ApperIcon";
-import Button from "@/components/atoms/Button";
 import Badge from "@/components/atoms/Badge";
+import Button from "@/components/atoms/Button";
 import Card from "@/components/atoms/Card";
 import Error from "@/components/ui/Error";
 import Loading from "@/components/ui/Loading";
@@ -12,18 +12,18 @@ import Analytics from "@/components/pages/Analytics";
 import Pipeline from "@/components/pages/Pipeline";
 import Leads from "@/components/pages/Leads";
 import MetricCard from "@/components/molecules/MetricCard";
+import { getSalesReps } from "@/services/api/salesRepService";
+import { getPendingFollowUps } from "@/services/api/leadsService";
 import { 
   getDashboardMetrics, 
-  getPendingFollowUps, 
+  getDetailedRecentActivity, 
+  getLeadPerformanceChart, 
   getRecentActivity, 
-  getTodaysMeetings,
-  getLeadPerformanceChart,
-  getTeamPerformanceRankings,
-  getRevenueTrendsData,
-  getDetailedRecentActivity,
-getUserLeadsReport
+  getRevenueTrendsData, 
+  getTeamPerformanceRankings, 
+  getTodaysMeetings, 
+  getUserLeadsReport 
 } from "@/services/api/dashboardService";
-import { getAllSalesReps } from "@/services/api/salesRepService";
 const Dashboard = () => {
   const navigate = useNavigate();
   const [metrics, setMetrics] = useState([]);
@@ -42,7 +42,7 @@ const [detailedActivity, setDetailedActivity] = useState([]);
 const [error, setError] = useState("");
 const loadSalesReps = async () => {
     try {
-      const salesRepsData = await getAllSalesReps();
+      const salesRepsData = await getSalesReps();
       setSalesReps(salesRepsData);
       // Set Shashank Sharma as default selected rep
       const shashankRep = salesRepsData.find(rep => rep.name === "Shashank Sharma");
