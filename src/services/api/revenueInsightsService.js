@@ -259,6 +259,129 @@ export default {
   getDealsWonCount,
   getNewOpportunities,
   getRevenueTrendsChart,
-  getFunnelProgressionChart,
-  getAllRevenueInsights
+getAllRevenueInsights
+};
+
+// Get expected revenue vs goal for 2025
+export const getExpectedRevenueVsGoal = async () => {
+  await simulateAPICall();
+  
+  const currentYearDeals = filterDealsByYear(dealsData, CURRENT_YEAR);
+  const expectedRevenue = currentYearDeals.reduce((sum, deal) => sum + (deal.value || 0), 0);
+  const revenueGoal = 2000000; // $2M goal for 2025
+  
+  const achievementPercentage = ((expectedRevenue / revenueGoal) * 100).toFixed(1);
+  
+  return {
+    expected: expectedRevenue,
+    goal: revenueGoal,
+    achievementPercentage: `${achievementPercentage}%`,
+    remaining: Math.max(0, revenueGoal - expectedRevenue),
+    status: expectedRevenue >= revenueGoal ? 'achieved' : 'in-progress'
+  };
+};
+
+// Get revenue by quarter for 2025
+export const getRevenueByQuarter = async () => {
+  await simulateAPICall();
+  
+  const currentYearDeals = filterDealsByYear(dealsData, CURRENT_YEAR);
+  
+  const quarterlyRevenue = [
+    { quarter: 'Q1', months: [0, 1, 2] },
+    { quarter: 'Q2', months: [3, 4, 5] },
+    { quarter: 'Q3', months: [6, 7, 8] },
+    { quarter: 'Q4', months: [9, 10, 11] }
+  ].map(q => {
+    const revenue = currentYearDeals
+      .filter(deal => {
+        const dealMonth = new Date(deal.createdAt).getMonth();
+        return q.months.includes(dealMonth) && deal.stage === 'Closed';
+      })
+      .reduce((sum, deal) => sum + deal.value, 0);
+    
+    return {
+      quarter: q.quarter,
+      revenue: revenue
+    };
+  });
+  
+  return {
+    categories: quarterlyRevenue.map(q => q.quarter),
+    series: [{
+      name: 'Revenue',
+      data: quarterlyRevenue.map(q => q.revenue)
+    }],
+    quarters: quarterlyRevenue
+  };
+};
+
+// Get top earning accounts for 2025
+export const getTopEarningAccounts = async () => {
+  await simulateAPICall();
+  
+  const currentYearDeals = filterDealsByYear(dealsData, CURRENT_YEAR)
+    .filter(deal => deal.stage === 'Closed');
+  
+  const accountRevenue = currentYearDeals.reduce((acc, deal) => {
+    const accountName = deal.name || 'Unknown Account';
+    acc[accountName] = (acc[accountName] || 0) + deal.value;
+    return acc;
+  }, {});
+  
+  const topAccounts = Object.entries(accountRevenue)
+    .map(([name, revenue]) => ({ name, revenue }))
+    .sort((a, b) => b.revenue - a.revenue)
+    .slice(0, 5);
+  
+  return topAccounts;
+};
+
+// Get top lead sources for 2025
+export const getTopLeadSources = async () => {
+  await simulateAPICall();
+  
+  const currentYearDeals = filterDealsByYear(dealsData, CURRENT_YEAR);
+  
+  // Mock lead sources based on deal patterns
+  const leadSources = {
+    'Website': Math.floor(currentYearDeals.length * 0.35),
+    'Referral': Math.floor(currentYearDeals.length * 0.25),
+    'Cold Email': Math.floor(currentYearDeals.length * 0.20),
+    'Social Media': Math.floor(currentYearDeals.length * 0.15),
+    'Events': Math.floor(currentYearDeals.length * 0.05)
+  };
+  
+  return Object.entries(leadSources)
+    .map(([source, count]) => ({ source, count }))
+    .sort((a, b) => b.count - a.count);
+};
+
+// Get top lost reasons for 2025
+export const getTopLostReasons = async () => {
+  await simulateAPICall();
+  
+  const currentYearDeals = filterDealsByYear(dealsData, CURRENT_YEAR);
+  const lostDeals = currentYearDeals.filter(deal => 
+    deal.stage === 'Rejected' || deal.stage === 'Closed Lost'
+  );
+  
+  // Mock lost reasons based on common patterns
+  const lostReasons = {
+    'Budget Constraints': Math.floor(lostDeals.length * 0.30),
+    'Timing Issues': Math.floor(lostDeals.length * 0.25),
+    'Competitor Chosen': Math.floor(lostDeals.length * 0.20),
+    'No Decision Made': Math.floor(lostDeals.length * 0.15),
+    'Internal Changes': Math.floor(lostDeals.length * 0.10)
+  };
+  
+  const totalLost = Object.values(lostReasons).reduce((sum, count) => sum + count, 0);
+  
+  return Object.entries(lostReasons)
+    .map(([reason, count]) => ({
+      reason,
+      count,
+      percentage: totalLost > 0 ? ((count / totalLost) * 100).toFixed(1) : '0.0'
+    }))
+    .sort((a, b) => b.count - a.count);
 };
