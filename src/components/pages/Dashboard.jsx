@@ -232,8 +232,39 @@ useEffect(() => {
 </Card>
       </div>
 
-{/* Daily Leads Report */}
+{/* Team Performance & Daily Leads Report */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900">Team Performance</h3>
+              <p className="text-sm text-gray-600">Top performing sales reps</p>
+            </div>
+            <ApperIcon name="Users" size={20} className="text-primary-600" />
+          </div>
+          <div className="space-y-4">
+            {teamPerformance.slice(0, 5).map((rep, index) => (
+              <div key={rep.Id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-700 rounded-full flex items-center justify-center">
+                    <span className="text-white text-sm font-semibold">
+                      {rep.name.charAt(0)}
+                    </span>
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900">{rep.name}</p>
+                    <p className="text-xs text-gray-500">{rep.weekLeads} leads this week</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="font-semibold text-primary-600">{rep.totalLeads}</p>
+                  <p className="text-xs text-gray-500">total</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+
         <Card className={`p-6 border-2 transition-colors ${
           dailyUrls.length >= 10 ? 'border-green-500' : 'border-red-500'
         }`}>
@@ -356,39 +387,9 @@ useEffect(() => {
           </div>
         </Card>
       </div>
-      {/* Team Performance & Revenue Trends */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900">Team Performance</h3>
-              <p className="text-sm text-gray-600">Top performing sales reps</p>
-            </div>
-            <ApperIcon name="Users" size={20} className="text-primary-600" />
-          </div>
-          <div className="space-y-4">
-            {teamPerformance.slice(0, 5).map((rep, index) => (
-              <div key={rep.Id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-700 rounded-full flex items-center justify-center">
-                    <span className="text-white text-sm font-semibold">
-                      {rep.name.charAt(0)}
-                    </span>
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-900">{rep.name}</p>
-                    <p className="text-xs text-gray-500">{rep.weekLeads} leads this week</p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="font-semibold text-primary-600">{rep.totalLeads}</p>
-                  <p className="text-xs text-gray-500">total</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
 
+      {/* Revenue Trends - Full Width */}
+      <div className="grid grid-cols-1 gap-6">
         <Card className="p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
@@ -412,32 +413,39 @@ useEffect(() => {
               series={revenueTrends.series}
               type="line"
               height={280}
-/>
+            />
           )}
         </Card>
-</div>
-      {/* Recent Activity & Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      </div>
+
+      {/* Meetings Today & Pending Follow-ups */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
-          <div className="space-y-3 max-h-80 overflow-y-auto">
-            {detailedActivity.map((item, index) => (
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Meetings Today</h3>
+          <div className="space-y-3">
+            {meetings.length > 0 ? meetings.map((meeting, index) => (
               <motion.div
-                key={item.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
+                key={meeting.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                <div className={`w-2 h-2 rounded-full ${
-                  item.type === "meeting" ? "bg-blue-500" : 
-                  item.type === "deal" ? "bg-green-500" : "bg-yellow-500"
-                }`} />
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-900">{item.title}</p>
-                  <p className="text-xs text-gray-500">{item.time}</p>
+                className="p-3 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <div className="font-medium text-gray-900 text-sm">{meeting.title}</div>
+                    <div className="text-xs text-gray-500">{meeting.client}</div>
+                  </div>
+                  <div className="text-xs font-medium text-primary-600">
+                    {meeting.time}
+                  </div>
                 </div>
               </motion.div>
-            ))}
+            )) : (
+              <div className="text-center text-gray-500 py-8">
+                <ApperIcon name="Calendar" size={48} className="mx-auto mb-3 text-gray-300" />
+                <p>No meetings today</p>
+              </div>
+            )}
           </div>
         </Card>
 
@@ -471,33 +479,30 @@ useEffect(() => {
             )}
           </div>
         </Card>
+      </div>
 
+      {/* Recent Activity */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Meetings Today</h3>
-          <div className="space-y-3">
-            {meetings.length > 0 ? meetings.map((meeting, index) => (
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
+          <div className="space-y-3 max-h-80 overflow-y-auto">
+            {detailedActivity.map((item, index) => (
               <motion.div
-                key={meeting.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
+                key={item.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="p-3 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <div className="font-medium text-gray-900 text-sm">{meeting.title}</div>
-                    <div className="text-xs text-gray-500">{meeting.client}</div>
-                  </div>
-                  <div className="text-xs font-medium text-primary-600">
-                    {meeting.time}
-                  </div>
+                className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                <div className={`w-2 h-2 rounded-full ${
+                  item.type === "meeting" ? "bg-blue-500" : 
+                  item.type === "deal" ? "bg-green-500" : "bg-yellow-500"
+                }`} />
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-gray-900">{item.title}</p>
+                  <p className="text-xs text-gray-500">{item.time}</p>
                 </div>
               </motion.div>
-            )) : (
-              <div className="text-center text-gray-500 py-8">
-                <ApperIcon name="Calendar" size={48} className="mx-auto mb-3 text-gray-300" />
-                <p>No meetings today</p>
-              </div>
-            )}
+            ))}
           </div>
         </Card>
       </div>
