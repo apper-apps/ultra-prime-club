@@ -246,8 +246,8 @@ const loadSalesReps = async () => {
 </Card>
       </div>
 
-      {/* Daily Leads Report */}
-      <div className="grid grid-cols-1 gap-6">
+{/* Daily Leads Report */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className={`p-6 border-2 transition-colors ${
           dailyUrls.length >= 10 ? 'border-green-500' : 'border-red-500'
         }`}>
