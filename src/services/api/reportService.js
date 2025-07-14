@@ -133,11 +133,44 @@ const getCategorySummary = (data) => {
   return summary;
 };
 
+// Get daily website URLs for a specific sales rep
+export const getDailyWebsiteUrls = async (salesRepId, date) => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 300));
+  
+  const targetDate = new Date(date);
+  let filteredData = [...leadsData];
+  
+  // Filter by sales rep
+  if (salesRepId) {
+    filteredData = filteredData.filter(lead => lead.addedBy === salesRepId);
+  }
+  
+  // Filter by specific date
+  if (date) {
+    filteredData = filteredData.filter(lead => {
+      const leadDate = new Date(lead.createdAt);
+      return leadDate.toDateString() === targetDate.toDateString();
+    });
+  }
+  
+  // Clean website URLs and return with performance indicator
+  const cleanedData = filteredData.map(lead => ({
+    ...lead,
+    websiteUrl: cleanWebsiteUrl(lead.websiteUrl)
+  }));
+  
+  return cleanedData;
+};
+
+// Re-export sales reps for easy access
+export { getSalesReps } from './salesRepService';
+
 // Export lead data for external use (CSV, etc.)
 export const exportWebsiteUrlData = async (filters = {}) => {
   const result = await getWebsiteUrlActivity(filters);
   
-return result.data.map(lead => ({
+  return result.data.map(lead => ({
     'Website URL': cleanWebsiteUrl(lead.websiteUrl),
     'Category': lead.category,
     'Team Size': lead.teamSize,
