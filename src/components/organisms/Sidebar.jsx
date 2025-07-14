@@ -11,9 +11,9 @@ const navigation = [
     { to: "/leads", icon: "Building2", label: "Leads" },
     { to: "/hotlist", icon: "Flame", label: "Hotlist" },
     { to: "/pipeline", icon: "Kanban", label: "Deal Pipeline" },
-    { to: "/calendar", icon: "Calendar", label: "Calendar" },
+{ to: "/calendar", icon: "Calendar", label: "Calendar" },
     { to: "/analytics", icon: "TrendingUp", label: "Analytics" },
-    { to: "/revenue-insights", icon: "DollarSign", label: "Revenue Insights" },
+    { to: "/revenue-insights", icon: "DollarSign", label: "Insights" },
     { to: "/leaderboard", icon: "Trophy", label: "Leaderboard" }
   ];
 

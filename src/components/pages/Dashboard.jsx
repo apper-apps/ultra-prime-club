@@ -129,10 +129,10 @@ setMetrics(metricsData);
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-900">Revenue Analytics 2025</h2>
-        <div className="flex gap-3">
+<div className="flex gap-3">
           <Button variant="outline" onClick={() => navigate('/revenue-insights')}>
             <ApperIcon name="TrendingUp" size={16} className="mr-2" />
-            Revenue Insights
+            Insights
           </Button>
           <Button variant="outline" onClick={() => navigate('/analytics')}>
             <ApperIcon name="BarChart3" size={16} className="mr-2" />

@@ -73,13 +73,12 @@ const RevenueInsights = () => {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
+<div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Revenue Insights</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Insights</h1>
           <p className="text-gray-600 mt-1">Track sales performance, lead generation, and funnel progression for 2025.</p>
         </div>
       </div>
-
       {/* Key Metrics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         {revenueOverview && (
