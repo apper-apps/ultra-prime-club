@@ -206,64 +206,6 @@ img {
   }
 }
 
-/* Enhanced Empty State Animations */
-@keyframes float-particles {
-  0%, 100% {
-    transform: translateY(0px) translateX(0px);
-  }
-  25% {
-    transform: translateY(-10px) translateX(5px);
-  }
-  50% {
-    transform: translateY(-5px) translateX(-5px);
-  }
-  75% {
-    transform: translateY(-15px) translateX(10px);
-  }
-}
-
-@keyframes gradient-pulse {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-@keyframes icon-float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
-}
-
-.animate-gradient-pulse {
-  background-size: 400% 400%;
-  animation: gradient-pulse 6s ease infinite;
-}
-
-.animate-float-particles {
-  animation: float-particles 4s ease-in-out infinite;
-}
-
-.animate-icon-float {
-  animation: icon-float 3s ease-in-out infinite;
-}
-
-/* Enhanced Empty State Styles */
-.empty-state-glow {
-  box-shadow: 0 0 20px rgba(139, 92, 246, 0.1);
-}
-
-.empty-state-card {
-  backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
 /* Ensure images are ready for viewport capture */
 .image-ready {
   opacity: 1;

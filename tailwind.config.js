@@ -44,34 +44,9 @@ export default {
           900: '#111827',
         },
       },
-fontFamily: {
+      fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
         display: ['Plus Jakarta Sans', 'system-ui', '-apple-system', 'sans-serif'],
-      },
-      animation: {
-        'gradient-pulse': 'gradient-pulse 6s ease infinite',
-        'float-particles': 'float-particles 4s ease-in-out infinite',
-        'icon-float': 'icon-float 3s ease-in-out infinite',
-        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-      },
-      keyframes: {
-        'gradient-pulse': {
-          '0%, 100%': { 'background-position': '0% 50%' },
-          '50%': { 'background-position': '100% 50%' },
-        },
-        'float-particles': {
-          '0%, 100%': { transform: 'translateY(0px) translateX(0px)' },
-          '25%': { transform: 'translateY(-10px) translateX(5px)' },
-          '50%': { transform: 'translateY(-5px) translateX(-5px)' },
-          '75%': { transform: 'translateY(-15px) translateX(10px)' },
-        },
-        'icon-float': {
-          '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-8px)' },
-        },
-      },
-      backgroundSize: {
-        'gradient': '400% 400%',
       },
     },
   },
