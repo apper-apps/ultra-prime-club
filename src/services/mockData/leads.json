@@ -16,7 +16,7 @@
 {
     "Id": 2,
     "websiteUrl": "https://canva.com",
-    "teamSize": "501-1000",
+"teamSize": "500+",
     "arr": 2500000,
     "category": "Graphic Design",
     "linkedinUrl": "https://linkedin.com/company/canva",
@@ -72,7 +72,7 @@
 {
     "Id": 6,
     "websiteUrl": "https://slack.com",
-    "teamSize": "501-1000",
+"teamSize": "500+",
     "arr": 4200000,
     "category": "Team Communication",
     "linkedinUrl": "https://linkedin.com/company/slack",
@@ -140,7 +140,7 @@
   {
     "Id": 11,
     "websiteUrl": "https://mailchimp.com",
-    "teamSize": "501-1000",
+"teamSize": "500+",
 "arr": 3200000,
     "category": "Email Marketing",
     "linkedinUrl": "https://linkedin.com/company/mailchimp",
@@ -192,7 +192,7 @@
   {
     "Id": 15,
     "websiteUrl": "https://gitlab.com",
-    "teamSize": "501-1000",
+"teamSize": "500+",
 "arr": 3800000,
     "category": "Code Repository",
     "linkedinUrl": "https://linkedin.com/company/gitlab",
@@ -283,7 +283,7 @@
   {
     "Id": 22,
     "websiteUrl": "https://outreach.io",
-    "teamSize": "501-1000",
+"teamSize": "500+",
 "arr": 2800000,
     "category": "Sales Enablement Platform",
     "linkedinUrl": "https://linkedin.com/company/outreach",
@@ -361,7 +361,7 @@
   {
     "Id": 28,
     "websiteUrl": "https://intercom.com",
-    "teamSize": "501-1000",
+"teamSize": "500+",
 "arr": 2200000,
     "category": "Customer Support Platform",
     "linkedinUrl": "https://linkedin.com/company/intercom",
@@ -465,7 +465,7 @@
   {
     "Id": 36,
     "websiteUrl": "https://freshworks.com",
-    "teamSize": "501-1000",
+"teamSize": "500+",
     "arr": 3500000,
     "category": "CRM",
     "linkedinUrl": "https://linkedin.com/company/freshworks",

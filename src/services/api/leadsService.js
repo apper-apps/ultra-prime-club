@@ -102,7 +102,7 @@ export const createLead = async (leadData) => {
   const maxId = Math.max(...leads.map(l => l.Id), 0);
   const newLead = {
     websiteUrl: leadData.websiteUrl,
-    teamSize: leadData.teamSize || "1-10",
+teamSize: leadData.teamSize || "1-3",
     arr: leadData.arr || 0,
     category: leadData.category || "Other",
     linkedinUrl: leadData.linkedinUrl || "",
