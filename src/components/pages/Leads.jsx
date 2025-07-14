@@ -1039,14 +1039,38 @@ emptyRow => <tr key={`empty-${emptyRow.Id}`} className="hover:bg-gray-50 empty-r
                                     onCreateCategory={handleCreateCategory}
                                 />
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap min-w-[100px]">
-                                <a
-                                    href={lead.linkedinUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-primary-600 hover:text-primary-800 inline-block p-1">
-                                    <ApperIcon name="Linkedin" size={16} />
-                                </a>
+<td className="px-6 py-4 whitespace-nowrap min-w-[100px]">
+                                <div className="flex items-center gap-2">
+                                    <Input
+                                        type="url"
+                                        value={lead.linkedinUrl}
+                                        onChange={e => {
+                                            setData(prevData => prevData.map(l => l.Id === lead.Id ? {
+                                                ...l,
+                                                linkedinUrl: e.target.value
+                                            } : l));
+
+                                            handleFieldUpdateDebounced(lead.Id, "linkedinUrl", e.target.value);
+                                        }}
+                                        onBlur={e => handleFieldUpdate(lead.Id, "linkedinUrl", e.target.value)}
+                                        onKeyDown={e => {
+                                            if (e.key === "Enter") {
+                                                handleFieldUpdate(lead.Id, "linkedinUrl", e.target.value);
+                                            }
+                                        }}
+                                        placeholder="LinkedIn URL..."
+                                        className="border-0 bg-transparent p-1 hover:bg-gray-50 focus:bg-white focus:border-gray-300 w-full placeholder-gray-400 text-sm flex-1" />
+                                    {lead.linkedinUrl && (
+                                        <a
+                                            href={lead.linkedinUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-primary-600 hover:text-primary-800 flex-shrink-0 p-1 hover:bg-gray-100 rounded"
+                                            title="Visit LinkedIn profile">
+                                            <ApperIcon name="Linkedin" size={16} />
+                                        </a>
+                                    )}
+                                </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap min-w-[150px]">
                                 <div className="relative">
