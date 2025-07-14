@@ -21,8 +21,9 @@ import {
   getTeamPerformanceRankings,
   getRevenueTrendsData,
   getDetailedRecentActivity,
-  getUserLeadsReport
+getUserLeadsReport
 } from "@/services/api/dashboardService";
+import { getAllSalesReps } from "@/services/api/salesRepService";
 const Dashboard = () => {
   const navigate = useNavigate();
   const [metrics, setMetrics] = useState([]);
@@ -32,18 +33,35 @@ const [pendingFollowUps, setPendingFollowUps] = useState([]);
   const [leadChart, setLeadChart] = useState(null);
   const [teamPerformance, setTeamPerformance] = useState([]);
   const [revenueTrends, setRevenueTrends] = useState(null);
-  const [detailedActivity, setDetailedActivity] = useState([]);
+const [detailedActivity, setDetailedActivity] = useState([]);
   const [userLeads, setUserLeads] = useState([]);
+  const [salesReps, setSalesReps] = useState([]);
+  const [selectedRep, setSelectedRep] = useState(null);
   const [selectedPeriod, setSelectedPeriod] = useState('today');
   const [loading, setLoading] = useState(true);
 const [error, setError] = useState("");
+const loadSalesReps = async () => {
+    try {
+      const salesRepsData = await getAllSalesReps();
+      setSalesReps(salesRepsData);
+      // Set Shashank Sharma as default selected rep
+      const shashankRep = salesRepsData.find(rep => rep.name === "Shashank Sharma");
+      setSelectedRep(shashankRep || salesRepsData[0]);
+    } catch (err) {
+      console.error("Failed to load sales reps:", err);
+      setError("Failed to load sales representatives");
+    }
+  };
 
   const loadDashboardData = async () => {
     try {
       setLoading(true);
       setError("");
       
-const [
+      // First load sales reps
+      await loadSalesReps();
+      
+      const [
         metricsData, 
         activityData, 
         meetingsData, 
@@ -51,7 +69,7 @@ const [
         leadChartData,
         teamPerformanceData,
         revenueTrendsData,
-        detailedActivityData,
+detailedActivityData,
         userLeadsData
       ] = await Promise.all([
         getDashboardMetrics(),
@@ -62,7 +80,7 @@ const [
         getTeamPerformanceRankings(),
         getRevenueTrendsData(),
         getDetailedRecentActivity(),
-        getUserLeadsReport(1, selectedPeriod) // Shashank Sharma's ID
+        getUserLeadsReport(6, selectedPeriod) // Default to Shashank Sharma's ID
       ]);
       
 setMetrics(metricsData);
@@ -81,10 +99,35 @@ setMetrics(metricsData);
     }
   };
 
-  const handlePeriodChange = async (period) => {
+const handlePeriodChange = async (period) => {
     setSelectedPeriod(period);
+    if (selectedRep) {
+      try {
+        const userLeadsData = await getUserLeadsReport(selectedRep.Id, period);
+        setUserLeads(userLeadsData);
+      } catch (err) {
+        console.error("Failed to load user leads:", err);
+      }
+    }
+  };
+
+  const handleRepNavigation = async (direction) => {
+    if (!salesReps.length) return;
+    
+    const currentIndex = salesReps.findIndex(rep => rep.Id === selectedRep.Id);
+    let newIndex;
+    
+    if (direction === 'next') {
+      newIndex = (currentIndex + 1) % salesReps.length;
+    } else {
+      newIndex = (currentIndex - 1 + salesReps.length) % salesReps.length;
+    }
+    
+    const newRep = salesReps[newIndex];
+    setSelectedRep(newRep);
+    
     try {
-      const userLeadsData = await getUserLeadsReport(1, period); // Shashank Sharma's ID
+      const userLeadsData = await getUserLeadsReport(newRep.Id, selectedPeriod);
       setUserLeads(userLeadsData);
     } catch (err) {
       console.error("Failed to load user leads:", err);
@@ -230,16 +273,51 @@ setMetrics(metricsData);
         </Card>
       </div>
 
-      {/* Shashank Sharma Report */}
+{/* Sales Rep Performance Report */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">Shashank Sharma</h3>
+              <h3 className="text-lg font-semibold text-gray-900">Sales Rep Performance</h3>
               <p className="text-sm text-gray-600">Lead performance report</p>
             </div>
-            <ApperIcon name="User" size={20} className="text-primary-600" />
+            <ApperIcon name="Users" size={20} className="text-primary-600" />
           </div>
+          
+          {/* Sales Rep Selector */}
+          {selectedRep && (
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg mb-6">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleRepNavigation('prev')}
+                className="p-2"
+              >
+                <ApperIcon name="ChevronLeft" size={16} />
+              </Button>
+              
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-full flex items-center justify-center">
+                  <span className="text-white font-semibold">
+                    {selectedRep.name.charAt(0)}
+                  </span>
+                </div>
+                <div className="text-center">
+                  <p className="font-medium text-gray-900">{selectedRep.name}</p>
+                  <p className="text-xs text-gray-500">{selectedRep.leadsContacted} leads contacted</p>
+                </div>
+              </div>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleRepNavigation('next')}
+                className="p-2"
+              >
+                <ApperIcon name="ChevronRight" size={16} />
+              </Button>
+            </div>
+          )}
           
           {/* Time Period Selector */}
           <div className="flex flex-wrap gap-2 mb-6">
@@ -257,7 +335,8 @@ setMetrics(metricsData);
               </Button>
             ))}
           </div>
-{/* Leads List */}
+
+          {/* Leads List */}
           <div className="space-y-3 max-h-80 overflow-y-auto">
             {userLeads.length > 0 ? userLeads.map((lead, index) => {
               // Map status to badge variant
