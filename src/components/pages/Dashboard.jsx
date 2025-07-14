@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Chart from "react-apexcharts";
 import ApperIcon from "@/components/ApperIcon";
-import Badge from "@/components/atoms/Badge";
 import Button from "@/components/atoms/Button";
+import Badge from "@/components/atoms/Badge";
 import Card from "@/components/atoms/Card";
 import Error from "@/components/ui/Error";
 import Loading from "@/components/ui/Loading";
@@ -12,9 +12,9 @@ import Analytics from "@/components/pages/Analytics";
 import Pipeline from "@/components/pages/Pipeline";
 import Leads from "@/components/pages/Leads";
 import MetricCard from "@/components/molecules/MetricCard";
-import { getPendingFollowUps } from "@/services/api/leadsService";
 import { 
   getDashboardMetrics, 
+  getPendingFollowUps, 
   getRecentActivity, 
   getTodaysMeetings,
   getLeadPerformanceChart,
@@ -32,18 +32,12 @@ const [pendingFollowUps, setPendingFollowUps] = useState([]);
   const [leadChart, setLeadChart] = useState(null);
   const [teamPerformance, setTeamPerformance] = useState([]);
   const [revenueTrends, setRevenueTrends] = useState(null);
-const [detailedActivity, setDetailedActivity] = useState([]);
+  const [detailedActivity, setDetailedActivity] = useState([]);
   const [userLeads, setUserLeads] = useState([]);
   const [selectedPeriod, setSelectedPeriod] = useState('today');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  
-  // Missing revenue analytics state
-  const [revenueVsGoal, setRevenueVsGoal] = useState(null);
-  const [quarterlyRevenue, setQuarterlyRevenue] = useState(null);
-  const [topAccounts, setTopAccounts] = useState([]);
-  const [topLeadSources, setTopLeadSources] = useState([]);
-  const [topLostReasons, setTopLostReasons] = useState([]);
+const [error, setError] = useState("");
+
   const loadDashboardData = async () => {
     try {
       setLoading(true);
@@ -124,153 +118,6 @@ setMetrics(metricsData);
             color={metric.color}
             delay={index * 0.1} />)}
 </div>
-    
-{/* Revenue Analytics Dashboard */}
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">Revenue Analytics 2025</h2>
-<div className="flex gap-3">
-          <Button variant="outline" onClick={() => navigate('/revenue-insights')}>
-            <ApperIcon name="TrendingUp" size={16} className="mr-2" />
-            Insights
-          </Button>
-          <Button variant="outline" onClick={() => navigate('/analytics')}>
-            <ApperIcon name="BarChart3" size={16} className="mr-2" />
-            Analytics
-          </Button>
-        </div>
-      </div>
-
-      {/* Revenue Metrics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        {/* Expected Revenue vs Goal */}
-        <Card className="p-4">
-          <div className="flex items-center justify-between mb-2">
-            <h4 className="text-sm font-medium text-gray-600">Expected Revenue vs Goal</h4>
-            <ApperIcon name="Target" size={16} className="text-green-600" />
-          </div>
-          {revenueVsGoal && (
-            <div>
-              <p className="text-2xl font-bold text-gray-900">
-                ${(revenueVsGoal.expected / 1000000).toFixed(1)}M
-              </p>
-              <p className="text-sm text-gray-500">of ${(revenueVsGoal.goal / 1000000).toFixed(1)}M goal</p>
-              <div className="mt-2 bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-green-600 h-2 rounded-full"
-                  style={{ width: `${Math.min(100, parseFloat(revenueVsGoal.achievementPercentage))}%` }}
-                />
-              </div>
-              <p className="text-xs text-green-600 mt-1">{revenueVsGoal.achievementPercentage} achieved</p>
-            </div>
-          )}
-        </Card>
-
-        {/* Revenue by Quarter Chart */}
-        <Card className="p-4 md:col-span-2">
-          <div className="flex items-center justify-between mb-2">
-            <h4 className="text-sm font-medium text-gray-600">Revenue by Quarter</h4>
-            <ApperIcon name="BarChart3" size={16} className="text-blue-600" />
-          </div>
-          {quarterlyRevenue && (
-            <Chart
-              options={{
-                chart: { type: 'bar', height: 160, toolbar: { show: false } },
-                colors: ['#3B82F6'],
-                dataLabels: { enabled: false },
-                plotOptions: { bar: { columnWidth: '60%' } },
-                grid: { show: false },
-                xaxis: { categories: quarterlyRevenue.categories },
-                yaxis: { labels: { formatter: (val) => `$${(val/1000).toFixed(0)}K` } },
-                tooltip: { y: { formatter: (val) => `$${(val/1000).toFixed(0)}K` } }
-              }}
-              series={quarterlyRevenue.series}
-              type="bar"
-              height={160}
-            />
-          )}
-        </Card>
-
-        {/* Top Earning Accounts */}
-        <Card className="p-4 md:col-span-2">
-          <div className="flex items-center justify-between mb-2">
-            <h4 className="text-sm font-medium text-gray-600">Top 5 Earning Accounts</h4>
-            <ApperIcon name="Building" size={16} className="text-purple-600" />
-          </div>
-<div className="space-y-2">
-            {topAccounts?.slice(0, 5).map((account, index) => (
-              <div key={account.name} className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center">
-                    <span className="text-xs font-semibold text-purple-600">{index + 1}</span>
-                  </div>
-                  <span className="text-sm text-gray-900">{account.name}</span>
-                </div>
-                <span className="text-sm font-semibold text-gray-600">
-                  ${(account.revenue / 1000).toFixed(0)}K
-                </span>
-              </div>
-            ))}
-          </div>
-        </Card>
-      </div>
-
-      {/* Lead Sources and Lost Reasons */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Top Lead Sources */}
-        <Card className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h4 className="text-lg font-semibold text-gray-900">Top Lead Sources</h4>
-            <ApperIcon name="Users" size={20} className="text-blue-600" />
-          </div>
-<div className="space-y-3">
-            {topLeadSources?.map((source, index) => (
-              <div key={source.source} className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                    <span className="text-xs font-semibold text-blue-600">{index + 1}</span>
-                  </div>
-                  <span className="text-sm text-gray-900">{source.source}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-16 bg-gray-200 rounded-full h-2">
-<div 
-                      className="bg-blue-600 h-2 rounded-full"
-                      style={{ width: `${topLeadSources.length > 0 ? (source.count / Math.max(...topLeadSources.map(s => s.count))) * 100 : 0}%` }}
-                    />
-                  </div>
-                  <span className="text-sm font-semibold text-gray-600">{source.count}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
-
-        {/* Top Lost Reasons */}
-        <Card className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h4 className="text-lg font-semibold text-gray-900">Top Lost Reasons</h4>
-            <ApperIcon name="XCircle" size={20} className="text-red-600" />
-          </div>
-<div className="space-y-3">
-            {topLostReasons?.map((reason, index) => (
-              <div key={reason.reason} className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
-                    <span className="text-xs font-semibold text-red-600">{index + 1}</span>
-                  </div>
-                  <span className="text-sm text-gray-900">{reason.reason}</span>
-                </div>
-                <div className="text-right">
-                  <span className="text-sm font-semibold text-gray-600">{reason.count}</span>
-                  <span className="text-xs text-gray-500 ml-1">({reason.percentage}%)</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
-      </div>
-    </div>
     
     {/* Comprehensive Reports Dashboard */}
     <div className="space-y-6">
@@ -412,7 +259,7 @@ setMetrics(metricsData);
           </div>
 {/* Leads List */}
           <div className="space-y-3 max-h-80 overflow-y-auto">
-            {userLeads?.length > 0 ? userLeads.map((lead, index) => {
+            {userLeads.length > 0 ? userLeads.map((lead, index) => {
               // Map status to badge variant
               const getStatusVariant = (status) => {
                 switch (status) {
@@ -443,9 +290,9 @@ setMetrics(metricsData);
                   transition={{ delay: index * 0.1 }}
                   className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                 >
-<div className="flex-1">
+                  <div className="flex-1">
                     <div className="font-medium text-gray-900 text-sm">
-                      {lead.websiteUrl?.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+                      {lead.websiteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")}
                     </div>
                     <div className="text-xs text-gray-500">{lead.category}</div>
                   </div>
@@ -508,9 +355,9 @@ setMetrics(metricsData);
                 transition={{ delay: index * 0.1 }}
                 className="p-3 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all">
                 <div className="flex items-center justify-between">
-<div className="flex-1">
+                  <div className="flex-1">
                     <div className="font-medium text-gray-900 text-sm">
-                      {followUp.websiteUrl?.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+                      {followUp.websiteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")}
                     </div>
                     <div className="text-xs text-gray-500">{followUp.category}</div>
                   </div>
