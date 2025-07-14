@@ -97,11 +97,8 @@ export const createLead = async (leadData) => {
   if (existingLead) {
     throw new Error(`A lead with website URL "${leadData.websiteUrl}" already exists`);
   }
-  
 // Update history tracker for new lead
-  const normalizedUrl = leadData.websiteUrl.toLowerCase().replace(/\/$/, '');
   leadHistoryTracker.set(normalizedUrl, true);
-  
   const maxId = Math.max(...leads.map(l => l.Id), 0);
   const newLead = {
     websiteUrl: leadData.websiteUrl,
