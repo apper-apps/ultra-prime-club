@@ -109,17 +109,15 @@
   pointer-events: none;
 }
 
-/* Enhanced viewport stability and canvas error prevention */
+/* Viewport stability and canvas error prevention */
 html, body {
   min-height: 100vh;
   min-width: 100vw;
-  overflow-x: hidden;
 }
 
 #root {
   min-height: 100vh;
   min-width: 100%;
-  position: relative;
 }
 
 /* Ensure no elements have zero dimensions that could cause canvas errors */
@@ -127,92 +125,57 @@ html, body {
   min-height: 0;
 }
 
-*:not(script):not(style):not(meta):not(title):not(link):not(br):not(hr) {
+*:not(script):not(style):not(meta):not(title):not(link) {
   min-width: 0;
 }
 
-/* Prevent canvas rendering issues with enhanced protection */
+/* Prevent canvas rendering issues */
 canvas {
-  min-width: 1px !important;
-  min-height: 1px !important;
-  max-width: 100%;
-  max-height: 100%;
-}
-
-/* Ensure viewport capture targets are properly sized */
-.viewport-capture-ready {
-  min-width: 1px !important;
-  min-height: 1px !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-/* Enhanced loading state protection */
-.loading-viewport {
-  min-width: 100px !important;
-  min-height: 100px !important;
-  background-color: transparent;
-  position: relative;
-}
-
-/* Prevent zero-dimension elements during transitions */
-.transition-all, .transition-opacity, .transition-transform {
   min-width: 1px;
   min-height: 1px;
 }
 
-/* Ensure all containers have minimum dimensions */
-.container, .flex, .grid, .block, .inline-block {
-  min-width: 0;
-  min-height: 0;
+/* Ensure viewport capture targets are properly sized */
+.viewport-capture-ready {
+  min-width: 1px;
+  min-height: 1px;
+  visibility: visible;
 }
 
-/* Specific protection for common layout elements */
-div:not([style*="display: none"]):not([style*="visibility: hidden"]) {
-  min-width: 0;
-  min-height: 0;
+/* Loading state protection */
+.loading-viewport {
+  min-width: 100px;
+  min-height: 100px;
+  background-color: transparent;
 }
 
-/* Ensure elements are ready for viewport capture */
-.viewport-ready {
-  min-width: 1px !important;
-  min-height: 1px !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-/* Enhanced image loading optimization and error handling */
+/* Image loading optimization and error handling */
 img {
   max-width: 100%;
   height: auto;
   /* Prevent layout shifts during loading */
-  min-width: 1px !important;
-  min-height: 1px !important;
-  background-color: transparent;
-  position: relative;
+  min-width: 1px;
+  min-height: 1px;
 }
 
 /* Lazy loading hint for better performance */
 img[loading="lazy"] {
   opacity: 0;
   transition: opacity 0.3s ease;
-  min-width: 1px !important;
-  min-height: 1px !important;
 }
 
 img[loading="lazy"].loaded {
   opacity: 1;
 }
 
-/* Enhanced image error states */
-img[src=""], img:not([src]), img[src="#"] {
-  background-color: #f8f9fa !important;
-  border: 1px solid #dee2e6;
-  display: inline-block !important;
-  width: 100px !important;
-  height: 100px !important;
-  min-width: 100px !important;
-  min-height: 100px !important;
-  background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100"%3E%3Crect width="100" height="100" fill="%23f8f9fa"/%3E%3Ctext x="50" y="50" text-anchor="middle" dy="0.35em" font-family="Arial" font-size="12" fill="%23666"%3ENo Image%3C/text%3E%3C/svg%3E');
+/* Image error states */
+img[src=""], img:not([src]) {
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100"%3E%3Crect width="100" height="100" fill="%23f0f0f0"/%3E%3Ctext x="50" y="50" text-anchor="middle" dy="0.35em" font-family="Arial" font-size="12" fill="%23666"%3ENo Image%3C/text%3E%3C/svg%3E');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -225,36 +188,8 @@ img {
   -moz-user-drag: none;
   -o-user-drag: none;
   user-drag: none;
-  pointer-events: auto;
 }
 
-/* Ensure images maintain dimensions during loading */
-img:not([width]):not([height]) {
-  min-width: 1px !important;
-  min-height: 1px !important;
-}
-
-/* Image loading states with canvas protection */
-img.loading {
-  min-width: 1px !important;
-  min-height: 1px !important;
-  background-color: #f8f9fa;
-}
-
-img.error {
-  min-width: 1px !important;
-  min-height: 1px !important;
-  background-color: #f8f9fa;
-  border: 1px solid #dee2e6;
-}
-
-/* Ensure broken images don't cause zero dimensions */
-img:not([src]):before {
-  content: '';
-  display: block;
-  min-width: 1px !important;
-  min-height: 1px !important;
-}
 /* Loading placeholder for images */
 .image-loading {
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
