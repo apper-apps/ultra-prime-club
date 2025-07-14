@@ -4,6 +4,15 @@ import salesRepData from "@/services/mockData/salesReps.json";
 let leads = [...leadsData];
 let salesReps = [...salesRepData];
 
+// Track all URLs that have ever been added to the system (for fresh lead detection)
+const leadHistoryTracker = new Map();
+
+// Initialize history tracker with existing leads
+leads.forEach(lead => {
+  const normalizedUrl = lead.websiteUrl.toLowerCase().replace(/\/$/, '');
+  leadHistoryTracker.set(normalizedUrl, true);
+});
+
 // Utility function to remove duplicate website URLs, keeping the most recent entry
 const deduplicateLeads = (leadsArray) => {
   const urlMap = new Map();
@@ -14,14 +23,17 @@ const deduplicateLeads = (leadsArray) => {
   
   sortedLeads.forEach(lead => {
     const normalizedUrl = lead.websiteUrl.toLowerCase().replace(/\/$/, ''); // Remove trailing slash and normalize
+    
+    // Update history tracker
+    leadHistoryTracker.set(normalizedUrl, true);
+    
     if (urlMap.has(normalizedUrl)) {
       duplicates.push(lead);
     } else {
       urlMap.set(normalizedUrl, lead);
     }
   });
-  
-  return {
+return {
     uniqueLeads: Array.from(urlMap.values()),
     duplicatesRemoved: duplicates,
     duplicateCount: duplicates.length
@@ -86,7 +98,11 @@ export const createLead = async (leadData) => {
     throw new Error(`A lead with website URL "${leadData.websiteUrl}" already exists`);
   }
   
-const maxId = Math.max(...leads.map(l => l.Id), 0);
+// Update history tracker for new lead
+  const normalizedUrl = leadData.websiteUrl.toLowerCase().replace(/\/$/, '');
+  leadHistoryTracker.set(normalizedUrl, true);
+  
+  const maxId = Math.max(...leads.map(l => l.Id), 0);
   const newLead = {
     websiteUrl: leadData.websiteUrl,
     teamSize: leadData.teamSize || "1-10",
@@ -201,7 +217,37 @@ export const getPendingFollowUps = async () => {
     const followUpDate = new Date(lead.followUpDate);
     return followUpDate >= now && followUpDate <= sevenDaysFromNow;
   });
-  
-  // Sort by follow-up date (earliest first)
+// Sort by follow-up date (earliest first)
   return pendingFollowUps.sort((a, b) => new Date(a.followUpDate) - new Date(b.followUpDate));
+};
+
+// Get only fresh leads that have never existed in the system before
+export const getFreshLeadsOnly = async (leadsArray) => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 100));
+  
+  const freshLeads = leadsArray.filter(lead => {
+    const normalizedUrl = lead.websiteUrl.toLowerCase().replace(/\/$/, '');
+    // Check if this URL was added today and wasn't in the system before today
+    const leadDate = new Date(lead.createdAt);
+    const today = new Date();
+    
+    // If lead was created today and URL never existed before, it's fresh
+    return leadDate.toDateString() === today.toDateString() && 
+           !wasUrlPreviouslyAdded(normalizedUrl, leadDate);
+  });
+  
+  return freshLeads;
+};
+
+// Helper function to check if URL existed before a given date
+const wasUrlPreviouslyAdded = (normalizedUrl, currentDate) => {
+  // Check if any existing lead with this URL was created before the current date
+  const existingLeads = leads.filter(lead => {
+    const existingNormalizedUrl = lead.websiteUrl.toLowerCase().replace(/\/$/, '');
+    return existingNormalizedUrl === normalizedUrl && 
+           new Date(lead.createdAt) < currentDate;
+  });
+  
+  return existingLeads.length > 0;
 };

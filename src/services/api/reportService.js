@@ -1,5 +1,6 @@
 import leadsData from "@/services/mockData/leads.json";
 import salesRepsData from "@/services/mockData/salesReps.json";
+import { getFreshLeadsOnly } from "./leadsService";
 
 // Utility function to clean website URLs by removing trailing slash
 const cleanWebsiteUrl = (url) => {
@@ -133,7 +134,7 @@ const getCategorySummary = (data) => {
   return summary;
 };
 
-// Get daily website URLs for a specific sales rep
+// Get daily website URLs for a specific sales rep - only fresh leads
 export const getDailyWebsiteUrls = async (salesRepId, date) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 300));
@@ -159,8 +160,11 @@ export const getDailyWebsiteUrls = async (salesRepId, date) => {
     filteredData = generateSampleDailyData(salesRepId, targetDate);
   }
   
+  // Filter to only include fresh leads that never existed before
+  const freshLeads = await getFreshLeadsOnly(filteredData);
+  
   // Clean website URLs and return with performance indicator
-  const cleanedData = filteredData.map(lead => ({
+  const cleanedData = freshLeads.map(lead => ({
     ...lead,
     websiteUrl: cleanWebsiteUrl(lead.websiteUrl)
   }));
