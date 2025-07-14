@@ -249,12 +249,12 @@ export const getTeamPerformanceRankings = async () => {
 };
 
 // Revenue trends data
-export const getRevenueTrendsData = async () => {
+export const getRevenueTrendsData = async (year = new Date().getFullYear()) => {
   await simulateAPICall();
   
   const fallback = {
-    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-    series: [{ name: 'Cumulative ARR', data: [2500000, 3200000, 3800000, 4500000, 5100000, 5800000] }]
+    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    series: [{ name: 'Monthly Revenue', data: [45000, 52000, 48000, 61000, 55000, 67000, 72000, 58000, 63000, 69000, 74000, 81000] }]
   };
   
   return safeServiceCall(async () => {
@@ -265,40 +265,45 @@ export const getRevenueTrendsData = async () => {
       return fallback;
     }
     
-    const leads = urlActivity.data;
+const leads = urlActivity.data;
     
-    // Group leads by month and calculate cumulative ARR
-    const monthlyData = leads.reduce((acc, lead) => {
+    // Filter leads by selected year and group by month
+    const yearLeads = leads.filter(lead => {
+      if (!lead.createdAt) return false;
+      const leadYear = new Date(lead.createdAt).getFullYear();
+      return leadYear === year;
+    });
+    
+    // Group leads by month and calculate monthly revenue
+    const monthlyData = yearLeads.reduce((acc, lead) => {
       if (!lead.createdAt) return acc;
       
       const month = new Date(lead.createdAt).toISOString().slice(0, 7);
       if (!acc[month]) {
-        acc[month] = { count: 0, arr: 0 };
+        acc[month] = { count: 0, revenue: 0 };
       }
       acc[month].count += 1;
-      acc[month].arr += lead.arr || 0;
+      acc[month].revenue += lead.revenue || lead.arr || 0;
       return acc;
     }, {});
     
-    const sortedMonths = Object.keys(monthlyData).sort();
-    const last6Months = sortedMonths.slice(-6);
-    
-    if (last6Months.length === 0) {
-      return fallback;
-    }
-    
-    let cumulativeARR = 0;
-    const trendData = last6Months.map(month => {
-      cumulativeARR += monthlyData[month].arr;
-      return cumulativeARR;
+// Generate all months for the selected year
+    const allMonths = Array.from({ length: 12 }, (_, i) => {
+      const month = String(i + 1).padStart(2, '0');
+      return `${year}-${month}`;
     });
     
-    return {
-      categories: last6Months.map(month => {
+    // Create revenue data for each month
+    const trendData = allMonths.map(month => {
+      return monthlyData[month] ? monthlyData[month].revenue : 0;
+    });
+    
+return {
+      categories: allMonths.map(month => {
         const date = new Date(month);
-        return date.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+        return date.toLocaleDateString('en-US', { month: 'short' });
       }),
-      series: [{ name: 'Cumulative ARR', data: trendData }]
+      series: [{ name: 'Monthly Revenue', data: trendData }]
     };
   }, fallback);
 };

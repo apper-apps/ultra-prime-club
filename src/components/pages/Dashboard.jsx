@@ -34,8 +34,9 @@ const Dashboard = () => {
   const [pendingFollowUps, setPendingFollowUps] = useState([]);
   const [leadChart, setLeadChart] = useState(null);
   const [teamPerformance, setTeamPerformance] = useState([]);
-  const [revenueTrends, setRevenueTrends] = useState(null);
-const [detailedActivity, setDetailedActivity] = useState([]);
+const [revenueTrends, setRevenueTrends] = useState(null);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [detailedActivity, setDetailedActivity] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   
@@ -66,9 +67,9 @@ const [
         getRecentActivity(),
         getTodaysMeetings(),
         getDashboardPendingFollowUps(),
-        getLeadPerformanceChart(),
+getLeadPerformanceChart(),
         getTeamPerformanceRankings(),
-        getRevenueTrendsData(),
+        getRevenueTrendsData(selectedYear),
         getDetailedRecentActivity()
       ]);
       
@@ -145,8 +146,17 @@ const loadSalesReps = async () => {
     if (date) {
       loadDailyData(selectedSalesRep?.Id, 'custom', date);
     }
-  };
+};
 
+  const handleYearChange = async (year) => {
+    setSelectedYear(year);
+    try {
+      const newRevenueTrends = await getRevenueTrendsData(year);
+      setRevenueTrends(newRevenueTrends);
+    } catch (err) {
+      toast.error("Failed to load revenue data for selected year");
+    }
+  };
 useEffect(() => {
     loadDashboardData();
     loadSalesReps();
@@ -389,14 +399,34 @@ useEffect(() => {
       </div>
 
       {/* Revenue Trends - Full Width */}
+{/* Revenue Trends - Full Width */}
       <div className="grid grid-cols-1 gap-6">
         <Card className="p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h3 className="text-lg font-semibold text-gray-900">Revenue Trends</h3>
-              <p className="text-sm text-gray-600">ARR growth over time</p>
+              <p className="text-sm text-gray-600">Monthly revenue tracking</p>
             </div>
-            <ApperIcon name="DollarSign" size={20} className="text-primary-600" />
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <label className="text-sm font-medium text-gray-700">Year:</label>
+                <select
+                  value={selectedYear}
+                  onChange={(e) => handleYearChange(parseInt(e.target.value))}
+                  className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
+                >
+                  {Array.from({ length: 5 }, (_, i) => {
+                    const year = new Date().getFullYear() - i;
+                    return (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+<ApperIcon name="DollarSign" size={20} className="text-primary-600" />
+            </div>
           </div>
           {revenueTrends && (
             <Chart
@@ -407,8 +437,8 @@ useEffect(() => {
                 stroke: { curve: 'smooth', width: 4 },
                 grid: { show: true, borderColor: '#E5E7EB' },
                 xaxis: { categories: revenueTrends.categories },
-                yaxis: { labels: { formatter: (val) => `$${(val/1000000).toFixed(1)}M` } },
-                tooltip: { y: { formatter: (val) => `$${(val/1000000).toFixed(2)}M ARR` } }
+                yaxis: { labels: { formatter: (val) => `$${(val/1000).toFixed(0)}K` } },
+                tooltip: { y: { formatter: (val) => `$${(val/1000).toFixed(1)}K Revenue` } }
               }}
               series={revenueTrends.series}
               type="line"
