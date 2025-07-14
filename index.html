@@ -2,28 +2,159 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- Use data URI favicon to prevent 404 errors -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🏢%3C/text%3E%3C/svg%3E" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
-    <title>Prime Club CRM</title>
-    <!-- Preconnect to improve font loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Preconnect to Apper.io for faster script loading -->
     <link rel="preconnect" href="https://cdn.apper.io">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Prime Club CRM</title>
     <script>
-      // Enhanced error handling for all image and canvas related errors
-      window.addEventListener('error', function(e) {
-        // Handle canvas drawing errors
-        if (e.message && (e.message.includes('drawImage') || e.message.includes('canvas'))) {
-          console.warn('Canvas viewport capture error handled:', e.message);
-          e.preventDefault();
-          return true;
+      // Global error handling for canvas and viewport capture issues
+      window.addEventListener('error', function(event) {
+        if (event.message && (
+          event.message.includes('canvas') ||
+          event.message.includes('drawImage') ||
+          event.message.includes('InvalidStateError') ||
+          event.message.includes('width or height of 0')
+        )) {
+          console.warn('Canvas error caught and handled:', event.message);
+          event.preventDefault();
+          return false;
         }
-        // Handle image loading errors
-        if (e.target && e.target.tagName === 'IMG') {
-          console.warn('Image loading error handled:', e.target.src);
+      });
+      
+      // Handle unhandled promise rejections related to canvas operations
+      window.addEventListener('unhandledrejection', function(event) {
+        if (event.reason && event.reason.message && 
+            (event.reason.message.includes('canvas') || 
+             event.reason.message.includes('drawImage') ||
+             event.reason.message.includes('InvalidStateError') ||
+             event.reason.message.includes('viewport capture'))) {
+          console.warn('Canvas-related promise rejection caught:', event.reason);
+          event.preventDefault();
+        }
+      });
+
+      // Viewport readiness utilities
+      window.ensureViewportReady = function() {
+        return new Promise((resolve) => {
+          const checkReady = () => {
+            // Ensure DOM is fully loaded
+            if (document.readyState !== 'complete') {
+              setTimeout(checkReady, 100);
+              return;
+            }
+
+            // Ensure root element has proper dimensions
+            const root = document.getElementById('root');
+            if (!root || root.offsetWidth === 0 || root.offsetHeight === 0) {
+              setTimeout(checkReady, 100);
+              return;
+            }
+
+            // Ensure all images are loaded or have fallbacks
+            const images = document.querySelectorAll('img');
+            let imagesReady = true;
+            
+            images.forEach(img => {
+              if (img.complete === false || img.naturalWidth === 0) {
+                imagesReady = false;
+              }
+            });
+
+            if (!imagesReady) {
+              setTimeout(checkReady, 100);
+              return;
+            }
+
+            resolve();
+          };
+
+          checkReady();
+        });
+      };
+
+      // Canvas dimension validation utility
+      window.validateCanvasElement = function(element) {
+        if (!element) return false;
+        
+        // Check if element has valid dimensions
+        const rect = element.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) {
+          console.warn('Element has zero dimensions, cannot capture:', element);
+          return false;
+        }
+
+        // Check if element is visible
+        const style = window.getComputedStyle(element);
+        if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') {
+          console.warn('Element is not visible, cannot capture:', element);
+          return false;
+        }
+
+        return true;
+      };
+
+      // Enhanced image loading handler
+      window.handleImageErrors = function() {
+        document.querySelectorAll('img').forEach(img => {
+          if (!img.hasAttribute('data-error-handled')) {
+            img.setAttribute('data-error-handled', 'true');
+            
+            img.addEventListener('error', function() {
+              this.style.minWidth = '1px';
+              this.style.minHeight = '1px';
+              this.style.width = this.style.width || '100px';
+              this.style.height = this.style.height || '100px';
+              this.style.backgroundColor = '#f8f9fa';
+              this.style.border = '1px solid #dee2e6';
+            });
+
+            img.addEventListener('load', function() {
+              this.classList.add('image-ready');
+            });
+
+            // Set minimum dimensions immediately
+            if (img.offsetWidth === 0 || img.offsetHeight === 0) {
+              img.style.minWidth = '1px';
+              img.style.minHeight = '1px';
+            }
+          }
+        });
+      };
+
+      // DOM ready handler
+      document.addEventListener('DOMContentLoaded', function() {
+        // Apply image error handling
+        window.handleImageErrors();
+        
+        // Observe for dynamically added images
+        const observer = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type === 'childList') {
+              mutation.addedNodes.forEach(function(node) {
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                  if (node.tagName === 'IMG') {
+                    window.handleImageErrors();
+                  } else if (node.querySelectorAll) {
+                    const images = node.querySelectorAll('img');
+                    if (images.length > 0) {
+                      window.handleImageErrors();
+                    }
+                  }
+                }
+              });
+            }
+          });
+        });
+
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true
+        });
+      });
+    </script>
           e.preventDefault();
           return true;
         }
