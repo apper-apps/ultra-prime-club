@@ -13,6 +13,7 @@ const navigation = [
     { to: "/pipeline", icon: "Kanban", label: "Deal Pipeline" },
     { to: "/calendar", icon: "Calendar", label: "Calendar" },
     { to: "/analytics", icon: "TrendingUp", label: "Analytics" },
+    { to: "/revenue-insights", icon: "DollarSign", label: "Revenue Insights" },
     { to: "/leaderboard", icon: "Trophy", label: "Leaderboard" }
   ];
 

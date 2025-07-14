@@ -10,6 +10,7 @@ import Pipeline from "@/components/pages/Pipeline";
 import Dashboard from "@/components/pages/Dashboard";
 import Leads from "@/components/pages/Leads";
 import Hotlist from "@/components/pages/Hotlist";
+import RevenueInsights from "@/components/pages/RevenueInsights";
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -192,13 +193,22 @@ animate={{ opacity: 1, y: 0 }}
               <Calendar />
             </motion.div>
           } />
-          <Route path="/leaderboard" element={
+<Route path="/leaderboard" element={
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
               <Leaderboard />
+            </motion.div>
+          } />
+          <Route path="/revenue-insights" element={
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <RevenueInsights />
             </motion.div>
           } />
         </Routes>
