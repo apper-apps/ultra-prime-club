@@ -18,7 +18,6 @@ import {
   getRecentActivity, 
   getTodaysMeetings,
   getLeadPerformanceChart,
-  getSalesFunnelAnalysis,
   getTeamPerformanceRankings,
   getRevenueTrendsData,
   getDetailedRecentActivity,
@@ -29,10 +28,9 @@ const Dashboard = () => {
   const [metrics, setMetrics] = useState([]);
   const [activity, setActivity] = useState([]);
   const [meetings, setMeetings] = useState([]);
-  const [pendingFollowUps, setPendingFollowUps] = useState([]);
+const [pendingFollowUps, setPendingFollowUps] = useState([]);
   const [leadChart, setLeadChart] = useState(null);
-  const [salesFunnel, setSalesFunnel] = useState(null);
-const [teamPerformance, setTeamPerformance] = useState([]);
+  const [teamPerformance, setTeamPerformance] = useState([]);
   const [revenueTrends, setRevenueTrends] = useState(null);
   const [detailedActivity, setDetailedActivity] = useState([]);
   const [userLeads, setUserLeads] = useState([]);
@@ -45,13 +43,12 @@ const [error, setError] = useState("");
       setLoading(true);
       setError("");
       
-      const [
+const [
         metricsData, 
         activityData, 
         meetingsData, 
         followUpsData,
         leadChartData,
-        salesFunnelData,
         teamPerformanceData,
         revenueTrendsData,
         detailedActivityData,
@@ -62,20 +59,18 @@ const [error, setError] = useState("");
         getTodaysMeetings(),
         getPendingFollowUps(),
         getLeadPerformanceChart(),
-        getSalesFunnelAnalysis(),
         getTeamPerformanceRankings(),
         getRevenueTrendsData(),
         getDetailedRecentActivity(),
         getUserLeadsReport(1, selectedPeriod) // Shashank Sharma's ID
       ]);
       
-      setMetrics(metricsData);
+setMetrics(metricsData);
       setActivity(activityData);
       setMeetings(meetingsData);
       setPendingFollowUps(followUpsData);
       setLeadChart(leadChartData);
-      setSalesFunnel(salesFunnelData);
-setTeamPerformance(teamPerformanceData);
+      setTeamPerformance(teamPerformanceData);
       setRevenueTrends(revenueTrendsData);
       setDetailedActivity(detailedActivityData);
       setUserLeads(userLeadsData);
@@ -140,8 +135,8 @@ setTeamPerformance(teamPerformanceData);
         </div>
       </div>
 
-      {/* Lead Performance Chart */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+{/* Lead Performance Chart */}
+      <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
         <Card className="p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
@@ -168,32 +163,6 @@ setTeamPerformance(teamPerformanceData);
               }}
               series={leadChart.series}
               type="area"
-              height={280}
-            />
-          )}
-        </Card>
-
-        <Card className="p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900">Sales Funnel</h3>
-              <p className="text-sm text-gray-600">Conversion rates by stage</p>
-            </div>
-            <ApperIcon name="Filter" size={20} className="text-primary-600" />
-          </div>
-          {salesFunnel && (
-            <Chart
-              options={{
-                chart: { type: 'bar', height: 280, toolbar: { show: false } },
-                colors: ['#8B5CF6', '#10B981', '#F59E0B', '#EF4444'],
-                dataLabels: { enabled: false },
-                plotOptions: { bar: { horizontal: false, columnWidth: '55%' } },
-                xaxis: { categories: salesFunnel.categories },
-                yaxis: { labels: { formatter: (val) => `${val}%` } },
-                tooltip: { y: { formatter: (val) => `${val}%` } }
-              }}
-              series={salesFunnel.series}
-              type="bar"
               height={280}
             />
           )}
