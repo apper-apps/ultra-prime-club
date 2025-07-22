@@ -357,7 +357,7 @@ useEffect(() => {
                 </div>
 {dailyUrls.slice(0, 10).map((url, index) => (
                   <motion.div
-                    key={`${url.websiteUrl}-${url.createdAt}` || index}
+                    key={url?.websiteUrl && url?.createdAt ? `${url.websiteUrl}-${url.createdAt}` : index}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
