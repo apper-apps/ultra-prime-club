@@ -1,10 +1,9 @@
 import { motion } from "framer-motion";
-import { Draggable } from "react-beautiful-dnd";
+import { Draggable } from "@hello-pangea/dnd";
 import Card from "@/components/atoms/Card";
 import Badge from "@/components/atoms/Badge";
 import Avatar from "@/components/atoms/Avatar";
 import ApperIcon from "@/components/ApperIcon";
-
 const DealCard = ({ deal, index, onEdit }) => {
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("en-US", {
