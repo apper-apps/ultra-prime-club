@@ -369,14 +369,14 @@ useEffect(() => {
                       </div>
                       <div className="text-xs text-gray-500">{url.category}</div>
                     </div>
-                    <div className="text-right space-y-1">
+<div className="flex items-center justify-between">
                       <Badge 
                         variant={
-                          url.status === 'Connected' || url.status === 'Meeting Done' ? 'success' :
+                          ['Connected', 'Meeting Done'].includes(url.status) ? 'success' :
                           url.status === 'Meeting Booked' ? 'warning' :
                           url.status === 'Rejected' ? 'error' : 'default'
                         }
-                        size="sm"
+                      >
                         className="text-xs"
                       >
                         {url.status}
