@@ -2,16 +2,17 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import ApperIcon from "@/components/ApperIcon";
-import Badge from "@/components/atoms/Badge";
-import Button from "@/components/atoms/Button";
-import Card from "@/components/atoms/Card";
-import Input from "@/components/atoms/Input";
 import Empty from "@/components/ui/Empty";
 import Error from "@/components/ui/Error";
 import Loading from "@/components/ui/Loading";
+import Hotlist from "@/components/pages/Hotlist";
 import SearchBar from "@/components/molecules/SearchBar";
-import { createLead, deleteLead, getLeads, updateLead } from "@/services/api/leadsService";
+import Card from "@/components/atoms/Card";
+import Input from "@/components/atoms/Input";
+import Badge from "@/components/atoms/Badge";
+import Button from "@/components/atoms/Button";
 import { createDeal, getDeals, updateDeal } from "@/services/api/dealsService";
+import { createLead, deleteLead, getLeads, updateLead } from "@/services/api/leadsService";
 
 const Leads = () => {
   const [data, setData] = useState([]);
@@ -22,7 +23,7 @@ const [searchTerm, setSearchTerm] = useState("");
   const [fundingFilter, setFundingFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [teamSizeFilter, setTeamSizeFilter] = useState("all");
-  const [sortBy, setSortBy] = useState("websiteUrl");
+const [sortBy, setSortBy] = useState("websiteUrl");
   const [sortOrder, setSortOrder] = useState("desc");
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingLead, setEditingLead] = useState(null);
@@ -30,9 +31,10 @@ const [searchTerm, setSearchTerm] = useState("");
   const [nextTempId, setNextTempId] = useState(-1);
   const [selectedLeads, setSelectedLeads] = useState([]);
   const [showBulkDeleteDialog, setShowBulkDeleteDialog] = useState(false);
-const [topScrollbarRef, setTopScrollbarRef] = useState(null);
+  const [topScrollbarRef, setTopScrollbarRef] = useState(null);
   const [tableScrollbarRef, setTableScrollbarRef] = useState(null);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(25);
   useEffect(() => {
     loadLeads();
   }, []);
@@ -228,15 +230,13 @@ const handleUpdateLead = async (leadId, updates) => {
       }
     });
   };
-
-  const toggleSelectAll = () => {
-    if (selectedLeads.length === filteredAndSortedData.length) {
+const toggleSelectAll = () => {
+    if (selectedLeads.length === currentPageData.length) {
       setSelectedLeads([]);
     } else {
-      setSelectedLeads(filteredAndSortedData.map(lead => lead.Id));
+      setSelectedLeads(currentPageData.map(lead => lead.Id));
     }
-  };
-
+};
   const clearSelection = () => {
     setSelectedLeads([]);
   };
@@ -653,6 +653,26 @@ const handleSort = (field) => {
     }
   }, [loading, emptyRows.length]);
 
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, statusFilter, fundingFilter, categoryFilter, teamSizeFilter]);
+
+  // Calculate pagination
+  const totalItems = filteredAndSortedData.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentPageData = filteredAndSortedData.slice(startIndex, endIndex);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const handleItemsPerPageChange = (newItemsPerPage) => {
+    setItemsPerPage(newItemsPerPage);
+    setCurrentPage(1);
+  };
   if (loading) return <Loading />;
   if (error) return <Error message={error} onRetry={loadLeads} />;
 
@@ -771,10 +791,10 @@ icon="Building2" /> : <div className="relative">
                 <table className="w-full min-w-[1200px]">
                     <thead className="bg-gray-50">
                         <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[50px]">
+<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[50px]">
                                 <input
                                     type="checkbox"
-                                    checked={selectedLeads.length === filteredAndSortedData.length && filteredAndSortedData.length > 0}
+                                    checked={selectedLeads.length === currentPageData.length && currentPageData.length > 0}
                                     onChange={toggleSelectAll}
                                     className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
                                 />
@@ -966,8 +986,8 @@ emptyRow => <tr key={`empty-${emptyRow.Id}`} className="hover:bg-gray-50 empty-r
                                 </td>
                             </tr>
                         )}
-                        {/* Existing leads data */}
-{filteredAndSortedData.map(lead => <tr key={lead.Id} className="hover:bg-gray-50">
+{/* Existing leads data */}
+                        {currentPageData.map(lead => <tr key={lead.Id} className="hover:bg-gray-50">
                             <td className="px-6 py-4 whitespace-nowrap w-[50px]">
                                 <input
                                     type="checkbox"
@@ -1152,9 +1172,144 @@ emptyRow => <tr key={`empty-${emptyRow.Id}`} className="hover:bg-gray-50 empty-r
                         </tr>)}
                     </tbody>
                 </table>
+</div>
+        </div>}
+    </Card>
+
+    {/* Pagination Controls */}
+    {totalItems > 0 && (
+      <Card className="p-4">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="text-sm text-gray-700">
+              Showing {Math.min(startIndex + 1, totalItems)} to {Math.min(endIndex, totalItems)} of {totalItems} results
             </div>
-</div>}
-</Card>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-700">Show</span>
+              <select
+                value={itemsPerPage}
+                onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
+                className="px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+              >
+                <option value={10}>10</option>
+                <option value={25}>25</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
+              </select>
+              <span className="text-sm text-gray-700">per page</span>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-1">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handlePageChange(1)}
+              disabled={currentPage === 1}
+              className="px-2 py-1"
+            >
+              <ApperIcon name="ChevronsLeft" size={16} />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-2 py-1"
+            >
+              <ApperIcon name="ChevronLeft" size={16} />
+            </Button>
+            
+            {/* Page numbers */}
+            <div className="flex items-center gap-1">
+              {(() => {
+                const pages = [];
+                const maxVisible = 5;
+                let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+                let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+                
+                if (endPage - startPage < maxVisible - 1) {
+                  startPage = Math.max(1, endPage - maxVisible + 1);
+                }
+                
+                if (startPage > 1) {
+                  pages.push(
+                    <Button
+                      key={1}
+                      variant={1 === currentPage ? "primary" : "outline"}
+                      size="sm"
+                      onClick={() => handlePageChange(1)}
+                      className="px-3 py-1 min-w-[2rem]"
+                    >
+                      1
+                    </Button>
+                  );
+                  if (startPage > 2) {
+                    pages.push(
+                      <span key="start-ellipsis" className="px-2 text-gray-500">...</span>
+                    );
+                  }
+                }
+                
+                for (let i = startPage; i <= endPage; i++) {
+                  pages.push(
+                    <Button
+                      key={i}
+                      variant={i === currentPage ? "primary" : "outline"}
+                      size="sm"
+                      onClick={() => handlePageChange(i)}
+                      className="px-3 py-1 min-w-[2rem]"
+                    >
+                      {i}
+                    </Button>
+                  );
+                }
+                
+                if (endPage < totalPages) {
+                  if (endPage < totalPages - 1) {
+                    pages.push(
+                      <span key="end-ellipsis" className="px-2 text-gray-500">...</span>
+                    );
+                  }
+                  pages.push(
+                    <Button
+                      key={totalPages}
+                      variant={totalPages === currentPage ? "primary" : "outline"}
+                      size="sm"
+                      onClick={() => handlePageChange(totalPages)}
+                      className="px-3 py-1 min-w-[2rem]"
+                    >
+                      {totalPages}
+                    </Button>
+                  );
+                }
+                
+                return pages;
+              })()}
+            </div>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-2 py-1"
+            >
+              <ApperIcon name="ChevronRight" size={16} />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handlePageChange(totalPages)}
+              disabled={currentPage === totalPages}
+              className="px-2 py-1"
+            >
+              <ApperIcon name="ChevronsRight" size={16} />
+            </Button>
+          </div>
+        </div>
+      </Card>
+    )}
     
     {/* Bulk Actions */}
     {selectedLeads.length > 0 && (
