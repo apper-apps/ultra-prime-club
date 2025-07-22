@@ -376,7 +376,6 @@ useEffect(() => {
                           url.status === 'Meeting Booked' ? 'warning' :
                           url.status === 'Rejected' ? 'error' : 'default'
                         }
-                      >
                         className="text-xs"
                       >
                         {url.status}
